@@ -4,6 +4,7 @@ from handlers import custom_handlers as handler
 # import socket
 # import signal
 import sys
+import socketserver
 # import threading
 # import os
 
@@ -34,11 +35,6 @@ def check_before_run(hostname: str, port: int):
               "\nStarting the web server!")
 
 
-# with socketserver.TCPServer(("", PORT), Handler) as httpd:
-#     print("Http Server Serving at port", PORT)
-#     httpd.serve_forever()
-
-
 if __name__ == "__main__":
     welcome_message("Welcome !")
     try:
@@ -52,4 +48,8 @@ if __name__ == "__main__":
     # Starting the handler to catch keyboard interrupt
     # in order to stop it gracefully
     handler.SignalHandler.__init__()
-    # Handler = hrh.CustomHttpRequestHandler
+
+    HTTPHandler = handler.CustomHttpRequestHandler
+    with socketserver.TCPServer(("", PORT), HTTPHandler) as httpd:
+        print("Http Server Serving at port", PORT)
+        httpd.serve_forever()
