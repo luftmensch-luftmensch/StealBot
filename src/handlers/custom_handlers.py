@@ -41,12 +41,13 @@ class CustomHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     #     self.path = 'index.html'
     #     print("PATH" + self.path)
     #     return http.server.SimpleHTTPRequestHandler.do_GET(self)
-
+    """
+    Mapping incoming request:
+    https://stackoverflow.com/questions/18346583/how-do-i-map-incoming-path-requests-when-using-httpserver
+    """
     def do_GET(self):
         """Get homepage."""
-        print("Current directory ", os.getcwd())
         rootdir = os.getcwd() + '/src/site/'
-        print("ROOTDIR ", rootdir)
         try:
             if os.path.exists(os.path.join(rootdir, "index.html")):
                 # Open file as bytes-like object
@@ -58,24 +59,23 @@ class CustomHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(f.read())
                 f.close()
                 return  # http.server.SimpleHTTPRequestHandler.do_GET(self)
-            # print("SONO QUI ", rootdir + self.path)
-            # for filename in os.listdir(rootdir):
-            #     print(os.path.join(rootdir, filename))
-            # if self.path.endswith('.html'):
-            #     f = open(rootdir + self.path)  # open requested file
-            #     print("FILE ", f)
+                # for filename in os.listdir(rootdir):
+                #     print(os.path.join(rootdir, filename))
+                # if self.path.endswith('.html'):
+                #     f = open(rootdir + self.path)  # open requested file
+                #     print("FILE ", f)
 
-            #     # send code 200 response
-            #     # self.send_response(200)
+                #     # send code 200 response
+                #     # self.send_response(200)
 
-            #     # send header first
-            #     # self.send_header('Content-type','text-html')
-            #     # self.end_headers()
+                #     # send header first
+                #     # self.send_header('Content-type','text-html')
+                #     # self.end_headers()
 
-            #     # send file content to client
-            #     self.wfile.write(f.read())
-            #     f.close()
-            #     # return
-            #     return http.server.SimpleHTTPRequestHandler.do_GET(self)
+                #     # send file content to client
+                #     self.wfile.write(f.read())
+                #     f.close()
+                #     # return
+                #     return http.server.SimpleHTTPRequestHandler.do_GET(self)
         except IOError:
             self.send_error(404, 'file not found')

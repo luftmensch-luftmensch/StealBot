@@ -4,9 +4,10 @@ from handlers import custom_handlers as handler
 # import socket
 # import signal
 import sys
-import socketserver
+# import socketserver
 # import threading
 # import os
+from http.server import HTTPServer
 
 # import http.server # Our http server handler for http requests
 # import socketserver # Establish the TCP Socket connections
@@ -15,6 +16,7 @@ import socketserver
 # More at https://github.com/pwaller/pyfiglet
 import pyfiglet
 
+hostname = "localhost"
 PORT = 9090
 
 
@@ -49,7 +51,8 @@ if __name__ == "__main__":
     # in order to stop it gracefully
     handler.SignalHandler.__init__()
 
-    HTTPHandler = handler.CustomHttpRequestHandler
-    with socketserver.TCPServer(("", PORT), HTTPHandler) as httpd:
-        print("Http Server Serving at port", PORT)
-        httpd.serve_forever()
+    webServer = HTTPServer((hostname, PORT), handler.CustomHttpRequestHandler)
+    webServer.serve_forever()
+    # with socketserver.TCPServer(("", PORT), HTTPHandler) as httpd:
+    #     print("Http Server Serving at port", PORT)
+    #     httpd.serve_forever()
