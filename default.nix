@@ -1,3 +1,4 @@
+# Taken from https://nixos.org/manual/nixpkgs/stable/#how-to-consume-python-modules-using-pip-in-a-virtual-environment-like-i-am-used-to-on-other-operating-systems
 with import <nixpkgs> { };
 
 let
