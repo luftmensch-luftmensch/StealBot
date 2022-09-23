@@ -24,16 +24,6 @@ class SignalHandler:
         signal.signal(signal.SIGINT, self.keyboard_handler)
 
 
-class SocketChecker:
-    """Gestione della porta in fase di creazione della socket."""
-
-    def is_port_in_use(hostname: str, port: int) -> bool:
-        """Metodo di classe."""
-        import socket
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            return s.connect_ex((hostname, port)) == 0
-
-
 class CustomHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     """Handler per la richiesta HTTP effettuata da un client al server."""
 
