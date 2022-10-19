@@ -1,2 +1,8 @@
 /.venv/
 /src/handlers/__pycache__/
+*.aux
+*.blx
+*.log
+*.toc
+*.out
+*.psd

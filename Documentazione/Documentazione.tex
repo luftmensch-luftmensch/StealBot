@@ -1,0 +1,420 @@
+% Created 2022-10-19 mer 11:55
+% Intended LaTeX compiler: lualatex
+\documentclass[letterpaper, 11pt]{article}
+
+\usepackage{lmodern} % Ensures we have the right font
+\usepackage[T1]{fontenc} % Basic font & characters selection
+\usepackage[utf8]{inputenc}
+\usepackage{fontspec}
+% Define font family to use (Other options are: Iosevka, Source Code Pro, Ubuntu, Titillium -> see setup file)
+\setmainfont{RobotoCondensed}[Extension=.ttf, UprightFont=*-Light, BoldFont=*-Regular, ItalicFont=*-LightItalic, BoldItalicFont=*-BoldItalic, Path=/home/valentino/Dropbox/fonts/]
+
+% Tables, wrapping, and other options
+\usepackage{longtable} % This package defines the longtable environment, a multi-page version of tabular
+\usepackage{wrapfig} % This makes the wrapfigure environment available
+\usepackage{rotating} % Pretty obvious
+\usepackage[normalem]{ulem} % underlining and strike-through
+\usepackage{capt-of} % Captions outside of floats
+\usepackage{graphicx} % Include images
+\usepackage{amsmath, amsthm, amssymb} % Subscript & superscript and math environments (amsmath),  Various symbols used for interpreting the entities (amssymb)
+\usepackage[table, xcdraw]{xcolor}
+\usepackage{listings} % Code highlighting
+\usepackage{mdframed} % \usepackage[framemethod=TikZ]{mdframed} (Alternativa in caso si voglia usare Tikz come metodo)
+
+% COLOR DEFINITION
+\definecolor{classTIKZcolor}{RGB}{222,222,222}
+% DEFINIZIONE COLORI TIKZ
+\definecolor{darkblue}{RGB}{0,60,104}
+\definecolor{darkdark}{RGB}{22,22,22}
+% DEFINIZIONE COLORI DA USARE PER IL CODICE
+\definecolor{airforceblue}{rgb}{0.36, 0.54, 0.66}
+
+% Definizione colori per i linguaggi da usare
+\definecolor{orangered}{RGB}{239,134,64}
+\definecolor{includeStatementCPP}{RGB}{148,123,155}
+\definecolor{libraryStatementCPP}{RGB}{126,190,184}
+\definecolor{colorMainCPP}{RGB}{190,116,67}
+\definecolor{colorTypesCPP}{RGB}{188,90,69}
+\definecolor{colorReservedKeywordsCPP}{RGB}{130,183,75}
+\definecolor{colorLoopsCPP}{RGB}{185,176,176}
+\definecolor{colorOtherKeywordsCPP}{RGB}{254,178,54}
+\definecolor{headerJava}{HTML}{006b3C}
+\definecolor{packageNameJavaDefinition}{HTML}{007BA7}
+\definecolor{classKeywordJava}{HTML}{CD5C5C}
+\definecolor{classNameJava}{HTML}{D2691E}
+\definecolor{methodKeyword}{HTML}{FE6F5E}
+\definecolor{constantsKeyword}{HTML}{FFA812}
+\definecolor{attributesKeyword}{HTML}{9955BB}
+\definecolor{testKeyword}{HTML}{1E90FF}
+\definecolor{assertKeyword}{HTML}{6082B6}
+\definecolor{expectedKeyword}{HTML}{29AB87}
+\definecolor{nullKeyword}{HTML}{E66771}
+\definecolor{variableKeyword}{HTML}{778899}
+% Definizione colori definitiva
+\definecolor{orangelight}{RGB}{238,162,82}
+\definecolor{greenlight}{RGB}{147,196,125}
+\definecolor{purplelight}{RGB}{176,159,222}
+\definecolor{bluelight}{RGB}{122,171,216}
+\definecolor{redstrong}{RGB}{255,40,50}
+\definecolor{greendark}{RGB}{144,161,106}
+\definecolor{footerColor}{RGB}{0,163,243}
+\definecolor{footerColorSurrounding}{RGB}{22,154,255}
+\definecolor{ygroblue}{HTML}{179AFF}
+% TIKZ
+\usepackage{tikz}
+% DEFINIZIONE CAMPI E FORME PER TIKZ
+\usetikzlibrary{calc,shadows,shapes,arrows}
+
+% DEFINIZIONE FORME GEOMETRICHE PER DIAGRAMMI
+\tikzstyle{CIRCLE} = [circle, minimum width=0.8cm, minimum height=0.8cm,text centered, draw=black, fill=blue!30]
+\tikzstyle{CIRCLESMALL} = [circle, minimum width=0.2cm, minimum height=0.2cm,text centered, draw=black, fill=black]
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\tikzstyle{class}=[rectangle, draw=black, text centered, anchor=north, text=black, text width=3cm, shading=axis, bottom color=classTIKZcolor,top color=white,shading angle=45]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+
+% OPTIONS FOR MDFRAMES (ENVIRONMENT)
+\makeatletter
+\mdfdefinestyle{@mdf@stubenv}{
+leftmargin=2pt,
+rightmargin=2pt,
+innermargin=0pt,
+outermargin=0pt,
+skipabove=2pt,
+skipbelow=2pt,
+linewidth=1pt,
+linecolor=stub@tmp!80!black,
+frametitlebackgroundcolor=stub@tmp!80!black,
+backgroundcolor=stub@tmp,
+innertopmargin=1pt,
+innerbottommargin=1pt,
+innerleftmargin=1pt,
+innerrightmargin=1pt,
+nobreak=true}
+\def\make@stubenv#1#2#3#4{
+\global\newcounter{stub@#1}[#4]
+\newenvironment{#1}[1][]{
+\colorlet{stub@tmp}{#2!25}
+\begin{mdframed}[style=@mdf@stubenv, frametitle={\scriptsize \% #3 ##1}]
+}{
+\global\stepcounter{stub@#1}\end{mdframed}
+}
+}
+\make@stubenv{definition}{ygroblue}{}{subsection}
+\makeatother
+
+% SET DEFAULT OPTION FOR CODE BLOCKS
+\lstset {
+frame=trBL, %frame=single
+framesep=\fboxsep,
+framerule=\fboxrule,
+frameround=fttt,
+rulecolor=\color{black},
+xleftmargin=\dimexpr\fboxsep+\fboxrule,
+xrightmargin=\dimexpr\fboxsep+\fboxrule,
+breaklines=true,
+basicstyle=\small\tt,
+keywordstyle=\color{blue}\sf,
+columns=flexible,
+}
+
+% Settaggio stile per i linguaggi da usare
+\lstdefinestyle{CPP}{
+language=C++,
+backgroundcolor=\color{white},
+escapeinside={`'},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+commentstyle=\color{gray},
+% #include statement
+keywords=[1]{\#include},
+keywords=[2]{ main },
+% types
+keywords=[3]{int, char, short, long, float, double},
+% List of reserved keywords
+keywords=[4]{auto, struct , unsigned, signed, enum, register, typedef, extern, return, union, continue, goto, volatile, default, define, static},
+% Loops
+keywords=[5]{do, while, case, else, switch, break, for, if},
+% List of other keywords
+keywords=[6]{void, boolean, const, sizeof, sleep},
+% Colors of the keywords:
+keywordstyle=[1]\color{includeStatementCPP},
+keywordstyle=[2]\color{colorMainCPP},
+keywordstyle=[3]\color{colorTypesCPP},
+keywordstyle=[4]\color{colorReservedKeywordsCPP},
+keywordstyle=[6]\color{colorOtherKeywordsCPP}
+}
+\lstdefinestyle{BASH}{
+language=bash,
+commentstyle=\color{gray},
+backgroundcolor=\color{white},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+stringstyle=\color{greendark},
+commentstyle=\color{gray},
+keywords=[1]{exit, print_error, fail},
+keywords=[2]{printf, cut, print_ok, basename, while, usage, run},
+keywords=[3]{ls, find, touch, egrep, print_info, read, done},
+keywords=[4]{wc},
+keywordstyle=[1]\color{redstrong},
+keywordstyle=[2]\color{greenlight},
+keywordstyle=[3]\color{bluelight},
+keywordstyle=[4]\color{purplelight}
+}
+\lstdefinestyle{JAVA}{
+language=Java,
+backgroundcolor=\color{white},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+commentstyle=\color{gray},
+stringstyle=\color{gray},
+keywords=[1]{package, import, static, public, return, true},
+keywords=[2]{android, Manifest, content, Context, util, Log, androidx, core, app, ActivityCompat, org, test, platform, app, InstrumentationRegistry, ext, junit, runner, runners, AndroidJUnit4, Test, RunWith, Assert, com, natour, utils, constants, Constants, persistence, LocalUser, LocalUserDbManager, java, regex, Pattern, Before},
+keywords=[3]{void, boolean, int, String, while, synchronized, volatile, long, double},
+keywords=[4]{class, @RunWith, super},
+keywords=[5]{if, Employee, try, catch},
+keywords=[6]{localUser, dbManager, checkFineLocation, checkCoarseLocation, appContext, controlloRecuperoPassword},
+keywords=[7]{private},
+keywords=[8]{@Test, @Before},
+keywords=[9]{assertTrue, assertFalse},
+keywords=[10]{expected, IllegalArgumentException},
+keywords=[11]{null, false},
+keywords=[12]{username, email, password, confermaPassword, pattern},
+keywordstyle=[1]\color{headerJava},
+keywordstyle=[2]\color{packageNameJavaDefinition},
+keywordstyle=[3]\color{methodKeyword},
+keywordstyle=[4]\color{classKeywordJava},
+keywordstyle=[5]\color{classNameJava},
+keywordstyle=[6]\color{attributesKeyword},
+keywordstyle=[7]\color{constantsKeyword},
+keywordstyle=[8]\color{testKeyword},
+keywordstyle=[9]\color{assertKeyword},
+keywordstyle=[10]\color{expectedKeyword},
+keywordstyle=[11]\color{nullKeyword},
+keywordstyle=[12]\color{variableKeyword},
+morekeywords={*,...}
+}
+\lstdefinestyle{XML}{
+language=XML,
+backgroundcolor=\color{white},
+numbers=left,
+numbersep=15pt,
+numberstyle=\tiny,
+commentstyle=\color{gray},
+keywords=[1]{article, author, title, description, text, formula, math},
+keywords=[2]{dbs:,dbs:book,<dbs:description>},
+keywordstyle=[1]\color{colorMainCPP},
+keywordstyle=[2]\color{includeStatementCPP},
+}
+
+% Colorizing links in a nicer way.
+\usepackage{hyperref} % Links
+\hypersetup{colorlinks, linkcolor=black, urlcolor=blue}
+%Bibliography (Not added yet)
+\usepackage[backend=biber,sortcites,style=verbose-trad2]{biblatex}
+\bibliography{./Bibliography.bib}
+\usepackage{titling}
+\setlength{\droptitle}{-9em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+\usepackage[stretch=10]{microtype}
+\usepackage{hyphenat}
+\usepackage{ragged2e}
+\usepackage{subfig} % Subfigures (not needed in Org I think)
+\usepackage[top=1in, bottom=1.25in, left=0.55in, right=0.55in]{geometry} % Page geometry
+\renewcommand{\baselinestretch}{1.15}
+% Page numbering - Footer
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancy} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\newcommand\FrameBoxR[1]{
+\fcolorbox{footerColorSurrounding}{footerColor}{\makebox[3cm][r]{\textcolor{white}{\bfseries#1}}}
+}
+\fancyfoot[R]{\FrameBoxR{\thepage}}
+\usepackage[explicit]{titlesec}
+
+% Title customization
+\pretitle{\begin{center}\fontsize{20pt}{20pt}\selectfont}
+\posttitle{\par\end{center}}
+\preauthor{\begin{center}\vspace{-6bp}\fontsize{14pt}{14pt}\selectfont}
+\postauthor{\par\end{center}\vspace{-25bp}}
+\predate{\begin{center}\fontsize{12pt}{12pt}\selectfont}
+\postdate{\par\end{center}\vspace{0em}}
+
+% Section/subsection headings:
+%Section
+\titlespacing\section{0pt}{2pt}{2pt} % left margin, space before section header, space after section header
+%Subsection
+\titlespacing\subsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header
+%Subsubsection
+\titlespacing\subsubsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header
+
+% List spacing & options
+\usepackage{enumitem}
+\usepackage{fdsymbol}
+\setlist{itemsep=-2pt} % or \setlist{noitemsep} to leave space around whole list
+\setlist[enumerate, 1]{label=\arabic*.}
+\setlist[enumerate, 2]{label=\Roman*.}
+\setlist[enumerate, 3]{label=\alph*.}
+\setlist[itemize, 1]{label=$\smallblacktriangleright$}
+\setlist[itemize, 2]{label=$\smalldiamond$}
+\setlist[itemize, 3]{label=$\smallcircle$}
+\author{Valentino Bocchetti}
+\date{}
+\title{}
+\begin{document}
+
+\thispagestyle{empty}
+\newgeometry{margin=0pt}
+
+\begin{tikzpicture}[remember picture, overlay]
+  \begin{scope}
+
+    % STRUTTURA ESTERNA (ANGOLI E COLORAZIONE)
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=darkblue,
+      minimum size =55cm] (triangoloPrimoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=footerColorSurrounding,
+      minimum size =50cm] (triangoloSecondoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=darkdark,
+      minimum size =35cm] (triangoloTerzoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=white,
+      minimum size =32cm] (triangoloQuartoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=135,
+      fill=white,
+      minimum size =31cm] (triangoloSuperiore)
+    at ($(current page.north west)$)
+    {};
+
+
+    % STRUTTURA DEL CERCHIO E IL SUO CONTENUTO
+    \node [circle, minimum size=15cm, fill=white, draw=darkblue, line width = 7pt, xshift=11cm, yshift=1cm](centro)
+    at ($(current page.west)$)
+    {};
+
+    \coordinate (logo) at (10.7,-7.5);
+    \node[rectangle, inner sep = 0pt, outer sep = 0pt, minimum width = 3.5cm, minimum height = 3.5cm]
+    at (logo){\includegraphics[width=3.5cm, height=3.5cm]{./Risorse/Start-Page/FedericoII.png}};
+
+    \node[scale=1.5] at (5.85,-10){\LARGE{StealBot}}; %% TODO: Pensare ad una alternativa
+
+    \node[rectangle,
+      draw,
+      minimum width=4cm,
+      minimum height=2mm,
+      xshift= 6.42cm,
+      yshift= -11cm,
+      minimum height=2mm,
+      fill = darkblue] (r) at (0,0) {};
+ 
+    \node[scale=1.5] at (11,-13){\itshape{\LARGE{Università degli studi di Napoli}}};
+    \node[scale=1.5] at (11,-15){\itshape{\LARGE{Federico II}}};
+
+
+    %% STRUTTURA ANGOLO SINISTRO (angolo north-west)
+    \node[scale=3] at (1,-1){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/calendar.png}};
+    \node[scale=2] at (6,-1){\itshape{\LARGE{A.A. 2022-2023}}};
+
+    %% STRUTTURA ANGOLO DESTRO (angolo south-east) - Informazioni studenti
+    %% Valentino Bocchetti
+    \node[scale=3] at (12,-22){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.5, -22.23){\textbf{Valentino Bocchetti - N86003405}};
+
+    %% Valentina Annunziata
+    \node[scale=3] at (12,-24){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
+    \node[scale=1.5] at (16.7, -24.23){\textbf{Valentina Annunziata - N86003280}};
+
+    %% Francesco Ciccarelli
+    \node[scale=3] at (12,-26){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.58, -26.23){\textbf{Francesco Ciccarelli - N86003285}};
+
+    %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
+    %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
+  \end{scope}
+
+\end{tikzpicture}
+
+\newpage
+\restoregeometry
+\renewcommand*\contentsname{\hfill Indice \hfill}
+\tableofcontents
+\pagebreak
+\section{Revisioni}
+\label{sec:org6c21ea6}
+\begin{center}
+\begin{tabular}{|p{0.1\textwidth}|p{0.1\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
+\hline
+Versione & Data & Autore & Descrizione\\
+\hline
+0.0.1 & 19-10-2022 & Valentino Bocchetti & Creazione della struttura del documento e strutturazione\\
+ &  & Valentina Annunziata & dell'albero di lavoro\\
+ &  & Francesco Ciccarelli & \\
+\hline
+\end{tabular}
+\end{center}
+\pagebreak
+\section{Presentazione}
+\label{sec:org88a6f49}
+\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
+\subsection{Descrizione della traccia}
+\label{sec:org9e10224}
+Si richiede la realizzazione di una \texttt{BotNET} \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
+\subsubsection{Tecnologie e linguaggi richiesti}
+\label{sec:orgc008be1}
+Si richiede un applicativo scritto in \texttt{Python} \autocite{DefinizionePython} che utilizzi come strumento di comunicazione le \texttt{socket} \autocite{DefinizioneSocket}
+\section{Codice sorgente sviluppato}
+\label{sec:orgcb091bc}
+Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è disponibile sulla piattaforma \href{https://github.com/}{GitHub}, che ne ha permesso anche il versionamento.
+
+Essendo molto vicini al concetto di open-source, si è scelto fin da subito un tipo di licenza che fosse in linea con questo principio. È per questo che tutti i programmi necessari alla piattaforma \emph{NaTour} sono sotto licenza \href{https://www.gnu.org/licenses/gpl-3.0.en.html}{GPL 3.0} (che è possibile consultare anche nella repository di NaTour).
+
+Di seguito riportiamo un link per il download: \url{https://github.com/luftmensch-luftmensch/Progetto-NaTour} \autocite{informazioniRepository}
+\section{Analisi dei tempi di sviluppo}
+\label{sec:org1c153d6}
+Di seguito viene riportata lo storico dei tempi di sviluppo sotto forma di timeline con una vista i passaggi chiave dello sviluppo di \(StealBit^{\copyright}\)
+\end{document}

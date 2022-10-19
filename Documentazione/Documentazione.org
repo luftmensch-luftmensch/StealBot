@@ -1,0 +1,142 @@
+#+begin_export latex
+\thispagestyle{empty}
+\newgeometry{margin=0pt}
+
+\begin{tikzpicture}[remember picture, overlay]
+  \begin{scope}
+
+    % STRUTTURA ESTERNA (ANGOLI E COLORAZIONE)
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=darkblue,
+      minimum size =55cm] (triangoloPrimoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=footerColorSurrounding,
+      minimum size =50cm] (triangoloSecondoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=darkdark,
+      minimum size =35cm] (triangoloTerzoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=315,
+      fill=white,
+      minimum size =32cm] (triangoloQuartoLivelloAngoloInferiore)
+    at ($(current page.south east)$)
+    {};
+
+
+    \node[
+      isosceles triangle,
+      isosceles triangle apex angle=90,
+      draw,
+      rotate=135,
+      fill=white,
+      minimum size =31cm] (triangoloSuperiore)
+    at ($(current page.north west)$)
+    {};
+
+
+    % STRUTTURA DEL CERCHIO E IL SUO CONTENUTO
+    \node [circle, minimum size=15cm, fill=white, draw=darkblue, line width = 7pt, xshift=11cm, yshift=1cm](centro)
+    at ($(current page.west)$)
+    {};
+
+    \coordinate (logo) at (10.7,-7.5);
+    \node[rectangle, inner sep = 0pt, outer sep = 0pt, minimum width = 3.5cm, minimum height = 3.5cm]
+    at (logo){\includegraphics[width=3.5cm, height=3.5cm]{./Risorse/Start-Page/FedericoII.png}};
+
+    \node[scale=1.5] at (5.85,-10){\LARGE{StealBot}}; %% TODO: Pensare ad una alternativa
+
+    \node[rectangle,
+      draw,
+      minimum width=4cm,
+      minimum height=2mm,
+      xshift= 6.42cm,
+      yshift= -11cm,
+      minimum height=2mm,
+      fill = darkblue] (r) at (0,0) {};
+ 
+    \node[scale=1.5] at (11,-13){\itshape{\LARGE{Università degli studi di Napoli}}};
+    \node[scale=1.5] at (11,-15){\itshape{\LARGE{Federico II}}};
+
+
+    %% STRUTTURA ANGOLO SINISTRO (angolo north-west)
+    \node[scale=3] at (1,-1){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/calendar.png}};
+    \node[scale=2] at (6,-1){\itshape{\LARGE{A.A. 2022-2023}}};
+
+    %% STRUTTURA ANGOLO DESTRO (angolo south-east) - Informazioni studenti
+    %% Valentino Bocchetti
+    \node[scale=3] at (12,-22){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.5, -22.23){\textbf{Valentino Bocchetti - N86003405}};
+
+    %% Valentina Annunziata
+    \node[scale=3] at (12,-24){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
+    \node[scale=1.5] at (16.7, -24.23){\textbf{Valentina Annunziata - N86003280}};
+
+    %% Francesco Ciccarelli
+    \node[scale=3] at (12,-26){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.58, -26.23){\textbf{Francesco Ciccarelli - N86003285}};
+
+    %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
+    %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
+  \end{scope}
+
+\end{tikzpicture}
+
+\newpage
+\restoregeometry
+\renewcommand*\contentsname{\hfill Indice \hfill}
+\tableofcontents
+#+end_export
+#+OPTIONS: date:nil title:nil toc:nil
+#+STARTUP: overview hideblocks
+#+SETUPFILE: ~/.config/emacs/setup-org-latex.setup
+#+LATEX: \pagebreak
+* Revisioni
+#+ATTR_LATEX: :environment tabular :align |p{0.1\textwidth}|p{0.1\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|
+|----------+------------+----------------------+----------------------------------------------------------|
+| Versione |       Data | Autore               | Descrizione                                              |
+|----------+------------+----------------------+----------------------------------------------------------|
+|    0.0.1 | 19-10-2022 | Valentino Bocchetti  | Creazione della struttura del documento e strutturazione |
+|          |            | Valentina Annunziata | dell'albero di lavoro                                    |
+|          |            | Francesco Ciccarelli |                                                          |
+|----------+------------+----------------------+----------------------------------------------------------|
+#+LATEX: \pagebreak
+* Presentazione
+#+begin_export latex
+\noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
+#+end_export
+** Descrizione della traccia
+Si richiede la realizzazione di una ~BotNET~ \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
+*** Tecnologie e linguaggi richiesti
+Si richiede un applicativo scritto in ~Python~ \autocite{DefinizionePython} che utilizzi come strumento di comunicazione le ~socket~ \autocite{DefinizioneSocket}
+* Codice sorgente sviluppato
+Il codice sorgente prodotto durante lo sviluppo di $StealBot^{\copyright}$ è disponibile sulla piattaforma [[https://github.com/][GitHub]], che ne ha permesso anche il versionamento.
+
+Essendo molto vicini al concetto di open-source, si è scelto fin da subito un tipo di licenza che fosse in linea con questo principio. È per questo che tutti i programmi necessari alla piattaforma /NaTour/ sono sotto licenza [[https://www.gnu.org/licenses/gpl-3.0.en.html][GPL 3.0]] (che è possibile consultare anche nella repository di NaTour).
+
+Di seguito riportiamo un link per il : [[https://github.com/luftmensch-luftmensch/Progetto-NaTour]] \autocite{informazioniRepository}
+* Analisi dei tempi di sviluppo
+Di seguito viene riportata lo storico dei tempi di sviluppo sotto forma di timeline con una vista i passaggi chiave dello sviluppo di $StealBit^{\copyright}$
