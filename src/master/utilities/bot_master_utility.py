@@ -43,3 +43,9 @@ def port_validator(hostname: str, port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         """If the port selected is not used the connect_ex return false"""
         return s.connect_ex((hostname, port)) == 0
+
+
+def aler(msg):
+    """Funzione di stampa in caso di errore."""
+    print("\x1b[31m", msg, "\x1b[0m", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
+    sys.exit(1)
