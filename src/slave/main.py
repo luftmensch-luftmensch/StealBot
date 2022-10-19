@@ -1,0 +1,1 @@
+"""Bot slave source code."""
