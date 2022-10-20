@@ -2,3 +2,4 @@ grequests==0.6.0
 pyfiglet==0.8.post1 # ASCII welcome message
 psycopg2-binary==2.9.4 # Python + PostgreSQL
 asyncio==3.4.3  # Async socket programming (socket are not thread-safe, recv is blocking and blocks the main thread)
+aioconsole==0.5.1 # Async console and interfae for asyncio

@@ -2,7 +2,6 @@
 
 # Definizione dei moduli
 import sys
-import socket
 
 # Import di funzioni di libreria personale
 from utilities import bot_master_utility as bot_master
@@ -18,15 +17,11 @@ def init_handlers():
     bot_master.SignalHandler.__init__()  # Gestione del keyboard interrupt
 
     if (bot_master.port_validator(hostname, PORT) is True):
-        print("Currently PORT n° ", PORT, "is used!", "\nExiting the program!")
+        print("Al momento la porta {PORT} è in utilizzo!!", "\nUscita dal programma in corso!")
         sys.exit(1)
     else:
-        print("Currently PORT n° ", PORT, "is not used yet!",
-              "\nStarting the web server!")
-
-
-def socket_setup():
-    """Gestione e controlli pre/post della socket."""
+        print("Al momento la porta {PORT} è libera!",
+              "\nInizializzazione del server!")
 
 
 def main():
