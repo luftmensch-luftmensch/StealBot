@@ -2,6 +2,7 @@
 
 # Definizione dei moduli
 import sys
+import socket
 
 # Import di funzioni di libreria personale
 from utilities import bot_master_utility as bot_master

@@ -28,13 +28,13 @@ class SignalHandler:
 
 # Messaggio di benvenuto
 def welcome_message(message: str):
-    """Welcome message function with pyfiglet."""
+    """Messaggio di benvenuto con pyfiglet."""
     print(pyfiglet.figlet_format(message))
 
 
 # Funzione per il controllo di validità della porta
 def port_validator(hostname: str, port: int) -> bool:
-    """Check if the requisite are respected."""
+    """Controllo dei requisiti."""
     """
     Cannot bind to ports below 1024 without
     the CAP_NET_BIND_SERVICE capability.
@@ -45,7 +45,7 @@ def port_validator(hostname: str, port: int) -> bool:
         return s.connect_ex((hostname, port)) == 0
 
 
-def aler(msg):
+def alert(msg):
     """Funzione di stampa in caso di errore."""
     print("\x1b[31m", msg, "\x1b[0m", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
     sys.exit(1)
