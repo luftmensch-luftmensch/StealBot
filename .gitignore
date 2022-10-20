@@ -6,3 +6,7 @@
 *.toc
 *.out
 *.psd
+*.bbl
+*.bcf
+*.blg
+/Documentazione/Documentazione.run.xml
