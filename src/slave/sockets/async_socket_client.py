@@ -1,36 +1,36 @@
-"""TODO."""
-import time
+"""Implementazione delle funzioni asincrone per la gestione del client (bot slave)."""
+# import time
 import asyncio
 
 HOST = "127.0.0.1"
 PORT = 9999
+__response_options = {"1": "OS-TYPE", "2": "RAM", "3": "DISK", "4": "USER", "5": "STATUS", "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "DOWNLOAD-FILE"}
 
 
-async def run_client() -> None:
+async def run() -> None:
     """Comunicazione con il server attraverso le socket. In base alle richieste impartite dal server il client esegue diverse operazioni."""
     reader, writer = await asyncio.open_connection(HOST, PORT)
+    operation_keyword = "Operazione?"
 
-    writer.write(b"Hello world")
+    await asyncio.sleep(1)
+    writer.write(operation_keyword.encode())
     await writer.drain()
-
-    messages = 5
     while True:
-        data = await reader.read(1024)
-        if not data:
-            raise Exception("socket closed")
+        response = await reader.read(1024)
+        if not response:
+            raise Exception("Socket closed!")
+        print(f"Received from server: {response.decode()!r}")
+        if response.decode() in __response_options.values():  # Controlliamo che il valore ottenuto matchi con qualche operazione presente nel dizionario
+            print("Response match!")
+            """
+            In questo momento il client invia al loop una nuova richiesta da effettuare. In questo punto invece andrà effettuata l'invocazione corrispondente
+            al metodo
+            """
+            writer.write(operation_keyword.encode())
+        else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
+            writer.write(operation_keyword.encode())
 
-        print(f"Received: {data.decode()!r}")
-        if messages > 0:
-            await asyncio.sleep(1)
-            # writer.write(f"{time.time()}".encode())
-            writer.write(b"Operazione?")
-            await writer.drain()
-            messages -= 1
-        else:
-            writer.write(b"quit")
-            await writer.drain()
-            break
 
 if __name__ == "__main__":
     loop = asyncio.new_event_loop()
-    loop.run_until_complete(run_client())
+    loop.run_until_complete(run())
