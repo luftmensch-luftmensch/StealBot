@@ -1,0 +1,35 @@
+#+OPTIONS: date:nil title:nil toc:nil author:nil
+#+STARTUP: overview
+* StealBot
+#+BEGIN_HTML
+<div align="center">
+
+  <!-- License -->
+  <a href="https://github.com/luftmensch-luftmensch/StealBot/blob/main/LICENSE"
+          ><img
+              src="https://img.shields.io/badge/License-GPL_v3-blue.svg?style=for-the-badge&color=red"
+              alt="License"
+      /></a>
+
+  <!-- Android -->
+  <a href="https://github.com/luftmensch-luftmensch/StealBot/tree/main/NaTour/"
+          ><img
+              src="https://img.shields.io/badge/-Python-black?style=for-the-badge&logo=python&logoColor=white"
+              alt="Powered by Python"
+      /></a>
+</div>
+#+END_HTML
+* Info Generali
+#+html: <p align="center" ><img src="./Documentazione/Risorse/Title.png"  width=250px height=250px  /></p>
+
+Questo progetto è l'implementazione della traccia di Reti (Anno 2022-2023).
+* Contributori
+#+BEGIN_HTML
+<a href="https://github.com/luftmensch-luftmensch">
+    <img src="./Risorse/Contributors/Valentino.png" width=60px height=60px>
+</a>
+
+<a href="https://github.com/mgcarofano">
+    <img src="./Risorse/Contributors/Mario.png" width=60px height=60px>
+</a>
+#+END_HTML
