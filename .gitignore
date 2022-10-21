@@ -10,3 +10,4 @@
 *.bcf
 *.blg
 /Documentazione/Documentazione.run.xml
+*.pyc

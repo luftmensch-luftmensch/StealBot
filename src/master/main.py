@@ -1,5 +1,4 @@
 """Bot master source code."""
-
 # Definizione dei moduli
 import sys
 
@@ -10,6 +9,23 @@ from utilities import bot_master_utility as bot_master
 # Definzione variabili globali
 hostname = "localhost"  # TODO: Da sostituire in prod
 PORT = 9090  # TODO: Da cambiare in corso d'opera (?)
+# global_response_options = ("OS-TYPE", "RAM", "DISK", "USER", "STATUS", "IO-CONNECTED", "NETWORK-INFO", "DOWNLOAD-FILE")
+
+
+
+def print_msg_box(msg, indent=1, width=None, title=None):
+    """Print message-box with optional title."""
+    lines = msg.split('\n')
+    space = " " * indent
+    if not width:
+        width = max(map(len, lines))
+    box = f'╔{"═" * (width + indent * 2)}╗\n'  # upper_border
+    if title:
+        box += f'║{space}{title:<{width}}{space}║\n'  # title
+        box += f'║{space}{"-" * len(title):<{width}}{space}║\n'  # underscore
+    box += ''.join([f'║{space}{line:<{width}}{space}║\n' for line in lines])
+    box += f'╚{"═" * (width + indent * 2)}╝'  # lower_border
+    print(box)
 
 
 def init_handlers():
@@ -31,4 +47,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
     # database_handler = db.DatabaseHandler()  # Inizializzazione automatica del database

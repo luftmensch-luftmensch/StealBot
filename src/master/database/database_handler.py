@@ -14,7 +14,7 @@ class DatabaseHandler:
     """
 
     __database_host = "192.168.1.36"  # TODO: Cambiare in produzione
-    __database_port = "5432"  # TODO: Cambiare in produzione
+    __database_port = "5432"
     __database_name = "botnet"
     __database_table_name = "botnet"
     __database_username = "username"  # TODO: Cambiare in produzione

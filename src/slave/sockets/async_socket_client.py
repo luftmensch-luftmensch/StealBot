@@ -22,7 +22,8 @@ async def run_client() -> None:
         print(f"Received: {data.decode()!r}")
         if messages > 0:
             await asyncio.sleep(1)
-            writer.write(f"{time.time()}".encode())
+            # writer.write(f"{time.time()}".encode())
+            writer.write(b"Operazione?")
             await writer.drain()
             messages -= 1
         else:

