@@ -20,6 +20,6 @@
 </div>
 #+END_HTML
 * Info Generali
-#+html: <p align="center" ><img src="./Documentazione/Risorse/Title.png"  width=550px height=250px  /></p>
+#+html: <p align="center" ><img src="./Documentazione/Risorse/Title.png"  width=1980px height=250px  /></p>
 
 Questo progetto è l'implementazione della traccia di Reti (Anno 2022-2023).
