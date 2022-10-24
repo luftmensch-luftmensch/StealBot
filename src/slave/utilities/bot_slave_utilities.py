@@ -30,35 +30,44 @@ def test_connection(hostname: str, port: int) -> bool:
                 print(e)
     return result_connection_status
 
-#Retrevial information machine
+
 def get_processor_name():
-    cpu_info = get_cpu_info() #json with processor information
-    return cpu_info['brand_raw'] #return only cpu name
+    """Recupero informazioni della macchina."""
+    cpu_info = get_cpu_info()  # json with processor information
+    return cpu_info['brand_raw']  # return only cpu name
+
 
 def get_ram_size():
-    ram_size_byte = psutil.virtual_memory() #get ram size in byte
-    ram_size_gb = (ram_size_byte / 1024**3) #convert byte -> Gb
-    return round(ram_size_gb) #round example: 15.65GB -> 16GB
+    """Recupero informazioni ram della macchina."""
+    ram_size_byte = psutil.virtual_memory()  # get ram size in byte
+    ram_size_gb = (ram_size_byte / 1024**3)  # convert byte -> Gb
+    return round(ram_size_gb)  # round example: 15.65GB -> 16GB
+
 
 def get_core_number():
+    """Recupero informazioni sui core della macchina."""
     logical_core = psutil.cpu_count()
     physical_core = psutil.cpu_count(logical=False)
     return str(physical_core), str(logical_core)
 
+
+# TODO: Modificare o espandere
 def get_hostname():
+    """Recupero info hostname."""
     return socket.gethostname()
 
+
+# TODO: Modificare o espandere: Necessario una dependency del genere? Possiamo sfruttare le socket
 def get_public_ip():
+    """Recupero ip della macchina."""
     return requests.get('https:/api.ipify.org').text
 
+
 def get_operating_system():
-    simple_operating_system = platform.uname().system #example: Linux
-    platform_operating_system = platform.platform() #example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
+    """Recupero informazioni del SO in esecuzione sulla macchina."""
+    simple_operating_system = platform.uname().system  # example: Linux
+    platform_operating_system = platform.platform()  # example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
     return simple_operating_system, platform_operating_system
-
-
-
-
 
 
 if __name__ == "__main__":
