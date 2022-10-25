@@ -67,3 +67,5 @@ if __name__ == "__main__":
     while test_connection("127.0.0.1", 9999) is False:
         print("Il server non è attualmente raggiungibile.")
         sleep(1)
+    for key, value in get_cpu_info().items():
+        print("{0}: {1}".format(key, value))

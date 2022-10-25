@@ -1,6 +1,7 @@
 """Implementazione delle funzioni asincrone per la gestione del server (bot master)."""
 import asyncio  # Non è necessario importare anche socket (asyncio lo fa da solo)
 from aioconsole import ainput  # Async console per asyncio
+import aiofiles
 
 
 HOST = "127.0.0.1"
@@ -31,7 +32,7 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
             break
         if response == b"Operazione?":  # Se la response è vuota eseguiamo un comando da inviare al client che si tradurrà in una operazione
             print_menu(__response_options, "Operazioni disponibili:", 32)
-            request = await ainput(">>>")  # TODO: al momento non la usiamo -> Punto ad aggiungere una serie di funzioni/cases per la richiesta da effettuare al client
+            request = await ainput(">>> ")  # TODO: al momento non la usiamo -> Punto ad aggiungere una serie di funzioni/cases per la richiesta da effettuare al client
             if request in __response_options.keys():
                 print(f"Opzione scelta: {request}")
                 chosen_operation = __response_options.get(request)
@@ -52,7 +53,7 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
 
 
 async def run_server() -> None:
-    """TODO."""
+    """Esecuzione del loop di gestione della connessione con il client."""
     server = await asyncio.start_server(handle_bot_client, HOST, PORT)
 
     async with server:
