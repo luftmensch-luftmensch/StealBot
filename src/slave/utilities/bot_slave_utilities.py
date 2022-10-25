@@ -1,11 +1,13 @@
 """Funzioni custom per il bot slave."""
 
 import socket
-from time import sleep
+# from time import sleep
 from cpuinfo import get_cpu_info
 import psutil
-import requests
+# import requests
 import platform
+
+# TODO: Aggiungere ai metodi il tipo di ritorno
 
 
 def test_connection(hostname: str, port: int) -> bool:
@@ -43,29 +45,67 @@ def get_core_number():
     return str(physical_core), str(logical_core)
 
 
+def get_cpu_min_max_freq() -> str:
+    """Recupero frequenza min/max della cpu."""
+    min_cpu_freq = psutil.cpu_freq().min
+    max_cpu_freq = psutil.cpu_freq().max
+    return f"{min_cpu_freq:.2f}, {max_cpu_freq:.2f}"
+
+
+def get_size(bytes, suffix="B"):
+    """Scale bytes to its proper format."""
+    """e.g: 1253656 => '1.20MB' 1253656678 => '1.17GB'"""
+    factor = 1024
+    for unit in ["", "K", "M", "G", "T", "P"]:
+        if bytes < factor:
+            return f"{bytes:.2f}{unit}{suffix}"
+        bytes /= factor
+
+
+# NB: È obbligatorio fare un loop per ottenere le info di ogni partizione
+def get_partition_disk_info():  # TODO: Controllare che funzioni anche con altri OS
+    """Recupero informazioni del disco."""
+    # partition_usage = psutil.disk_usage(partition.mountpoint)
+    # print(f"  Total Size: {get_size(partition_usage.total)}")
+    # print(f"  Used: {get_size(partition_usage.used)}")
+    # print(f"  Free: {get_size(partition_usage.free)}")
+    # print(f"  Percentage: {partition_usage.percent}%")
+    return psutil.disk_partitions()
+
+
+def get_io_disk_statistics() -> str:
+    """Recupero statistiche I/O del disco."""
+    # get IO statistics since boot
+    return f"Letture: {get_size(psutil.disk_io_counters().read_bytes)}, Scritture: {get_size(psutil.disk_io_counters().write_bytes)}"
+
+
+def get_network_info() -> str:  # TODO: Controllare che funzioni anche con altri OS
+    """Recupero informazioni sulla rete."""
+    return psutil.net_if_addrs()
+
+
+def get_sensors_statistics():
+    """Recupero statistche sui sensori."""
+    # TODO: Sfrutta le funzioni di psutil sensors_battery(), sensors_fan(), sensors_temperatures()
+
+
 # TODO: Modificare o espandere
 def get_hostname():
     """Recupero info hostname."""
     return socket.gethostname()
 
 
-# Da eliminare: Lo otteniamo attraverso la connessione diretta con le socket
-def get_public_ip():
-    """Recupero ip della macchina."""
-    return requests.get('https:/api.ipify.org').text
-
-
-def get_operating_system():
+def get_operating_system() -> str:
     """Recupero informazioni del SO in esecuzione sulla macchina."""
-    simple_operating_system = platform.uname().system  # example: Linux
-    platform_operating_system = platform.platform()  # example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
-    return simple_operating_system, platform_operating_system
+    # simple_operating_system = platform.uname().system  # example: Linux
+    # Ritorniamo il campo con il maggior numero di informazioni possibili
+    # TODO: Da testare con altri OS
+    # platform_operating_system = platform.platform()  # example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
+    return platform.platform()
 
 
-if __name__ == "__main__":
-    # TODO: Aggiungere anche un controllo sui tentativi?
-    while test_connection("127.0.0.1", 9999) is False:
-        print("Il server non è attualmente raggiungibile.")
-        sleep(1)
-    for key, value in get_cpu_info().items():
-        print("{0}: {1}".format(key, value))
+# if __name__ == "__main__":
+#     # TODO: Aggiungere anche un controllo sui tentativi?
+#     while test_connection("127.0.0.1", 9999) is False:
+#         print("Il server non è attualmente raggiungibile.")
+#         sleep(1)

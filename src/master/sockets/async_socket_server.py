@@ -1,12 +1,22 @@
 """Implementazione delle funzioni asincrone per la gestione del server (bot master)."""
 import asyncio  # Non è necessario importare anche socket (asyncio lo fa da solo)
 from aioconsole import ainput  # Async console per asyncio
-import aiofiles
+# import aiofiles
 
 
 HOST = "127.0.0.1"
 PORT = 9999
-__response_options = {"1": "OS-TYPE", "2": "RAM", "3": "DISK", "4": "USER", "5": "STATUS", "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "DOWNLOAD-FILE"}
+__response_options = {"1": "OS-TYPE",
+                      "2": "RAM",
+                      "3": "PROCESSOR-NAME",
+                      "4": "CORES-NUMBER",
+                      "5": "CPU-FREQ",
+                      "6": "PARTITION-DISK-INFO",
+                      "7": "PARTITION-DISK-STATUS",
+                      "8": "IO-CONNECTED",
+                      "9": "NETWORK-INFO",
+                      "10": "SENSORS",
+                      "15": "DOWNLOAD-FILE"}
 
 
 def print_menu(dictionary: dict, title: str, width=int) -> None:

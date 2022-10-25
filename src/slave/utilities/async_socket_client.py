@@ -6,17 +6,46 @@ import bot_slave_utilities as bot_utils
 
 HOST = "127.0.0.1"
 PORT = 9999
-__response_options = {"1": "OS-TYPE", "2": "RAM", "3": "DISK", "4": "USER", "5": "STATUS", "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "DOWNLOAD-FILE"}
+__response_options = {"1": "OS-TYPE",
+                      "2": "RAM",
+                      "3": "PROCESSOR-NAME",
+                      "4": "CORES-NUMBER",
+                      "5": "CPU-FREQ",
+                      "6": "PARTITION-DISK-INFO",
+                      "7": "PARTITION-DISK-STATUS",
+                      "8": "IO-CONNECTED",
+                      "9": "NETWORK-INFO",
+                      "10": "SENSORS",
+                      "15": "DOWNLOAD-FILE"}
 
 
-def command_to_execute(case: str) -> str:
+# Passiamo alla funzione anche il writer in modo da poter ciclare sui vari oggetti (in particolare dischi e schede di rete)
+async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
     """Gestione dell'operazione impartita dal master da eseguire."""
     match case:
         case 'OS-TYPE':
-            return bot_utils.get_cpu_report()
-
+            writer.write(bot_utils.get_operating_system().encode())
         case 'RAM':
             return bot_utils.get_ram_size()
+        case 'PROCESSOR-NAME':
+            writer.write(bot_utils.get_processor_name().encode())
+        case 'CORES-NUMBER':
+            writer.write(bot_utils.get_cores_number().encode())
+        case 'CPU-FREQ':
+            writer.write(bot_utils.get_cpu_min_max_freq().encode())
+        case 'PARTITION-DISK-INFO':
+            for partition in bot_utils.get_partition_disk_info():
+                info_disk = f"{partition.device}, {partition.mountpoint}, {partition.fstype}"
+                writer.write(info_disk.encode())
+                await asyncio.sleep(1)
+        case 'PARTITION-DISK-STATUS':
+            writer.write(bot_utils.get_io_disk_statistics().encode())
+        case 'NETWORK-INFO':
+            for i_name, interface_addresses in bot_utils.get_network_info().items():
+                for i_addr in interface_addresses:
+                    info_net = f"Intefaccia: {i_name}, IP: {i_addr.address}, Netmask: {i_addr.netmask}, Broadcast IP: {i_addr.broadcast}"
+                    writer.write(info_net.encode())
+                    await asyncio.sleep(1)
         case _:
             return "NULL"
 
@@ -40,8 +69,7 @@ async def run() -> None:
             al metodo
             TODO: Aggiungere CASE STATEMENT
             """
-            report = command_to_execute(response.decode())
-            writer.write(report.encode())
+            await command_to_execute(writer, response.decode())
             await asyncio.sleep(1)
             writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida

@@ -36,6 +36,8 @@ in pkgs.mkShell rec {
     zlib
   ];
 
+    
+
   # Run this command, only after creating the virtual environment
   postVenvCreation = ''
     unset SOURCE_DATE_EPOCH
@@ -47,6 +49,15 @@ in pkgs.mkShell rec {
   postShellHook = ''
     # allow pip to install wheels
     unset SOURCE_DATE_EPOCH
+
+    # TODO: Change PS1 to a better one
+    master(){
+         export PS1="\[\e[1;32m\]master (\w) > \[\e[0m\]"
+    }
+
+    slave(){
+         export PS1="\[\e[1;32m\]slave (\w) > \[\e[0m\]"
+    }
   '';
 
 }
