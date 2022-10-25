@@ -11,24 +11,16 @@ import platform
 def test_connection(hostname: str, port: int) -> bool:
     """Funzione di controllo per lo stato del server (in ascolto o meno)."""
     """Variante della funzione port_validator."""
-    attempt = 5
-    result_connection_status = False
-    while True:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as tester:
-            try:
-                if attempt > 0:
-                    if (tester.connect_ex((hostname, port)) == 0):
-                        print(f"Il server {hostname} sulla porta {port} è attualmente raggiungibile")
-                        result_connection_status = True
-                        break
-                    print(f"Il server {hostname} sulla porta {port} non è attualmente raggiungibile. Tentativo {attempt} di 5")
-                    attempt -= 1
-                else:
-                    print(f"Il server {hostname} sulla porta {port} non è attualmente raggiungibile. Riprovo da 5 sec")
-                    sleep(5)
-            except Exception as e:
-                print(e)
-    return result_connection_status
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as tester:
+        try:
+            if (tester.connect_ex((hostname, port)) == 0):
+                print(f"Il server {hostname} sulla porta {port} è attualmente raggiungibile")
+                return True
+            else:
+                print(f"Il server {hostname} sulla porta {port} non è attualmente raggiungibile.")
+                return False
+        except Exception as e:
+            print(e)
 
 
 def get_processor_name():
@@ -57,7 +49,7 @@ def get_hostname():
     return socket.gethostname()
 
 
-# TODO: Modificare o espandere: Necessario una dependency del genere? Possiamo sfruttare le socket
+# Da eliminare: Lo otteniamo attraverso la connessione diretta con le socket
 def get_public_ip():
     """Recupero ip della macchina."""
     return requests.get('https:/api.ipify.org').text
@@ -71,4 +63,7 @@ def get_operating_system():
 
 
 if __name__ == "__main__":
-    test_connection("127.0.0.1", 9999)
+    # TODO: Aggiungere anche un controllo sui tentativi?
+    while test_connection("127.0.0.1", 9999) is False:
+        print("Il server non è attualmente raggiungibile.")
+        sleep(1)

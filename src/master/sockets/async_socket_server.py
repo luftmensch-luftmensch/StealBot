@@ -25,6 +25,10 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
     stop_key = "quit"
     while response != stop_key.encode():  # Eseguiamo fin tanto che non riceviamo dal client "quit"
         response = await reader.read(1024)
+        if not response:
+            test_addr, test_port = writer.get_extra_info("peername")
+            print(f"Il client {test_addr}:{test_port} ha effettuato una connessione di test per la verifica dello stato del server")
+            break
         if response == b"Operazione?":  # Se la response è vuota eseguiamo un comando da inviare al client che si tradurrà in una operazione
             print_menu(__response_options, "Operazioni disponibili:", 32)
             request = await ainput(">>>")  # TODO: al momento non la usiamo -> Punto ad aggiungere una serie di funzioni/cases per la richiesta da effettuare al client
