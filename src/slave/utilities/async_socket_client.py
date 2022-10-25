@@ -1,11 +1,7 @@
 """Implementazione delle funzioni asincrone per la gestione del client (bot slave)."""
 # import time
 import asyncio
-# from cpuinfo import get_cpu_info
-import cpuinfo
-
-# from ..utilities import bot_slave_utilities as bot_slave
-from ..utilities.bot_slave_utilities import bot_slave_utilities
+import bot_slave_utilities as bot_utils
 
 
 HOST = "127.0.0.1"
@@ -13,17 +9,14 @@ PORT = 9999
 __response_options = {"1": "OS-TYPE", "2": "RAM", "3": "DISK", "4": "USER", "5": "STATUS", "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "DOWNLOAD-FILE"}
 
 
-def get_cpu_report():
-    """Report delle informazioni della CPU dell'host."""
-    cpu_report = cpuinfo.get_cpu_info()
-    return cpu_report['brand_raw']
-
-
 def command_to_execute(case: str) -> str:
     """Gestione dell'operazione impartita dal master da eseguire."""
     match case:
         case 'OS-TYPE':
-            return get_cpu_report()
+            return bot_utils.get_cpu_report()
+
+        case 'RAM':
+            return bot_utils.get_ram_size()
         case _:
             return "NULL"
 
