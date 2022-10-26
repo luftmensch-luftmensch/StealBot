@@ -8,15 +8,13 @@ from datetime import datetime as dt
 HOST = "127.0.0.1"
 PORT = 9999
 __response_options = {"1": "OS-TYPE",
-                      "2": "RAM",
-                      "3": "PROCESSOR-NAME",
-                      "4": "CORES-NUMBER",
-                      "5": "CPU-FREQ",
-                      "6": "PARTITION-DISK-INFO",
-                      "7": "PARTITION-DISK-STATUS",
-                      "8": "IO-CONNECTED",
-                      "9": "NETWORK-INFO",
-                      "10": "USERS",
+                      "2": "CPU-STATS",
+                      "3": "RAM",
+                      "4": "PARTITION-DISK-INFO",
+                      "5": "PARTITION-DISK-STATUS",
+                      "6": "IO-CONNECTED",
+                      "7": "NETWORK-INFO",
+                      "8": "USERS",
                       "15": "DOWNLOAD-FILE"}
 
 
@@ -26,14 +24,10 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
     match case:
         case 'OS-TYPE':
             writer.write(bot_utils.get_operating_system().encode())
+        case 'CPU-STATS':
+            writer.write(bot_utils.get_cpu_information().encode())
         case 'RAM':
             writer.write(bot_utils.get_ram_size().encode())
-        case 'PROCESSOR-NAME':
-            writer.write(bot_utils.get_processor_name().encode())
-        case 'CORES-NUMBER':
-            writer.write(bot_utils.get_cores_number().encode())
-        case 'CPU-FREQ':
-            writer.write(bot_utils.get_cpu_min_max_freq().encode())
         case 'PARTITION-DISK-INFO':
             for partition in bot_utils.get_partition_disk_info():
                 info_disk = f"{partition.device}, {partition.mountpoint}, {partition.fstype}"
@@ -49,7 +43,7 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
                     await asyncio.sleep(1)
         case 'USERS':
             for user in bot_utils.get_users():
-                user_data = f"Nome: {user.name}, Host: {user.host}, Attivo da: {dt.fromtimestamp(user.started)}"
+                user_data = f"Nome: {user.name}, Attivo da: {dt.fromtimestamp(user.started)}"
                 writer.write(user_data.encode())
                 await asyncio.sleep(1)
         case _:

@@ -25,10 +25,20 @@ def test_connection(hostname: str, port: int) -> bool:
             print(e)
 
 
-def get_processor_name():
-    """Recupero informazioni della macchina."""
-    cpu_info = get_cpu_info()  # json with processor information
-    return cpu_info['brand_raw']  # return only cpu name
+def get_cpu_information() -> str:
+    """Recupero informazioni sulla cpu della macchina."""
+    # cpu_info = get_cpu_info()  # json with processor information
+    # CPU Brand
+    cpu_brand = get_cpu_info()['brand_raw']
+    # Core info
+    logical_core = psutil.cpu_count()
+    physical_core = psutil.cpu_count(logical=False)
+
+    # CPU Freq info
+    min_cpu_freq = psutil.cpu_freq().min
+    max_cpu_freq = psutil.cpu_freq().max
+    # return platform.system()  #   # return only cpu name
+    return f"CPU: {cpu_brand}, CPU count: {physical_core}, CPU count (logical): {logical_core}, Min freq: {min_cpu_freq:.2f}, Max freq: {max_cpu_freq:.2f}"
 
 
 def get_ram_size():
@@ -36,20 +46,6 @@ def get_ram_size():
     total_mem = psutil.virtual_memory().total
     used_mem = psutil.virtual_memory().used
     return f"Ram used: {get_size(used_mem)} / {get_size(total_mem)}"
-
-
-def get_core_number():
-    """Recupero informazioni sui core della macchina."""
-    logical_core = psutil.cpu_count()
-    physical_core = psutil.cpu_count(logical=False)
-    return str(physical_core), str(logical_core)
-
-
-def get_cpu_min_max_freq() -> str:
-    """Recupero frequenza min/max della cpu."""
-    min_cpu_freq = psutil.cpu_freq().min
-    max_cpu_freq = psutil.cpu_freq().max
-    return f"{min_cpu_freq:.2f}, {max_cpu_freq:.2f}"
 
 
 def get_size(bytes, suffix="B"):

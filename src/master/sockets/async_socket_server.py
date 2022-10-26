@@ -7,15 +7,13 @@ from aioconsole import ainput  # Async console per asyncio
 HOST = "127.0.0.1"
 PORT = 9999
 __response_options = {"1": "OS-TYPE",
-                      "2": "RAM",
-                      "3": "PROCESSOR-NAME",
-                      "4": "CORES-NUMBER",
-                      "5": "CPU-FREQ",
-                      "6": "PARTITION-DISK-INFO",
-                      "7": "PARTITION-DISK-STATUS",
-                      "8": "IO-CONNECTED",
-                      "9": "NETWORK-INFO",
-                      "10": "USERS",
+                      "2": "CPU-STATS",
+                      "3": "RAM",
+                      "4": "PARTITION-DISK-INFO",
+                      "5": "PARTITION-DISK-STATUS",
+                      "6": "IO-CONNECTED",
+                      "7": "NETWORK-INFO",
+                      "8": "USERS",
                       "15": "DOWNLOAD-FILE"}
 
 
