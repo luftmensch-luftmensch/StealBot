@@ -2,6 +2,7 @@
 # import time
 import asyncio
 import bot_slave_utilities as bot_utils
+from datetime import datetime as dt
 
 
 HOST = "127.0.0.1"
@@ -15,7 +16,7 @@ __response_options = {"1": "OS-TYPE",
                       "7": "PARTITION-DISK-STATUS",
                       "8": "IO-CONNECTED",
                       "9": "NETWORK-INFO",
-                      "10": "SENSORS",
+                      "10": "USERS",
                       "15": "DOWNLOAD-FILE"}
 
 
@@ -26,7 +27,7 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
         case 'OS-TYPE':
             writer.write(bot_utils.get_operating_system().encode())
         case 'RAM':
-            return bot_utils.get_ram_size()
+            writer.write(bot_utils.get_ram_size().encode())
         case 'PROCESSOR-NAME':
             writer.write(bot_utils.get_processor_name().encode())
         case 'CORES-NUMBER':
@@ -46,6 +47,11 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
                     info_net = f"Intefaccia: {i_name}, IP: {i_addr.address}, Netmask: {i_addr.netmask}, Broadcast IP: {i_addr.broadcast}"
                     writer.write(info_net.encode())
                     await asyncio.sleep(1)
+        case 'USERS':
+            for user in bot_utils.get_users():
+                user_data = f"Nome: {user.name}, Host: {user.host}, Attivo da: {dt.fromtimestamp(user.started)}"
+                writer.write(user_data.encode())
+                await asyncio.sleep(1)
         case _:
             return "NULL"
 

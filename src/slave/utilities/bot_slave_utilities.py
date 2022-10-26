@@ -1,11 +1,11 @@
 """Funzioni custom per il bot slave."""
 
 import socket
-# from time import sleep
 from cpuinfo import get_cpu_info
 import psutil
-# import requests
 import platform
+# from time import sleep
+# import requests
 
 # TODO: Aggiungere ai metodi il tipo di ritorno
 
@@ -33,9 +33,9 @@ def get_processor_name():
 
 def get_ram_size():
     """Recupero informazioni ram della macchina."""
-    ram_size_byte = psutil.virtual_memory()  # get ram size in byte
-    ram_size_gb = (ram_size_byte / 1024**3)  # convert byte -> Gb
-    return round(ram_size_gb)  # round example: 15.65GB -> 16GB
+    total_mem = psutil.virtual_memory().total
+    used_mem = psutil.virtual_memory().used
+    return f"Ram used: {get_size(used_mem)} / {get_size(total_mem)}"
 
 
 def get_core_number():
@@ -84,15 +84,15 @@ def get_network_info() -> str:  # TODO: Controllare che funzioni anche con altri
     return psutil.net_if_addrs()
 
 
-def get_sensors_statistics():
-    """Recupero statistche sui sensori."""
-    # TODO: Sfrutta le funzioni di psutil sensors_battery(), sensors_fan(), sensors_temperatures()
-
-
 # TODO: Modificare o espandere
 def get_hostname():
     """Recupero info hostname."""
     return socket.gethostname()
+
+
+def get_users() -> list:
+    """Recupero della lista degli utenti presenti sulla macchina ospite."""
+    return psutil.users()
 
 
 def get_operating_system() -> str:

@@ -15,7 +15,7 @@ __response_options = {"1": "OS-TYPE",
                       "7": "PARTITION-DISK-STATUS",
                       "8": "IO-CONNECTED",
                       "9": "NETWORK-INFO",
-                      "10": "SENSORS",
+                      "10": "USERS",
                       "15": "DOWNLOAD-FILE"}
 
 
