@@ -50,13 +50,14 @@ in pkgs.mkShell rec {
     # allow pip to install wheels
     unset SOURCE_DATE_EPOCH
 
-    # TODO: Change PS1 to a better one
     master(){
-         export PS1="\[\e[1;32m\]master (\w) > \[\e[0m\]"
+         export PS1="\[\e[1;32m\][\w] master > \[\e[0m\]"
+         cd src/master
     }
 
     slave(){
-         export PS1="\[\e[1;32m\]slave (\w) > \[\e[0m\]"
+         export PS1="\[\e[1;32m\][\w] slave > \[\e[0m\]"
+         cd src/slave
     }
   '';
 
