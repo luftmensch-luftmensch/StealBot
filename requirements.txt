@@ -5,3 +5,4 @@ aioconsole==0.5.1 # Async console and interfae for asyncio
 aiofiles==22.1.0  # File support for asyncio
 py-cpuinfo==8.0.0 # Py-cpuinfo gets CPU info with pure Python
 psutil==5.9.3 # Retrieving information (CPU, memory, disks, network, sensors) in Python.
+tqdm==4.64.1  # Progress bar for file transfer

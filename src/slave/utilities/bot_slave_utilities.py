@@ -4,6 +4,8 @@ import socket
 from cpuinfo import get_cpu_info
 import psutil
 import platform
+# from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
+import asyncio
 # from time import sleep
 # import requests
 
@@ -39,6 +41,18 @@ def get_cpu_information() -> str:
     max_cpu_freq = psutil.cpu_freq().max
     # return platform.system()  #   # return only cpu name
     return f"CPU: {cpu_brand}, CPU count: {physical_core}, CPU count (logical): {logical_core}, Min freq: {min_cpu_freq:.2f}, Max freq: {max_cpu_freq:.2f}"
+
+
+async def send_file(request: str, writer: asyncio.StreamWriter):
+    """Invio di uno specifico file dal client al server."""
+    with open(request, 'r') as filename:
+        for line in filename:
+            writer.write(line.encode())
+            await asyncio.sleep(1)
+
+        # for chunk_of_data in iter(partial(filename.read, chunk_to_read_at_time), ''):
+        #     print(repr(chunk_of_data), len(chunk_of_data))
+        #     print(f"REPR: {type(repr(chunk_of_data))}, LEN: {type(len(chunk_of_data))}")
 
 
 def get_ram_size():
