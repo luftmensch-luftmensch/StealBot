@@ -1,6 +1,7 @@
 """Implementazione delle funzioni asincrone per la gestione del server (bot master)."""
 import asyncio  # Non è necessario importare anche socket (asyncio lo fa da solo)
 from aioconsole import ainput  # Async console per asyncio
+import os
 # import aiofiles
 
 
@@ -15,6 +16,30 @@ __response_options = {"1": "OS-TYPE",
                       "7": "NETWORK-INFO",
                       "8": "USERS",
                       "15": "DOWNLOAD-FILE"}
+
+__filesystem_hierarchy = {"1": ["/", "C:/"],
+                          "2": [f"/home/{os.getlogin()}/", "C:/NON_SO_IL_PATH"]
+                          }  # TODO: completare
+
+
+def get_directory_list(parent_path: str):
+    """Recupero info del contenuto delle directory."""
+    for current_dir in os.listdir(parent_path):
+        # Controlliamo di avere i permessi necessari per leggere nella directory
+        if os.access(f"{parent_path}{current_dir}", os.R_OK) is True:
+            print(f"Contenuto di {parent_path}{current_dir}:")
+            content = os.listdir(f"{parent_path}{current_dir}")
+            print(content)
+        else:
+            print(f"Per mancanza di permessi non viene mostrato il contenuto di {parent_path}{current_dir}")
+
+
+# Da preferire in quanto non restituisce nulla nel caso in cui si stia cercando di leggere una directory senza permessi
+def get_path_content(current_position: str):
+    """Recupero info su directory e file."""
+    for path, dirs, files in os.walk(current_position):
+        for filename in files:
+            print(os.path.join(path, filename))
 
 
 def print_menu(dictionary: dict, title: str, width=int) -> None:

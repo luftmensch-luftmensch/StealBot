@@ -2,6 +2,7 @@
 import signal
 import sys
 import socket
+import asyncio
 # import socketserver # Establish the TCP Socket connections
 
 # Generate welcome message with ASCII text
@@ -49,3 +50,11 @@ def alert(msg):
     """Funzione di stampa in caso di errore."""
     print("\x1b[31m", msg, "\x1b[0m", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
     sys.exit(1)
+
+
+def receive_file(filename: str, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
+    """Funzione di ricezione file inviati dal client."""
+
+
+def file_system_navigator():
+    """Funzione per la navigazione delle directory presenti sul client."""
