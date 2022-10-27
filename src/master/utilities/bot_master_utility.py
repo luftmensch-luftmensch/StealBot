@@ -36,7 +36,7 @@ TODO: Per la gestione di recupero dati da win: https://stackoverflow.com/questio
 Struttura: key: [Linux, Win, MacOS]
 """
 __filesystem_hierarchy = {"1": ["/", "C:/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
-                          "2": [f"/home/{os.getlogin()}/", "C:/NON_SO_IL_PATH"],
+                          "2": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}"],
                           "3": [],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
                           "4": [],  # Recupero immagini (?)
                           }
@@ -55,16 +55,26 @@ def port_validator(hostname: str, port: int) -> bool:
     Cannot bind to ports below 1024 without
     the CAP_NET_BIND_SERVICE capability.
     """
-    print("Controllo che la porta n° {:d} sia valida per l'utente" .format(port))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         """If the port selected is not used the connect_ex return false"""
         return s.connect_ex((hostname, port)) == 0
 
 
-def alert(msg):
+def info(msg: str, level: int) -> None:
     """Funzione di stampa in caso di errore."""
-    print("\x1b[31m", msg, "\x1b[0m", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
-    sys.exit(1)
+    ANSI_COLOR_BLUE = "\x1b[34m"
+    ANSI_COLOR_GREEN = "\x1b[32m"
+    ANSI_COLOR_RED = "\x1b[31m"
+    ANSI_COLOR_RESET = "\x1b[0m"
+
+    match level:
+        case 1:  # Logging Level: info
+            print(f"{ANSI_COLOR_GREEN}{msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
+        case 2:  # Logging Level: debug
+            print(f"{ANSI_COLOR_BLUE}{msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
+        case 3:  # Logging Level: error
+            print(f"{ANSI_COLOR_RED}{msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
+            sys.exit(1)
 
 
 def print_menu(dictionary: dict, title: str, width=int) -> None:
