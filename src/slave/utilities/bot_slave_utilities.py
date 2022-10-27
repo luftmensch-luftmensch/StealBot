@@ -43,16 +43,16 @@ def get_cpu_information() -> str:
     return f"CPU: {cpu_brand}, CPU count: {physical_core}, CPU count (logical): {logical_core}, Min freq: {min_cpu_freq:.2f}, Max freq: {max_cpu_freq:.2f}"
 
 
-async def send_file(request: str, writer: asyncio.StreamWriter):
+async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
     """Invio di uno specifico file dal client al server."""
-    with open(request, 'r') as filename:
-        for line in filename:
-            writer.write(line.encode())
-            await asyncio.sleep(1)
-
-        # for chunk_of_data in iter(partial(filename.read, chunk_to_read_at_time), ''):
-        #     print(repr(chunk_of_data), len(chunk_of_data))
-        #     print(f"REPR: {type(repr(chunk_of_data))}, LEN: {type(len(chunk_of_data))}")
+    with open(request, 'rb') as filename:
+        for chunk in iter(lambda: filename.read(size), ""):
+            if chunk:
+                writer.write(chunk)
+                await asyncio.sleep(1)
+                print(f"Sent: {len(chunk)} bytes")
+            else:
+                break
 
 
 def get_ram_size():

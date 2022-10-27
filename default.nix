@@ -49,6 +49,8 @@ in pkgs.mkShell rec {
   postShellHook = ''
     # allow pip to install wheels
     unset SOURCE_DATE_EPOCH
+    # Don't create __pycache_ directory
+    # export PYTHONDONTWRITEBYTECODE=1
 
     master(){
          export PS1="\[\e[1;32m\][\w] master > \[\e[0m\]"

