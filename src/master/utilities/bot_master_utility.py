@@ -6,6 +6,7 @@ import aiofiles
 import os
 
 from sys import stderr
+import asyncio
 from asyncio.events import AbstractEventLoop
 from signal import Signals
 
@@ -36,6 +37,9 @@ class SignalHaltError(SystemExit):
 def immediate_exit(signal_enum: Signals, loop: AbstractEventLoop) -> None:
     """Funzione per l'uscita immediata in caso di un segnale di Interrupt."""
     loop.stop()
+    tasks = [t for t in asyncio.all_tasks() if t is not
+             asyncio.current_task()]
+    [task.cancel() for task in tasks]
     raise SignalHaltError(signal_enum=signal_enum)
 
 

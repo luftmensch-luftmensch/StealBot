@@ -12,7 +12,7 @@ from utilities import async_socket_server as async_server
 # from utilities import database_handler as db
 
 
-def init_handlers(hostname: str, port: int):
+def validator(hostname: str, port: int):
     """Inizializzazione degli handler (tastiera e porta in uso)."""
     if (bot_master.port_validator(hostname, port) is True):
         bot_master.info(f"Al momento la porta {port} è in utilizzo!! Uscita dal programma in corso!", 3)  # Log Level: Error
@@ -30,16 +30,18 @@ def main():
 @click.option("--port", default=9090, type=int, help="Porta sulla quale deve mettersi in ascolto il service")
 def start(host: str, port: int):
     """Funzione di esecuzione del server."""
-    init_handlers(host, port)
+    validator(host, port)
+
     loop = asyncio.new_event_loop()
+
     for signal_enum in [SIGINT, SIGTERM]:
         exit_func = partial(bot_master.immediate_exit, signal_enum=signal_enum, loop=loop)
         loop.add_signal_handler(signal_enum, exit_func)
 
     try:
         loop.run_until_complete(async_server.run_server(host, port))
-    except bot_master.SignalHaltError as exc:
-        print(f"{exc}")
+    except bot_master.SignalHaltError as shr:
+        print(f"{shr}")
         pass
     else:
         raise
