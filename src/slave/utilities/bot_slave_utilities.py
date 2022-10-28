@@ -11,6 +11,8 @@ import asyncio
 
 # TODO: Aggiungere ai metodi il tipo di ritorno
 
+__headers_type = {"1": b"<Send-File>", "2": b"<Print-to-Output>"}
+
 
 def test_connection(hostname: str, port: int) -> bool:
     """Funzione di controllo per lo stato del server (in ascolto o meno)."""
@@ -48,7 +50,7 @@ async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
     with open(request, 'rb') as filename:
         for chunk in iter(lambda: filename.read(size), ""):
             if chunk:
-                writer.write(chunk)
+                writer.write(__headers_type["1"] + chunk)
                 await asyncio.sleep(1)
                 print(f"Sent: {len(chunk)} bytes")
             else:
