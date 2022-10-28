@@ -36,10 +36,12 @@ TODO: Ampliare i values (sono quelli tra le parentesi []) con quelli specifici p
 TODO: Per la gestione di recupero dati da win: https://stackoverflow.com/questions/13184414/how-can-i-get-the-path-to-the-appdata-directory-in-python
 Struttura: key: [Linux, Win, MacOS]
 """
-__filesystem_hierarchy = {"1": ["/", "C:/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
-                          "2": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}"],
+__filesystem_hierarchy = {"1": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
+                          "2": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
                           "3": [],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
-                          "4": [],  # Recupero immagini (?)
+                          "4": [],  # Recupero Immagini (?)
+                          "5": [],  # Recupero Documenti (?)
+                          "6": [],  # Recupero File di config (?)
                           }
 
 
