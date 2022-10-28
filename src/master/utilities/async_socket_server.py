@@ -7,8 +7,6 @@ import aiofiles
 from . import bot_master_utility as bot_master_utils
 
 
-HOST = "127.0.0.1"
-PORT = 9999
 __response_options = {"1": "OS-TYPE",
                       "2": "CPU-STATS",
                       "3": "RAM",
@@ -51,7 +49,7 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
 async def handle_response_for_files(response: str) -> None:
     """Funzione di gestione per la response ricevuta dal client."""
     async with aiofiles.open("test.png", "ab+") as file:
-        await file.write(response.strip(__headers_type["1"]))    # TODO: Strippiamo l'header prima del salvataggio del file
+        await file.write(response.strip(__headers_type["1"]))    # Strippiamo l'header prima del salvataggio del file
 
 
 async def ask_operation(writer: asyncio.StreamWriter) -> None:
@@ -71,7 +69,7 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
 
 async def run_server(hostname: str, port: int) -> None:
     """Esecuzione del loop di gestione della connessione con il client."""
-    server = await asyncio.start_server(handle_bot_client, HOST, PORT)
+    server = await asyncio.start_server(handle_bot_client, hostname, port)
 
     async with server:
         async with server:

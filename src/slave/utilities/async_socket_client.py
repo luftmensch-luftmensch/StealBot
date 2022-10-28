@@ -1,12 +1,10 @@
 """Implementazione delle funzioni asincrone per la gestione del client (bot slave)."""
 # import time
 import asyncio
-import bot_slave_utilities as bot_utils
+from . import bot_slave_utilities as bot_utils
 from datetime import datetime as dt
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 
-HOST = "127.0.0.1"
-PORT = 9999
 __response_options = {"1": "OS-TYPE",
                       "2": "CPU-STATS",
                       "3": "RAM",
@@ -52,9 +50,9 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
             return "NULL"
 
 
-async def run() -> None:
+async def run_client(hostname: str, port: int) -> None:
     """Comunicazione con il server attraverso le socket. In base alle richieste impartite dal server il client esegue diverse operazioni."""
-    reader, writer = await asyncio.open_connection(HOST, PORT)
+    reader, writer = await asyncio.open_connection(hostname, port)
     operation_keyword = "Operazione?"
 
     await asyncio.sleep(1)
@@ -67,9 +65,7 @@ async def run() -> None:
         print(f"Received from server: {response.decode()!r}")
         if response.decode() in __response_options.values():  # Controlliamo che il valore ottenuto matchi con qualche operazione presente nel dizionario
             """
-            In questo momento il client invia al loop una nuova richiesta da effettuare. In questo punto invece andrà effettuata l'invocazione corrispondente
-            al metodo
-            TODO: Aggiungere CASE STATEMENT
+            In base a quello ottenuto dal server il client effettuerà l'operazione corrispondente
             """
             await command_to_execute(writer, response.decode())
             await asyncio.sleep(1)
@@ -78,6 +74,6 @@ async def run() -> None:
             writer.write(operation_keyword.encode())
 
 
-if __name__ == "__main__":
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(run())
+# if __name__ == "__main__":
+#     loop = asyncio.new_event_loop()
+#     loop.run_until_complete(run())

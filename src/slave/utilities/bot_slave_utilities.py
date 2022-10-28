@@ -114,10 +114,3 @@ def get_operating_system() -> str:
     # TODO: Da testare con altri OS
     # platform_operating_system = platform.platform()  # example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
     return platform.platform()
-
-
-# if __name__ == "__main__":
-#     # TODO: Aggiungere anche un controllo sui tentativi?
-#     while test_connection("127.0.0.1", 9999) is False:
-#         print("Il server non è attualmente raggiungibile.")
-#         sleep(1)
