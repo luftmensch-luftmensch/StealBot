@@ -1,30 +1,42 @@
 """Custom Handlers for various tasks."""
-import signal
 import sys
 import socket
-import asyncio
+# import asyncio
 import aiofiles
 import os
-# import socketserver # Establish the TCP Socket connections
+
+from sys import stderr
+from asyncio.events import AbstractEventLoop
+from signal import Signals
 
 # Generate welcome message with ASCII text
 # More at https://github.com/pwaller/pyfiglet
 import pyfiglet
 
 
-class SignalHandler:
+class SignalHaltError(SystemExit):
     """Classe Handler per la gestione dei segnali."""
 
-    def keyboard_handler(signal, frame):
-        """Gestione del segnale di  KeyboardInterrupt."""
-        print('\nkeyboardInterrupt detected!')
-        print('\nStopping the service...')
-        sys.exit(0)
+    def __init__(self, signal_enum: Signals):
+        """Auto settaggio componenti."""
+        self.signal_enum = signal_enum
+        print(repr(self), file=stderr)
+        super().__init__(self.exit_code)
 
-    @classmethod
-    def __init__(self):
-        """Init class."""
-        signal.signal(signal.SIGINT, self.keyboard_handler)
+    @property
+    def exit_code(self) -> int:
+        """Funzione per l'exit code."""
+        return self.signal_enum.value
+
+    def __repr__(self) -> str:
+        """Recupero segnale."""
+        return f"\nExitted due to {self.signal_enum.name}"
+
+
+def immediate_exit(signal_enum: Signals, loop: AbstractEventLoop) -> None:
+    """Funzione per l'uscita immediata in caso di un segnale di Interrupt."""
+    loop.stop()
+    raise SignalHaltError(signal_enum=signal_enum)
 
 
 """

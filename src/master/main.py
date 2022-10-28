@@ -2,6 +2,8 @@
 # Definizione dei moduli
 import asyncio
 import click
+from functools import partial
+from signal import SIGINT, SIGTERM
 # import sys
 
 # Import di funzioni di libreria personale
@@ -12,8 +14,6 @@ from utilities import async_socket_server as async_server
 
 def init_handlers(hostname: str, port: int):
     """Inizializzazione degli handler (tastiera e porta in uso)."""
-    bot_master.SignalHandler.__init__()  # Gestione del keyboard interrupt
-
     if (bot_master.port_validator(hostname, port) is True):
         bot_master.info(f"Al momento la porta {port} è in utilizzo!! Uscita dal programma in corso!", 3)  # Log Level: Error
     else:
@@ -32,7 +32,17 @@ def start(host: str, port: int):
     """Funzione di esecuzione del server."""
     init_handlers(host, port)
     loop = asyncio.new_event_loop()
-    loop.run_until_complete(async_server.run_server(host, port))
+    for signal_enum in [SIGINT, SIGTERM]:
+        exit_func = partial(bot_master.immediate_exit, signal_enum=signal_enum, loop=loop)
+        loop.add_signal_handler(signal_enum, exit_func)
+
+    try:
+        loop.run_until_complete(async_server.run_server(host, port))
+    except bot_master.SignalHaltError as exc:
+        print(f"{exc}")
+        pass
+    else:
+        raise
 
 
 if __name__ == "__main__":
