@@ -1,4 +1,4 @@
-% Created 2022-10-20 gio 22:18
+% Created 2022-10-30 dom 11:00
 % Intended LaTeX compiler: lualatex
 \documentclass[letterpaper, 11pt]{article}
 
@@ -216,6 +216,7 @@ keywordstyle=[2]\color{includeStatementCPP},
 % Colorizing links in a nicer way.
 \usepackage{hyperref} % Links
 \hypersetup{colorlinks, linkcolor=black, urlcolor=blue}
+%\hypersetup{pdfauthor={%a}, pdftitle={%t}, pdfkeywords={%k}, pdfsubject={%d}, pdfcreator={%c}, pdflang={%L}, breaklinks=true, colorlinks=true, linkcolor=link, urlcolor=url, citecolor=cite\n}
 %Bibliography (Not added yet)
 \usepackage[backend=biber,sortcites,style=verbose-trad2]{biblatex}
 \bibliography{./Bibliography.bib}
@@ -227,7 +228,7 @@ keywordstyle=[2]\color{includeStatementCPP},
 \usepackage{hyphenat}
 \usepackage{ragged2e}
 \usepackage{subfig} % Subfigures (not needed in Org I think)
-\usepackage[top=1in, bottom=1.25in, left=0.55in, right=0.55in]{geometry} % Page geometry
+\usepackage[top=1in, bottom=1.25in, left=0.55in, right=0.55in]{geometry} % Page geometry (to show frames add showframe options)
 \renewcommand{\baselinestretch}{1.15}
 % Page numbering - Footer
 \usepackage{fancyhdr} % Custom headers and footers
@@ -362,16 +363,20 @@ keywordstyle=[2]\color{includeStatementCPP},
 
     %% STRUTTURA ANGOLO DESTRO (angolo south-east) - Informazioni studenti
     %% Valentino Bocchetti
-    \node[scale=3] at (12,-22){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
-    \node[scale=1.5] at (16.5, -22.23){\textbf{Valentino Bocchetti - N86003405}};
+    \node[scale=3] at (12,-21){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.5, -21.23){\textbf{Valentino Bocchetti - N86003405}};
 
     %% Valentina Annunziata
-    \node[scale=3] at (12,-24){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
-    \node[scale=1.5] at (16.7, -24.23){\textbf{Valentina Annunziata - N86003280}};
+    \node[scale=3] at (12,-22.8){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
+    \node[scale=1.5] at (16.7, -22.9){\textbf{Valentina Annunziata - N86003280}};
 
     %% Francesco Ciccarelli
-    \node[scale=3] at (12,-26){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
-    \node[scale=1.5] at (16.58, -26.23){\textbf{Francesco Ciccarelli - N86003285}};
+    \node[scale=3] at (12,-24.6){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.56, -24.7){\textbf{Francesco Ciccarelli - N86003285}};
+
+    %% Giulia Caputo
+    \node[scale=3] at (12,-26.4){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
+    \node[scale=1.5] at (15.8, -26.5){\textbf{Giulia Caputo - N86003429}};
 
     %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
     %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
@@ -384,73 +389,55 @@ keywordstyle=[2]\color{includeStatementCPP},
 \renewcommand*\contentsname{\hfill Indice \hfill}
 \tableofcontents
 \pagebreak
-\section{Revisioni}
-\label{sec:org41ea8be}
-\begin{center}
-\begin{tabular}{|p{0.1\textwidth}|p{0.1\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|}
-\hline
-Versione & Data & Autore & Descrizione\\
-\hline
-0.0.1 & 19-10-2022 & Valentino Bocchetti & Creazione della struttura del documento e strutturazione\\
- &  & Valentina Annunziata & dell'albero di lavoro\\
- &  & Francesco Ciccarelli & \\
-\hline
-\end{tabular}
-\end{center}
-\pagebreak
 \section{Presentazione}
-\label{sec:org38467b1}
+\label{sec:orgb0b5a9b}
 \noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
 \subsection{Descrizione della traccia}
-\label{sec:org8a1783d}
+\label{sec:org4bd4a60}
 Si richiede la realizzazione di una \texttt{BotNET} \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
 \subsubsection{Tecnologie e linguaggi richiesti}
-\label{sec:orgdeb7f0a}
+\label{sec:orgc521929}
 Si richiede un applicativo scritto in \texttt{Python} \autocite{DefinizionePython} che utilizzi come strumento di comunicazione le \texttt{socket} \autocite{DefinizioneSocket}
 \subsection{Implementazione del sistema}
-\label{sec:org82b1877}
+\label{sec:orgc2bdedc}
 Il progetto si concretizza in 2 componenti ben definite:
 \begin{itemize}
 \item Un \texttt{Bot Master} per la gestione dei dati ricevuti dal \texttt{bot slave} al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
 \item Il \texttt{Bot slave}, che ha il compito di ricavare quante più informazioni possibili sullo stato della macchina sul quale viene eseguito \autocite{notaBotSlave1} .
 \end{itemize}
+\vfill
 \subsection{Guida al Bot Master}
-\label{sec:orgd490e0a}
+\label{sec:org6002397}
 \subsubsection{Primo avvio}
-\label{sec:org47c5c2a}
+\label{sec:org576b8fb}
 DESCRIZIONE DELLE OPERAZIONI EFFETTUATE IN FASE DI AVVIO
 \subsubsection{Analisi della struttura del progetto}
-\label{sec:org457c93f}
+\label{sec:orgb6999ac}
 \subsubsection{Memorizzazione dei dati}
-\label{sec:orgae7177c}
+\label{sec:org2b7d50e}
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal \emph{bot slave} durante la sua esecuzione.
 \subsection{Guida al Bot Slave}
-\label{sec:org53fd9b2}
+\label{sec:org051f0c4}
 \subsubsection{Analisi della struttura del progetto}
-\label{sec:orged238f9}
+\label{sec:org68fd260}
 \subsubsection{Primo avvio}
-\label{sec:org74e5085}
+\label{sec:org7027353}
 DESCRIZIONE DELLE OPERAZIONI EFFETTUATE IN FASE DI AVVIO
 \subsection{Report dei dati recuperati}
-\label{sec:org029d861}
+\label{sec:org7923305}
 TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
 \section{Dettagli implementativi}
-\label{sec:org79de2f8}
+\label{sec:orgf2e10eb}
 \subsection{Bot Master}
-\label{sec:org4042a74}
+\label{sec:org20996e8}
 \subsection{Bot Slave}
-\label{sec:org7151ce1}
+\label{sec:org0d59d31}
 \section{Codice sorgente sviluppato}
-\label{sec:org24a2a7d}
+\label{sec:org4488f9e}
 Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è disponibile sulla piattaforma \href{https://github.com/}{GitHub}, che ne ha permesso anche il versionamento.
 
-Essendo molto vicini al concetto di open-source, si è scelto fin da subito un tipo di licenza che fosse in linea con questo principio. È per questo che tutti i programmi necessari alla piattaforma \emph{NaTour} sono sotto licenza \href{https://www.gnu.org/licenses/gpl-3.0.en.html}{GPL 3.0} (che è possibile consultare anche nella repository di NaTour).
-
 Di seguito riportiamo un link per il \href{https://github.com/luftmensch-luftmensch/StealBot}{download} \autocite{informazioniRepository}
-\section{Analisi dei tempi di sviluppo}
-\label{sec:org1e1d539}
-Di seguito viene riportata lo storico dei tempi di sviluppo sotto forma di timeline con una vista i passaggi chiave dello sviluppo di \(StealBit^{\copyright}\)
 \section{Ringraziamenti}
-\label{sec:org41171ee}
-Ringraziamo il professore Alessio Botta per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
+\label{sec:orgde0e1f8}
+Ringraziamo il professore \href{mailto:a.botta@unina.it}{Alessio Botta} per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
 \end{document}

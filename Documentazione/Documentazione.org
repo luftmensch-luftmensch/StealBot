@@ -88,16 +88,20 @@
 
     %% STRUTTURA ANGOLO DESTRO (angolo south-east) - Informazioni studenti
     %% Valentino Bocchetti
-    \node[scale=3] at (12,-22){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
-    \node[scale=1.5] at (16.5, -22.23){\textbf{Valentino Bocchetti - N86003405}};
+    \node[scale=3] at (12,-21){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.5, -21.23){\textbf{Valentino Bocchetti - N86003405}};
 
     %% Valentina Annunziata
-    \node[scale=3] at (12,-24){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
-    \node[scale=1.5] at (16.7, -24.23){\textbf{Valentina Annunziata - N86003280}};
+    \node[scale=3] at (12,-22.8){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
+    \node[scale=1.5] at (16.7, -22.9){\textbf{Valentina Annunziata - N86003280}};
 
     %% Francesco Ciccarelli
-    \node[scale=3] at (12,-26){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
-    \node[scale=1.5] at (16.58, -26.23){\textbf{Francesco Ciccarelli - N86003285}};
+    \node[scale=3] at (12,-24.6){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated.png}};
+    \node[scale=1.5] at (16.56, -24.7){\textbf{Francesco Ciccarelli - N86003285}};
+
+    %% Giulia Caputo
+    \node[scale=3] at (12,-26.4){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
+    \node[scale=1.5] at (15.8, -26.5){\textbf{Giulia Caputo - N86003429}};
 
     %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
     %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
@@ -114,16 +118,6 @@
 #+STARTUP: overview hideblocks
 #+SETUPFILE: ~/.config/emacs/setup-org-latex.setup
 #+LATEX: \pagebreak
-* Revisioni
-#+ATTR_LATEX: :environment tabular :align |p{0.1\textwidth}|p{0.1\textwidth}|p{0.2\textwidth}|p{0.5\textwidth}|
-|----------+------------+----------------------+----------------------------------------------------------|
-| Versione |       Data | Autore               | Descrizione                                              |
-|----------+------------+----------------------+----------------------------------------------------------|
-|    0.0.1 | 19-10-2022 | Valentino Bocchetti  | Creazione della struttura del documento e strutturazione |
-|          |            | Valentina Annunziata | dell'albero di lavoro                                    |
-|          |            | Francesco Ciccarelli |                                                          |
-|----------+------------+----------------------+----------------------------------------------------------|
-#+LATEX: \pagebreak
 * Presentazione
 #+begin_export latex
 \noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
@@ -136,6 +130,7 @@ Si richiede un applicativo scritto in ~Python~ \autocite{DefinizionePython} che 
 Il progetto si concretizza in 2 componenti ben definite:
 + Un ~Bot Master~ per la gestione dei dati ricevuti dal ~bot slave~ al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
 + Il ~Bot slave~, che ha il compito di ricavare quante più informazioni possibili sullo stato della macchina sul quale viene eseguito \autocite{notaBotSlave1} .
+#+LATEX: \vfill
 ** Guida al Bot Master
 *** Primo avvio
 DESCRIZIONE DELLE OPERAZIONI EFFETTUATE IN FASE DI AVVIO
@@ -154,10 +149,6 @@ TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
 * Codice sorgente sviluppato
 Il codice sorgente prodotto durante lo sviluppo di $StealBot^{\copyright}$ è disponibile sulla piattaforma [[https://github.com/][GitHub]], che ne ha permesso anche il versionamento.
 
-Essendo molto vicini al concetto di open-source, si è scelto fin da subito un tipo di licenza che fosse in linea con questo principio. È per questo che tutti i programmi necessari alla piattaforma /NaTour/ sono sotto licenza [[https://www.gnu.org/licenses/gpl-3.0.en.html][GPL 3.0]] (che è possibile consultare anche nella repository di NaTour).
-
 Di seguito riportiamo un link per il [[https://github.com/luftmensch-luftmensch/StealBot][download]] \autocite{informazioniRepository}
-* Analisi dei tempi di sviluppo
-Di seguito viene riportata lo storico dei tempi di sviluppo sotto forma di timeline con una vista i passaggi chiave dello sviluppo di $StealBit^{\copyright}$
 * Ringraziamenti
-Ringraziamo il professore Alessio Botta per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
+Ringraziamo il professore [[mailto:a.botta@unina.it][Alessio Botta]] per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
