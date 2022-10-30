@@ -103,6 +103,8 @@
     \node[scale=3] at (12,-26.4){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
     \node[scale=1.5] at (15.8, -26.5){\textbf{Giulia Caputo - N86003429}};
 
+    %% TODO: Testare che i nomi siano effettivamente allineati con \node[fit, draw=red, fill=red, inner sep=5pt]{nome}{test}
+
     %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
     %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
   \end{scope}
@@ -133,19 +135,56 @@ Il progetto si concretizza in 2 componenti ben definite:
 #+LATEX: \vfill
 ** Guida al Bot Master
 *** Primo avvio
-DESCRIZIONE DELLE OPERAZIONI EFFETTUATE IN FASE DI AVVIO
-*** Analisi della struttura del progetto
+Durante la fase di avvio il programma effettua le seguenti operazioni:
++ Controlla che ~host~ e ~porta~ \autocite{infoHostPortMaster} siano disponibili per la successiva creazione della socket;
++ Esegue una connessione al dbms utilizzato per il salvataggio delle informazioni e inizializza la ~tabella~ utilizzata per lo scopo (se non precedentemente presente);
++ Inizializza la socket in attesa di nuove connessioni dal client a cui impartirà comandi da eseguire;
+
+Nel momento in cui viene effettuata una nuova connessione, il server invia la richiesta effettuata dall'utente al client e in base a questa automaticamente:
++ Salva l'informazione sul database (che viene mostrata all'utente attraverso lo standard output);
++ Nel caso in cui si trattasse di un file (identificato da un campo ~Header~ a inizio richiesta), lo salva automaticamente, per poter essere fruibile successivamente.
 *** Memorizzazione dei dati
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal /bot slave/ durante la sua esecuzione.
 ** Guida al Bot Slave
-*** Analisi della struttura del progetto
 *** Primo avvio
-DESCRIZIONE DELLE OPERAZIONI EFFETTUATE IN FASE DI AVVIO
+Durante la fase di avvio il programma effettua le seguenti operazioni:
++ Controlla che ~host~ e ~porta~ \autocite{infoHostPortSlave} siano disponibili per la successiva creazione della socket;
++ Esegue un test sull'effettivo stato di attività del server
+  - In caso di esito negativo attende e ritenta;
+  - In caso di esito positivo invece esegue le istruzioni impartite dal Master.
+** Analisi della struttura del progetto
+La struttura del progetto è così strutturata:
+
+#+begin_export latex
+% Server
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+  \begin{itemize}
+    \item Un file \texttt{main.py}, utilizzato per eseguire il tutto;
+    \item Una cartella \texttt{utilities}, contentente:
+    \begin{itemize}
+      \item \texttt{async\_socket\_server.py} $\rightarrow$ Funzioni per la gestione della connessione socket;
+      \item \texttt{bot\_master\_utility.py} $\rightarrow$ Funzioni di supporto al server;
+      \item \texttt{database\_handler.py} $\rightarrow$ Funzioni di supporto per la gestione del DBMS.
+    \end{itemize}
+  \end{itemize}
+\end{minipage}
+\hfill
+% Client
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+  \begin{itemize}
+    \item Un file \texttt{main.py}, utilizzato per eseguire il tutto;
+    \item Una cartella \texttt{utilities}, contentente:
+    \begin{itemize}
+      \item \texttt{async\_socket\_client.py} $\rightarrow$ Funzioni per la gestione della connessione socket;
+      \item \texttt{bot\_master\_utility.py} $\rightarrow$ Funzioni di supporto al client;
+    \end{itemize}
+  \end{itemize}
+\end{minipage}
+#+end_export
 ** Report dei dati recuperati
 TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
-* Dettagli implementativi
-** Bot Master
-** Bot Slave
 * Codice sorgente sviluppato
 Il codice sorgente prodotto durante lo sviluppo di $StealBot^{\copyright}$ è disponibile sulla piattaforma [[https://github.com/][GitHub]], che ne ha permesso anche il versionamento.
 

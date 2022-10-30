@@ -1,4 +1,4 @@
-% Created 2022-10-30 dom 11:00
+% Created 2022-10-30 dom 12:13
 % Intended LaTeX compiler: lualatex
 \documentclass[letterpaper, 11pt]{article}
 
@@ -378,6 +378,8 @@ keywordstyle=[2]\color{includeStatementCPP},
     \node[scale=3] at (12,-26.4){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
     \node[scale=1.5] at (15.8, -26.5){\textbf{Giulia Caputo - N86003429}};
 
+    %% TODO: Testare che i nomi siano effettivamente allineati con \node[fit, draw=red, fill=red, inner sep=5pt]{nome}{test}
+
     %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
     %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
   \end{scope}
@@ -390,16 +392,16 @@ keywordstyle=[2]\color{includeStatementCPP},
 \tableofcontents
 \pagebreak
 \section{Presentazione}
-\label{sec:orgb0b5a9b}
+\label{sec:org8b99750}
 \noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
 \subsection{Descrizione della traccia}
-\label{sec:org4bd4a60}
+\label{sec:org41d065e}
 Si richiede la realizzazione di una \texttt{BotNET} \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
 \subsubsection{Tecnologie e linguaggi richiesti}
-\label{sec:orgc521929}
+\label{sec:org94b660b}
 Si richiede un applicativo scritto in \texttt{Python} \autocite{DefinizionePython} che utilizzi come strumento di comunicazione le \texttt{socket} \autocite{DefinizioneSocket}
 \subsection{Implementazione del sistema}
-\label{sec:orgc2bdedc}
+\label{sec:orgd80173a}
 Il progetto si concretizza in 2 componenti ben definite:
 \begin{itemize}
 \item Un \texttt{Bot Master} per la gestione dei dati ricevuti dal \texttt{bot slave} al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
@@ -407,37 +409,76 @@ Il progetto si concretizza in 2 componenti ben definite:
 \end{itemize}
 \vfill
 \subsection{Guida al Bot Master}
-\label{sec:org6002397}
+\label{sec:org069dec4}
 \subsubsection{Primo avvio}
-\label{sec:org576b8fb}
-DESCRIZIONE DELLE OPERAZIONI EFFETTUATE IN FASE DI AVVIO
-\subsubsection{Analisi della struttura del progetto}
-\label{sec:orgb6999ac}
+\label{sec:org2e4923d}
+Durante la fase di avvio il programma effettua le seguenti operazioni:
+\begin{itemize}
+\item Controlla che \texttt{host} e \texttt{porta} \autocite{infoHostPortMaster} siano disponibili per la successiva creazione della socket;
+\item Esegue una connessione al dbms utilizzato per il salvataggio delle informazioni e inizializza la \texttt{tabella} utilizzata per lo scopo (se non precedentemente presente);
+\item Inizializza la socket in attesa di nuove connessioni dal client a cui impartirà comandi da eseguire;
+\end{itemize}
+
+Nel momento in cui viene effettuata una nuova connessione, il server invia la richiesta effettuata dall'utente al client e in base a questa automaticamente:
+\begin{itemize}
+\item Salva l'informazione sul database (che viene mostrata all'utente attraverso lo standard output);
+\item Nel caso in cui si trattasse di un file (identificato da un campo \texttt{Header} a inizio richiesta), lo salva automaticamente, per poter essere fruibile successivamente.
+\end{itemize}
 \subsubsection{Memorizzazione dei dati}
-\label{sec:org2b7d50e}
+\label{sec:orgd29a4a2}
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal \emph{bot slave} durante la sua esecuzione.
 \subsection{Guida al Bot Slave}
-\label{sec:org051f0c4}
-\subsubsection{Analisi della struttura del progetto}
-\label{sec:org68fd260}
+\label{sec:orgf9db1cc}
 \subsubsection{Primo avvio}
-\label{sec:org7027353}
-DESCRIZIONE DELLE OPERAZIONI EFFETTUATE IN FASE DI AVVIO
+\label{sec:org08432cf}
+Durante la fase di avvio il programma effettua le seguenti operazioni:
+\begin{itemize}
+\item Controlla che \texttt{host} e \texttt{porta} \autocite{infoHostPortSlave} siano disponibili per la successiva creazione della socket;
+\item Esegue un test sull'effettivo stato di attività del server
+\begin{itemize}
+\item In caso di esito negativo attende e ritenta;
+\item In caso di esito positivo invece esegue le istruzioni impartite dal Master.
+\end{itemize}
+\end{itemize}
+\subsection{Analisi della struttura del progetto}
+\label{sec:orgdb3e568}
+La struttura del progetto è così strutturata:
+
+% Server
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+  \begin{itemize}
+    \item Un file \texttt{main.py}, utilizzato per eseguire il tutto;
+    \item Una cartella \texttt{utilities}, contentente:
+    \begin{itemize}
+      \item \texttt{async\_socket\_server.py} $\rightarrow$ Funzioni per la gestione della connessione socket;
+      \item \texttt{bot\_master\_utility.py} $\rightarrow$ Funzioni di supporto al server;
+      \item \texttt{database\_handler.py} $\rightarrow$ Funzioni di supporto per la gestione del DBMS.
+    \end{itemize}
+  \end{itemize}
+\end{minipage}
+\hfill
+% Client
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+  \begin{itemize}
+    \item Un file \texttt{main.py}, utilizzato per eseguire il tutto;
+    \item Una cartella \texttt{utilities}, contentente:
+    \begin{itemize}
+      \item \texttt{async\_socket\_client.py} $\rightarrow$ Funzioni per la gestione della connessione socket;
+      \item \texttt{bot\_master\_utility.py} $\rightarrow$ Funzioni di supporto al client;
+    \end{itemize}
+  \end{itemize}
+\end{minipage}
 \subsection{Report dei dati recuperati}
-\label{sec:org7923305}
+\label{sec:org4424db9}
 TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
-\section{Dettagli implementativi}
-\label{sec:orgf2e10eb}
-\subsection{Bot Master}
-\label{sec:org20996e8}
-\subsection{Bot Slave}
-\label{sec:org0d59d31}
 \section{Codice sorgente sviluppato}
-\label{sec:org4488f9e}
+\label{sec:org66417fa}
 Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è disponibile sulla piattaforma \href{https://github.com/}{GitHub}, che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il \href{https://github.com/luftmensch-luftmensch/StealBot}{download} \autocite{informazioniRepository}
 \section{Ringraziamenti}
-\label{sec:orgde0e1f8}
+\label{sec:org2292aa7}
 Ringraziamo il professore \href{mailto:a.botta@unina.it}{Alessio Botta} per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
 \end{document}
