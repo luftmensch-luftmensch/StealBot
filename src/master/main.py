@@ -4,7 +4,7 @@ import asyncio
 import click
 from functools import partial
 from signal import SIGINT, SIGTERM
-# import sys
+import os
 
 # Import di funzioni di libreria personale
 from utilities import bot_master_utility as bot_master
@@ -28,9 +28,11 @@ def main():
 @click.command()
 @click.option("--host", default='127.0.0.1', help="Host su cui deve essere esposto il service")
 @click.option("--port", default=9090, type=int, help="Porta sulla quale deve mettersi in ascolto il service")
-def start(host: str, port: int):
+@click.option("--out_directory", default='result', type=str, help="Directory da utilizzare per il salvataggio dei file ricevuti dal client")
+def start(host: str, port: int, out_directory: str):
     """Funzione di esecuzione del server."""
     validator(host, port)
+    bot_master.initialize_result_folder(os.getcwd(), out_directory)
 
     loop = asyncio.new_event_loop()
 

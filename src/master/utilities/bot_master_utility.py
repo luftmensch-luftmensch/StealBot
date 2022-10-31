@@ -139,5 +139,12 @@ def get_path_content(current_position: str):
             print(os.path.join(path, filename))
 
 
+def initialize_result_folder(current_directory: str, result_folder: str) -> None:
+    """Controllo e creazione della directory utilizzata per il salvataggio di file ricevuti dal client."""
+    if not os.path.exists(current_directory + "/" + result_folder):
+        info(f"Creazione in corso della directory {current_directory}/{result_folder} non presente sul file system. ", 1)
+        os.makedirs(current_directory + "/" + result_folder)
+
+
 def file_system_navigator():
     """Funzione per la navigazione delle directory presenti sul client."""
