@@ -26,13 +26,14 @@ def main():
 
 
 @click.command()
-@click.option("--host", default='127.0.0.1', help="Host su cui deve essere esposto il service")
+@click.option("--host", default='127.0.0.1', type=str, help="Host su cui deve essere esposto il service")
 @click.option("--port", default=9090, type=int, help="Porta sulla quale deve mettersi in ascolto il service")
 @click.option("--out_directory", default='result', type=str, help="Directory da utilizzare per il salvataggio dei file ricevuti dal client")
 def start(host: str, port: int, out_directory: str):
     """Funzione di esecuzione del server."""
     validator(host, port)
     bot_master.initialize_result_folder(os.getcwd(), out_directory)
+    # database_handler = db.DatabaseHandler()  # Inizializzazione automatica del database
 
     loop = asyncio.new_event_loop()
 
@@ -51,5 +52,4 @@ def start(host: str, port: int, out_directory: str):
 
 if __name__ == "__main__":
     main()
-    start()  # Di default verrà eseguito su localhost:9090. Per modificare il comportamento è possibile eseguire lo script con `python main.py --host='XXX.XXX.XXX.XXX' --port='XXXX'
-    # database_handler = db.DatabaseHandler()  # Inizializzazione automatica del database
+    start()  # Di default verrà eseguito su localhost:9090. Per modificare il comportamento è possibile eseguire lo script con `python main.py --host='XXX.XXX.XXX.XXX' --port='XXXX --out_directory='result''

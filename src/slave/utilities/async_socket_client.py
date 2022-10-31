@@ -13,7 +13,7 @@ __response_options = {"1": "OS-TYPE",
                       "6": "IO-CONNECTED",
                       "7": "NETWORK-INFO",
                       "8": "USERS",
-                      "15": "DOWNLOAD-FILE"}
+                      "9": "DOWNLOAD-FILE"}
 
 
 # Passiamo alla funzione anche il writer in modo da poter ciclare sui vari oggetti (in particolare dischi e schede di rete)
@@ -72,8 +72,3 @@ async def run_client(hostname: str, port: int) -> None:
             writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())
-
-
-# if __name__ == "__main__":
-#     loop = asyncio.new_event_loop()
-#     loop.run_until_complete(run())

@@ -75,11 +75,6 @@ def get_size(bytes, suffix="B") -> str:
 # NB: È obbligatorio fare un loop per ottenere le info di ogni partizione
 def get_partition_disk_info() -> list:  # TODO: Controllare che funzioni anche con altri OS
     """Recupero informazioni del disco."""
-    # partition_usage = psutil.disk_usage(partition.mountpoint)
-    # print(f"  Total Size: {get_size(partition_usage.total)}")
-    # print(f"  Used: {get_size(partition_usage.used)}")
-    # print(f"  Free: {get_size(partition_usage.free)}")
-    # print(f"  Percentage: {partition_usage.percent}%")
     return psutil.disk_partitions()
 
 

