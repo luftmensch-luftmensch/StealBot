@@ -17,7 +17,7 @@ __response_options = {"1": "OS-TYPE",
                       "8": "USERS",
                       "15": "DOWNLOAD-FILE"}
 
-__headers_type = {"1": b"<Send-File>", "2": b"<Print-to-Output>"}
+__headers_type = {"1": b"<Send-File>", "2": b"<File-Name>", "3": b"<Print-to-Output>"}
 
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:

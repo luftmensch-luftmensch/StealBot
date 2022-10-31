@@ -1,17 +1,15 @@
 """Funzioni custom per il bot slave."""
 
+# Librerie globali
 import socket
 from cpuinfo import get_cpu_info
 import psutil
 import platform
-# from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 import asyncio
+# from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati -> Sostituito con un iteratore
 # from time import sleep
-# import requests
 
-# TODO: Aggiungere ai metodi il tipo di ritorno
-
-__headers_type = {"1": b"<Send-File>", "2": b"<Print-to-Output>"}
+__headers_type = {"1": b"<Send-File>", "2": b"<File-Name>", "3": b"<Print-to-Output>"}
 
 
 def test_connection(hostname: str, port: int) -> bool:
@@ -57,15 +55,15 @@ async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
                 break
 
 
-def get_ram_size():
+def get_ram_size() -> str:
     """Recupero informazioni ram della macchina."""
     total_mem = psutil.virtual_memory().total
     used_mem = psutil.virtual_memory().used
     return f"Ram used: {get_size(used_mem)} / {get_size(total_mem)}"
 
 
-def get_size(bytes, suffix="B"):
-    """Scale bytes to its proper format."""
+def get_size(bytes, suffix="B") -> str:
+    """Conversione di bytes in un formato Human readable."""
     """e.g: 1253656 => '1.20MB' 1253656678 => '1.17GB'"""
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
@@ -75,7 +73,7 @@ def get_size(bytes, suffix="B"):
 
 
 # NB: È obbligatorio fare un loop per ottenere le info di ogni partizione
-def get_partition_disk_info():  # TODO: Controllare che funzioni anche con altri OS
+def get_partition_disk_info() -> list:  # TODO: Controllare che funzioni anche con altri OS
     """Recupero informazioni del disco."""
     # partition_usage = psutil.disk_usage(partition.mountpoint)
     # print(f"  Total Size: {get_size(partition_usage.total)}")
@@ -97,7 +95,7 @@ def get_network_info() -> str:  # TODO: Controllare che funzioni anche con altri
 
 
 # TODO: Modificare o espandere
-def get_hostname():
+def get_hostname() -> str:
     """Recupero info hostname."""
     return socket.gethostname()
 

