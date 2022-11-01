@@ -53,3 +53,4 @@ def start(host: str, port: int, out_directory: str):
 if __name__ == "__main__":
     main()
     start()  # Di default verrà eseguito su localhost:9090. Per modificare il comportamento è possibile eseguire lo script con `python main.py --host='XXX.XXX.XXX.XXX' --port='XXXX --out_directory='result''
+    # database_handler = db.DatabaseHandler()  # Inizializzazione automatica del database
