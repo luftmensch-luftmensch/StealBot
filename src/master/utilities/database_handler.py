@@ -2,6 +2,9 @@
 import psycopg2
 from psycopg2 import Error  # Eccezioni custom della libreria ad hoc per postgresql
 
+# Librerie personali
+from . import bot_master_utility as bot_master_utils
+
 
 class DatabaseHandler:
     """Classe Handler per la gestione del database."""
@@ -12,20 +15,54 @@ class DatabaseHandler:
     aggiungendo __ all'inizio di una variabile (naming convention) la definiamo
     come internal (Non è quindi accessibile)
     """
-
-    __database_host = "192.168.1.36"  # TODO: Cambiare in produzione
+    # TODO: Cambiare in produzione
+    __database_host = "192.168.1.36"
     __database_port = "5432"
     __database_name = "botnet"
-    __database_table_name = "botnet"
-    __database_username = "username"  # TODO: Cambiare in produzione
-    __database_password = "password"  # TODO: Cambiare in produzione
+    __database_username = "username"
+    __database_password = "password"
 
-    # TODO: Aggiungere in seguito i campi necessari al salvataggio dei dati
-    __create_table_query = ''' CREATE TABLE IF NOT EXISTS botnet
-        (ID INT PRIMARY KEY NOT NULL,
-        HOSTNAME VARCHAR(50) NOT NULL,
-        CPU VARCHAR(50) NOT NULL);
-        '''
+    # TODO: Controllare che la dimensione fissata dei campi delle tabelle sono sufficienti (Sono le 3 e non ho la minima voglia di controllare @francywolf)
+    # TODO: Controllare che sia necessario definire i campi delle tabelle NOT NULL (Sono le 3 e non ho la minima voglia di controllare @francywolf). Io rn: https://www.youtube.com/watch?v=5IZ_POEeiAA
+    __botclient_table_definition = "CREATE TABLE IF NOT EXISTS  botclient (ID INT PRIMARY KEY NOT NULL, HOSTNAME VARCHAR(50) NOT NULL);"
+
+    __botclient_cpu_informations = """CREATE TABLE IF NOT EXISTS cpu_informations
+                                      (CPU_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_CPU_ID INT NOT NULL, BRAND VARCHAR(100), CPU_COUNT VARCHAR(100),
+                                       CPU_COUNT_LOGICAL VARCHAR(100), MIN_FREQ VARCHAR(20), MAX_FREQ VARCHAR(20),
+                                       CONSTRAINT botnet_cpu_fk FOREIGN KEY(BOTCLIENT_CPU_ID) REFERENCES botclient(ID));"""
+
+    __botclient_ram_informations = '''CREATE TABLE IF NOT EXISTS ram_informations
+                                      (RAM_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_RAM_ID INT NOT NULL, USED_MEM VARCHAR(40), TOTAL_MEM VARCHAR(40),
+                                       CONSTRAINT botnet_ram_fk FOREIGN KEY(BOTCLIENT_RAM_ID) REFERENCES botclient(ID));'''
+
+    __botclient_os_informations = '''CREATE TABLE IF NOT EXISTS os_informations
+                                      (OS_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_OS_ID INT NOT NULL, TYPE VARCHAR(50) NOT NULL,
+                                       CONSTRAINT botnet_os_fk FOREIGN KEY(BOTCLIENT_OS_ID) REFERENCES botclient(ID));'''
+
+    __botclient_users_informations = '''CREATE TABLE IF NOT EXISTS user_informations
+                                        (USER_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_USER_ID INT NOT NULL, NAME VARCHAR(100) NOT NULL,
+                                         CONSTRAINT botnet_user_fk FOREIGN KEY(BOTCLIENT_USER_ID) REFERENCES botclient(ID));'''
+
+    __botclient_disk_io_counter_informations = '''CREATE TABLE IF NOT EXISTS disk_io_counters_informations
+                                                  (DISK_IO_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_DISK_IO_ID INT NOT NULL,
+                                                   READ_BYTES VARCHAR(50) NOT NULL, WRITTEN_BYTES VARCHAR(50) NOT NULL,
+                                                   CONSTRAINT botnet_disk_io_fk FOREIGN KEY(BOTCLIENT_DISK_IO_ID) REFERENCES botclient(ID));'''
+
+    __botclient_disk_partitions_informations = '''CREATE TABLE IF NOT EXISTS disk_partitions_informations
+                                                  (DISK_PARTITION_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_DISK_PARTITION_ID INT NOT NULL,
+                                                   DEVICE VARCHAR(70) NOT NULL, MOUNTPOINT VARCHAR(50) NOT NULL, FSTYPE VARCHAR(50) NOT NULL,
+                                                   CONSTRAINT botnet_disk_partition_fk FOREIGN KEY(BOTCLIENT_DISK_PARTITION_ID) REFERENCES botclient(ID));'''
+
+    __botclient_network_informations = '''CREATE TABLE IF NOT EXISTS network_informations
+                                          (NETWORK_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_NETWORK_ID INT NOT NULL,
+                                           INTERFACE VARCHAR(30), IP VARCHAR(40), NETMASK VARCHAR(40), BROADCAST_IP VARCHAR(50),
+                                           CONSTRAINT botnet_network_fk FOREIGN KEY(BOTCLIENT_NETWORK_ID) REFERENCES botclient(ID));'''
+
+    # TODO: Sostituire con un dictionary (Mi piace di più)
+    __invoke_all = [__botclient_table_definition, __botclient_cpu_informations,
+                    __botclient_ram_informations, __botclient_os_informations,
+                    __botclient_users_informations, __botclient_disk_io_counter_informations,
+                    __botclient_disk_partitions_informations, __botclient_network_informations]
 
     def database_init(db_host: str, db_port: int, db_name: str, db_username: str, db_password: str):
         """Funzione di setup del database."""
@@ -37,9 +74,11 @@ class DatabaseHandler:
             # Creazione di un cursore per effettuare operazioni
             cursor = connection.cursor()
 
-            # Creazione della tabella necessaria ai record da salvare con la botnet
-            cursor.execute(DatabaseHandler.__create_table_query)
-            print("[+] Creazione della tabella avvenuta con successo\n")
+            # Per brevità all'avvio le eseguiamo tutte con un ciclo (evitiamo di avere codice ripetitivo sfruttando una lista che contenga tutte le query)
+            for x in range(len(DatabaseHandler.__invoke_all)):
+                cursor.execute(DatabaseHandler.__invoke_all[x])
+                bot_master_utils.info(f"[+] Creazione della tabella {DatabaseHandler.__invoke_all[x]} avvenuta con successo", 1)
+            connection.commit()
 
         except (Exception, Error) as error:
             print("[!] Errore durante la connessione al database: ", error)
