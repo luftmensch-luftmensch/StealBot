@@ -54,12 +54,12 @@ in pkgs.mkShell rec {
 
     master(){
          export PS1="\[\e[1;32m\][\w] master > \[\e[0m\]"
-         cd src/master
+         cd ~/UNI/StealBot/src/master
     }
 
     slave(){
          export PS1="\[\e[1;32m\][\w] slave > \[\e[0m\]"
-         cd src/slave
+         cd ~/UNI/StealBot/src/slave
     }
   '';
 

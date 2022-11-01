@@ -11,3 +11,5 @@
 *.blg
 /Documentazione/Documentazione.run.xml
 *.pyc
+/site/resources/
+/site/.hugo_build.lock
