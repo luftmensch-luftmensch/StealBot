@@ -13,7 +13,8 @@ __response_options = {"1": "OS-TYPE",
                       "6": "IO-CONNECTED",
                       "7": "NETWORK-INFO",
                       "8": "USERS",
-                      "9": "DOWNLOAD-FILE"}
+                      "9": "DOWNLOAD-FILE",
+                      "q": "QUIT"}
 
 
 # Passiamo alla funzione anche il writer in modo da poter ciclare sui vari oggetti (in particolare dischi e schede di rete)
@@ -67,8 +68,14 @@ async def run_client(hostname: str, port: int) -> None:
             """
             In base a quello ottenuto dal server il client effettuerà l'operazione corrispondente
             """
-            await command_to_execute(writer, response.decode())
-            await asyncio.sleep(1)
-            writer.write(operation_keyword.encode())
+            # Nel caso in cui il server chieda di quittare inviamo la conferma di quit al server e interrompiamo il loop
+            if response.decode() == "QUIT":
+                writer.write(b"quit")
+                await writer.drain()
+                break
+            else:
+                await command_to_execute(writer, response.decode())
+                await asyncio.sleep(1)
+                writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())

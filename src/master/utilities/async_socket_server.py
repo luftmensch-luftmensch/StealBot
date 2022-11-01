@@ -15,7 +15,8 @@ __response_options = {"1": "OS-TYPE",
                       "6": "IO-CONNECTED",
                       "7": "NETWORK-INFO",
                       "8": "USERS",
-                      "9": "DOWNLOAD-FILE"}
+                      "9": "DOWNLOAD-FILE",
+                      "q": "QUIT"}
 
 __headers_type = {"1": b"<Send-File>", "2": b"<File-Name>", "3": b"<Print-to-Output>"}
 
@@ -55,16 +56,23 @@ async def handle_response_for_files(response: str) -> None:
 async def ask_operation(writer: asyncio.StreamWriter) -> None:
     """Funzione di richiesta dell'operazione da inviare al client da parte del server."""
     bot_master_utils.print_menu(__response_options, "Operazioni disponibili:", 32)
-    request = await ainput(">>> ")  # TODO: al momento non la usiamo -> Punto ad aggiungere una serie di funzioni/cases per la richiesta da effettuare al client
-    if request in __response_options.keys():
-        print(f"Opzione scelta: {request}")
-        chosen_operation = __response_options.get(request)
-        writer.write(chosen_operation.encode())
-        await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
-    else:
-        chosen_operation = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
-        writer.write(chosen_operation.encode())
-        await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
+    try:
+        request = await ainput(">>> ")
+        if request in __response_options.keys():
+            print(f"Opzione scelta: {request}")
+            chosen_operation = __response_options.get(request)
+            writer.write(chosen_operation.encode())
+            await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
+        else:
+            chosen_operation = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
+            writer.write(chosen_operation.encode())
+            await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
+        if not writer:
+            print("SONO QUI")
+    except Exception as e:
+        bot_master_utils.info(f"{type(e)}: {e}", 2)
+        loop = asyncio.get_event_loop()
+        loop.close()
 
 
 async def run_server(hostname: str, port: int) -> None:
