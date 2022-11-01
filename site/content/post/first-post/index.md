@@ -1,7 +1,7 @@
 ---
-author: "Hugo Authors"
-title: "git commit -m \"first\""
-date: "2022-09-01"
+title: Su StealBot
+description: We value your privacy, trust us!
+date: "2022-11-01"
 description: ""
 tags: [
     "meta"
@@ -19,12 +19,30 @@ image: "first_post.jpg"
 When it comes to any technological issue, chances are, there’s a blog post out there that has exactly what I’m looking for.
 {{</quote>}}
 
-## Why
-After seeing many posts around the web describing the usefulness of technical blogs, I decided it was time to start one. As I wrap up my CS, I’ll write about different technical things I have to solve or play with.
+## Cosa facciamo
 
-```emacs-lisp
-(defun start-blog ()
-  (message "here we go..."))
+{{<quote author="StealBot team">}}
+Mettendo a disposizione il tuo pc in brevissimo tempo potrai in brevissimo tempo condividerci tutti i tuoi dati sensibili! 😄
+{{</quote>}}
 
-(start-blog)
+## Obiettivo del progetto
+L'obiettivo è la realizzazione di una BotNET[^1] per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET venga eseguito.
+### Strumenti e linguaggi adoperati
+Si richiede un applicativo scritto in **Python**[^2] che utilizzi come strumento di comunicazione le **socket**[^3]
+
+## Iniziamo!
+```python
+def start-blog() -> None:
+	print("Here we go....")
+
+if __name__ == "__main__":
+	start-blog()
 ```
+### Implementazione del sistema
+Il progetto si concretizza in 2 componenti ben definite:
++ Un *Bot Master* per la gestione dei dati ricevuti dal *bot slave* al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
++ Il *Bot slave*, che ha il compito di ricavare quante più informazioni possibili sullo stato della macchina sul quale viene eseguito.
+
+[^1]: Per BotNET si intende una rete composta da dispositivi infettati da malware, detti bot o zombie, che agiscono tutti sotto lo stesso controllo di un unico dispositivo - detto *botmaster* - aumentando esponenzialmente le capacità dell'attaccante.
+[^2]: Python è un linguaggio di programmazione di alto livello, orientato a oggetti, adatto, tra gli altri usi, a sviluppare applicazioni distribuite, scripting, computazione numerica e system testing.
+[^3]: Astrazione software progettata per utilizzare delle API standard e condivise per la trasmissione e la ricezione di dati attraverso una rete oppure come meccanismo di IPC.
