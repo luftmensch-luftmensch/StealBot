@@ -122,7 +122,7 @@ class DatabaseHandler:
                                   database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
                                   password=DatabaseHandler.__database_password) as connection:
                 with connection.cursor() as cursor:
-                    cursor.execute(hostname)
+                    cursor.execute(f"INSERT INTO botclient(hostname) values('{hostname}')")
                     connection.commit()
         except Error as e:
             bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
