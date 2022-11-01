@@ -1,5 +1,5 @@
 ---
-title: About
+title: Su StealBot
 description: We value your privacy, trust us!
 date: '2022-08-01'
 aliases:
