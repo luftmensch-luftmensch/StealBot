@@ -9,7 +9,7 @@ import os
 # Import di funzioni di libreria personale
 from utilities import bot_master_utility as bot_master
 from utilities import async_socket_server as async_server
-# from utilities import database_handler as db
+from utilities import database_handler as db
 
 
 def validator(hostname: str, port: int):
@@ -33,7 +33,7 @@ def start(host: str, port: int, out_directory: str):
     """Funzione di esecuzione del server."""
     validator(host, port)
     bot_master.initialize_result_folder(os.getcwd(), out_directory)
-    # database_handler = db.DatabaseHandler()  # Inizializzazione automatica del database
+    db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
 
     loop = asyncio.new_event_loop()
 
@@ -53,4 +53,4 @@ def start(host: str, port: int, out_directory: str):
 if __name__ == "__main__":
     main()
     start()  # Di default verrà eseguito su localhost:9090. Per modificare il comportamento è possibile eseguire lo script con `python main.py --host='XXX.XXX.XXX.XXX' --port='XXXX --out_directory='result''
-    # database_handler = db.DatabaseHandler()  # Inizializzazione automatica del database
+    # database_handler = db.DatabaseHandler.database_drop_all()  # Inizializzazione automatica del database

