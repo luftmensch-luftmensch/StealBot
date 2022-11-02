@@ -33,7 +33,7 @@ def start(host: str, port: int, out_directory: str):
     """Funzione di esecuzione del server."""
     validator(host, port)
     bot_master.initialize_result_folder(os.getcwd(), out_directory)
-    db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
+    # db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
 
     loop = asyncio.new_event_loop()
 
