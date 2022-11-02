@@ -7,4 +7,3 @@ py-cpuinfo==8.0.0 # Py-cpuinfo gets CPU info with pure Python
 psutil==5.9.3 # Retrieving information (CPU, memory, disks, network, sensors) in Python.
 tqdm==4.64.1  # Progress bar for file transfer
 click==8.1.3  # Pass variables to script to change is behaviour
-python3-nmap==1.6.0  # Network scan for the client
