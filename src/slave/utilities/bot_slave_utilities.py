@@ -1,5 +1,11 @@
-"""Funzioni custom per il bot slave."""
+"""
+Codice sorgente contenente funzioni di supporto per il bot-slave.
 
+Scritto da:
+       Valentino Bocchetti, Valentina Annunziata
+       Francesco Ciccarelli, Giulia Caputo
+Copyright (c) 2022. All rights reserved.
+"""
 # Librerie globali
 import socket
 from cpuinfo import get_cpu_info

@@ -1,4 +1,11 @@
-"""Bot master source code."""
+"""
+Esecuzione del bot master.
+
+Scritto da:
+       Valentino Bocchetti, Valentina Annunziata
+       Francesco Ciccarelli, Giulia Caputo
+Copyright (c) 2022. All rights reserved.
+"""
 # Definizione dei moduli
 import asyncio
 import click

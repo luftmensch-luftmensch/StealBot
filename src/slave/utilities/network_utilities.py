@@ -1,4 +1,11 @@
-"""Utilities per la gestione della network."""
+"""
+Codice sorgente contenente funzioni di supporto (networking) per il bot-slave.
+
+Scritto da:
+       Valentino Bocchetti, Valentina Annunziata
+       Francesco Ciccarelli, Giulia Caputo
+Copyright (c) 2022. All rights reserved.
+"""
 import psutil
 from socket import AddressFamily
 import typing

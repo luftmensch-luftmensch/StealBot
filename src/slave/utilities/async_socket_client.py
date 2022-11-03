@@ -1,8 +1,14 @@
-"""Implementazione delle funzioni asincrone per la gestione del client (bot slave)."""
-# import time
+"""
+Codice sorgente per la gestione della connessione con il server (bot-client).
+
+Scritto da:
+       Valentino Bocchetti, Valentina Annunziata
+       Francesco Ciccarelli, Giulia Caputo
+Copyright (c) 2022. All rights reserved.
+"""
 import asyncio
-from . import bot_slave_utilities as bot_utils
 from datetime import datetime as dt
+from . import bot_slave_utilities as bot_utils
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 
 __response_options = {"1": "OS-TYPE",

@@ -1,4 +1,11 @@
-"""Implementazione delle funzioni asincrone per la gestione del server (bot master)."""
+"""
+Codice sorgente per la gestione della connessione con il client (bot-master).
+
+Scritto da:
+       Valentino Bocchetti, Valentina Annunziata
+       Francesco Ciccarelli, Giulia Caputo
+Copyright (c) 2022. All rights reserved.
+"""
 import asyncio  # Non è necessario importare anche socket (asyncio lo fa da solo)
 from aioconsole import ainput  # Async console per asyncio
 import aiofiles

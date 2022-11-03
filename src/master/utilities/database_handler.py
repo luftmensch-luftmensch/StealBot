@@ -1,4 +1,11 @@
-"""Database handler for bot-master source code."""
+"""
+Codice sorgente per la gestione del database (bot-master).
+
+Scritto da:
+       Valentino Bocchetti, Valentina Annunziata
+       Francesco Ciccarelli, Giulia Caputo
+Copyright (c) 2022. All rights reserved.
+"""
 import psycopg2
 from psycopg2 import Error  # Eccezioni custom della libreria ad hoc per postgresql
 
