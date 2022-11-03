@@ -1,8 +1,14 @@
+# TODO: Modificare la baseurl prima di andare in prod
 baseurl: https://example.com
 languageCode: en-us
-theme: hugo-theme-stack # https://github.com/CaiJimmy/hugo-theme-stack
 paginate: 5
 title: StealBot
+
+# Gestiamo il tema come modulo
+# hugo new site <site> -> hugo mod init <nome_sito/url> -> hugo server -D
+module:
+  imports:
+    - path: github.com/CaiJimmy/hugo-theme-stack/v3
 
 # Cheatsheet: http://www.emoji-cheat-sheet.com/
 enableEmoji: true
@@ -41,6 +47,8 @@ params:
     featuredImageField: image
     rssFullContent: true
     favicon:
+            enabled: true
+            src: img/favicon.png
 
     footer:
         since: 2020
