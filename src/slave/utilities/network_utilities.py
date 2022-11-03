@@ -1,5 +1,4 @@
 """Utilities per la gestione della network."""
-# TODO: https://nmap.readthedocs.io/en/latest/
 import psutil
 from socket import AddressFamily
 import typing
@@ -27,10 +26,17 @@ def get_hosts(net: str) -> typing.List[str]:
     return hosts
 
 
-if __name__ == "__main__":
+def get_list_active_hosts(range: typing.List[str]) -> list:
+    """Recupero di tutti gli host attivi che accettano una connessione sulla porta richiesta."""
     # TODO: Velocizzare il testing (magari facendolo a batteria)
-    for host in get_hosts("192.168.1.0/24"):
+    for host in range:
         if bot_utils.test_connection(host, 9090) is True:
             print(f"L'host {host} è raggiungibile sulla porta 9090")
         else:
             print(f"Socket non presente sull'host {host}")
+
+
+if __name__ == "__main__":
+    for ip in get_net_ifname().values():
+        print(ip)
+    # get_list_active_hosts(get_hosts(get_net_ifname()))
