@@ -86,15 +86,16 @@ class DatabaseHandler:
                 bot_master_utils.info(f"[+] Creazione della tabella {key} avvenuta con successo", 1)
             connection.commit()
 
-        except (Exception, Error) as error:
-            print("[!] Errore durante la connessione al database: ", error)
-
-        # L'obiettivo è quello di fare operazioni con il dbms che siano "atomiche" e "isolate" -> Ergo una volta finita l'operazione chiudiamo la connessione
-        finally:
             if (connection):
                 cursor.close()
                 connection.close()
                 bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+
+        except (Exception, Error) as error:
+            bot_master_utils.info(f"[!] Errore durante la connessione al database: {error}", 3)
+
+        # L'obiettivo è quello di fare operazioni con il dbms che siano "atomiche" e "isolate" -> Ergo una volta finita l'operazione chiudiamo la connessione
+        # finally:
 
     def database_insert(query: str) -> None:
         """Funzione di inserimento di un record nel database."""
@@ -124,13 +125,14 @@ class DatabaseHandler:
                 with connection.cursor() as cursor:
                     cursor.execute(f"INSERT INTO botclient(hostname) values('{hostname}')")
                     connection.commit()
+
+                if (connection):
+                    cursor.close()
+                    connection.close()
+                    bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+
         except Error as e:
             bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
-        finally:
-            if (connection):
-                cursor.close()
-                connection.close()
-                bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
     def database_select(query: str):
         """Funzione di retrieval di tutti i record presenti nel database."""
@@ -142,13 +144,13 @@ class DatabaseHandler:
                 with connection.cursor() as cursor:
                     cursor.execute(query)
                     return cursor.fetchall()
+
+                if (connection):
+                    cursor.close()
+                    connection.close()
+                    bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
         except Error as e:
             bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
-        finally:
-            if (connection):
-                cursor.close()
-                connection.close()
-                bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
     def database_select_all():
         """Funzione di retrieval di tutti i record nel database."""
@@ -167,20 +169,20 @@ class DatabaseHandler:
                                   database=DatabaseHandler.__database_name, user=DatabaseHandler.__database_username,
                                   password=DatabaseHandler.__database_password) as connection:
                 with connection.cursor() as cursor:
-                    # cursor.execute("DROP TABLE public.botclient CASCADE;")
                     cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE';")
                     tables = [i[0] for i in cursor.fetchall()]  # Convertiamo una tupla in un array (Prendiamo il primo campo)
                     for table in tables:
                         bot_master_utils.info(f"[+] Eliminazione tabella {table} database", 1)
                         cursor.execute(f"DROP TABLE public.{table} CASCADE;")
                 connection.commit()
+
+                if (connection):
+                    cursor.close()
+                    connection.close()
+                    bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
+
         except Error as e:
             bot_master_utils.info(f"Errore nell'esecuzione dello statement: {e}", 2)
-        finally:
-            if (connection):
-                cursor.close()
-                connection.close()
-                bot_master_utils.info("[+] Chiusura della connessione al database PostgreSQL effettuata con successo!", 2)
 
     @classmethod
     def __init__(self):

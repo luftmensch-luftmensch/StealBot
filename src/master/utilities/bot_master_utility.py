@@ -93,6 +93,8 @@ def info(msg: str, level: int) -> None:
             print(f"{ANSI_COLOR_BLUE}{msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in blu il messaggio di errore (in seguito resettiamo il colore a default)
         case 3:  # Logging Level: error
             print(f"{ANSI_COLOR_RED}{msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
+        case 4:  # Logging Level: critical
+            print(f"{ANSI_COLOR_RED}{msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
             sys.exit(1)
 
 

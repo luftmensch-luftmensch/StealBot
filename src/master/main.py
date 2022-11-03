@@ -15,7 +15,7 @@ from utilities import database_handler as db
 def validator(hostname: str, port: int):
     """Inizializzazione degli handler (tastiera e porta in uso)."""
     if (bot_master.port_validator(hostname, port) is True):
-        bot_master.info(f"Al momento la porta {port} è in utilizzo!! Uscita dal programma in corso!", 3)  # Log Level: Error
+        bot_master.info(f"Al momento la porta {port} è in utilizzo!! Uscita dal programma in corso!", 4)  # Log Level: Critical
     else:
         bot_master.info(f"Al momento la porta {port} è libera! Inizializzazione del server!", 1)
 
@@ -33,7 +33,7 @@ def start(host: str, port: int, out_directory: str):
     """Funzione di esecuzione del server."""
     validator(host, port)
     bot_master.initialize_result_folder(os.getcwd(), out_directory)
-    # db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
+    db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
 
     loop = asyncio.new_event_loop()
 
@@ -53,4 +53,3 @@ def start(host: str, port: int, out_directory: str):
 if __name__ == "__main__":
     main()
     start()  # Di default verrà eseguito su localhost:9090. Per modificare il comportamento è possibile eseguire lo script con `python main.py --host='XXX.XXX.XXX.XXX' --port='XXXX --out_directory='result''
-    # database_handler = db.DatabaseHandler.database_drop_all()  # Inizializzazione automatica del database
