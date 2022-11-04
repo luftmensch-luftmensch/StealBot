@@ -38,7 +38,7 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
                 if not partition.device.startswith("/dev/loop"):  # In questo modo escludiamo i mount point di snap
                     info_disk = f"{partition.device}, {partition.mountpoint}, {partition.fstype}"
                     writer.write(info_disk.encode())
-                await asyncio.sleep(1)
+                    await asyncio.sleep(1)
         case 'PARTITION-DISK-STATUS':
             writer.write(bot_utils.get_io_disk_statistics().encode())
         case 'NETWORK-INFO':
