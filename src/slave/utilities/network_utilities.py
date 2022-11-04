@@ -33,17 +33,28 @@ def get_hosts(net: str) -> typing.List[str]:
     return hosts
 
 
-def get_list_active_hosts(range: typing.List[str]) -> list:
+def get_list_active_hosts(hosts: list) -> list:
     """Recupero di tutti gli host attivi che accettano una connessione sulla porta richiesta."""
-    # TODO: Velocizzare il testing (magari facendolo a batteria)
-    for host in range:
+    active_hosts = []
+    for host in hosts:
+        # TODO: Velocizzare il testing (magari facendolo a batteria) e diminuendo il timeout
         if bot_utils.test_connection(host, 9090) is True:
             print(f"L'host {host} è raggiungibile sulla porta 9090")
+            hosts.append(host)
         else:
             print(f"Socket non presente sull'host {host}")
+    return active_hosts
 
 
 if __name__ == "__main__":
+    # TODO: Trovare un modo più pulito di ottenere l'ip + subnet da passare alla funzione get_hosts
+    range = ''
+    i = 0
     for ip in get_net_ifname().values():
-        print(ip)
-    # get_list_active_hosts(get_hosts(get_net_ifname()))
+        print(f"{ip.split('.')}")
+        while i < 3:
+            range += ip.split('.')[i] + '.'
+            i += 1
+
+    hosts = get_hosts(range + "0/24")
+    active_hosts = get_list_active_hosts(hosts)
