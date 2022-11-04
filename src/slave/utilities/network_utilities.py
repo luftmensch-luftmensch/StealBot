@@ -46,7 +46,8 @@ def get_list_active_hosts(hosts: list) -> list:
     return active_hosts
 
 
-if __name__ == "__main__":
+def find_bot_master() -> None:
+    """Funzione di wrapping per la ricerca del bot master sulla rete locale."""
     # TODO: Trovare un modo più pulito di ottenere l'ip + subnet da passare alla funzione get_hosts
     range = ''
     i = 0
@@ -58,3 +59,4 @@ if __name__ == "__main__":
 
     hosts = get_hosts(range + "0/24")
     active_hosts = get_list_active_hosts(hosts)
+    print(active_hosts)

@@ -35,7 +35,7 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
             writer.write(bot_utils.get_ram_size().encode())
         case 'PARTITION-DISK-INFO':
             for partition in bot_utils.get_partition_disk_info():
-                if not partition.device.startswith("/dev/loop"):  # In questo modo escludiamo i mount point di snap
+                if not partition.device.startswith("/dev/loop") and not partition.mountpoint.startswith("/var/snap"):  # In questo modo escludiamo i mount point di snap
                     info_disk = f"{partition.device}, {partition.mountpoint}, {partition.fstype}"
                     writer.write(info_disk.encode())
                     await asyncio.sleep(1)
