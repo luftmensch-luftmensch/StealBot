@@ -9,6 +9,7 @@ Copyright (c) 2022. All rights reserved.
 import asyncio  # Non è necessario importare anche socket (asyncio lo fa da solo)
 from aioconsole import ainput  # Async console per asyncio
 import aiofiles
+import re  # Necessario per la codifica della richiesta ricevuta dal client
 
 # Librerie personali
 from . import bot_master_utility as bot_master_utils
@@ -25,16 +26,19 @@ __response_options = {"1": "OS-TYPE",
                       "q": "QUIT"}
 
 # Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
-__headers_type = {1: b"<Send-File>", 2: b"<File-Name>", 3: b"<OS-type>", 4: b"<CPU-stats>", 5: b"<Ram-usage>",
-                  6: b"<Partition-disk-info>", 7: b"<Partition-disk-status>", 8: b"<IO-connected>", 9: b"<Network-info>", 10: b"<Users>"}
+# Per la gestione della ricezione dei file utilizziamo il seguente formato: <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
+__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<OS-type>", "4": b"<CPU-stats>", "5": b"<Ram-usage>",
+                  "6": b"<Partition-disk-info>", "7": b"<Partition-disk-status>", "8": b"<IO-connected>", "9": b"<Network-info>", "10": b"<Users>"}
 
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
     """Gestione della connessione e delle richieste da effettuare al client."""
     response = None
     stop_key = "quit"
-    while response != stop_key.encode():  # Eseguiamo fin tanto che non riceviamo dal client "quit"
+    while True:
         response = await reader.read(8192)  # Per ridurre i tempi di attesa aumentiamo il buffer
+        if response == stop_key.encode():  # Controlliamo che il client non abbia richiesto una disconnessione (modalità stand-by attiva)
+            break
         if not response:
             test_addr, test_port = writer.get_extra_info("peername")
             print(f"Il client {test_addr}:{test_port} ha effettuato una connessione di test per la verifica dello stato del server")
@@ -43,22 +47,32 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
             await ask_operation(writer)
         else:
             addr, port = writer.get_extra_info("peername")
-            if response.startswith(__headers_type[1]):
-                print(f"Receving file from the client {addr}:{port}")
-                await handle_response_for_files(response)  # NB: Adesso il server scriverà tutto in un file hardcodato. Valentino poi pensa a fixare (so già come fare dw)
-            else:
-                msg = response.decode()
-                print(f"Message from {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
-            # writer.write(msg.encode())
-            # await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
+            await handle_response(response, addr, port)  # Gestiamo automaticamente le richieste di ricezione file/informazioni sullo stato della macchina
+        await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
     writer.close()
     await writer.wait_closed()  # Attendiamo che il client sia chiuso prima di stoppare
 
 
-async def handle_response_for_files(response: str) -> None:
-    """Funzione di gestione per la response ricevuta dal client."""
-    async with aiofiles.open("test.png", "ab+") as file:
-        await file.write(response.strip(__headers_type[1]))    # Strippiamo l'header prima del salvataggio del file
+async def handle_response(response: bytes, addr: str, port: int) -> None:
+    """Funzione di gestione per la response (contenuto di file) ricevuta dal client."""
+    if response.startswith(__headers_type["1"]):
+        print("Ricezione di un file da parte del client:")
+
+        # In questo modo otteniamo una stringa la response prima dell'header <File-Name> (eliminando il [1] otteniamo una lista con il primo elemento vuoto)
+        delete_header = re.split(__headers_type["1"], response)[1]
+
+        # TODO: Assegnare a 2 variabili il contenuto della lista ottenuta da nome_n_content
+        name_n_content = re.split(__headers_type["2"], delete_header)
+        await handle_response_for_files(name_n_content[0], name_n_content[-1])  # La lista è composta da 2 elementi e per semplicità passiamo il primo e l'ultimo elemento in questo modo
+    else:
+        msg = response.decode()
+        print(f"Messaggio da {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
+
+
+async def handle_response_for_files(filename: str, content) -> None:
+    """Funzione di gestione per la response (contenuto di file) ricevuta dal client."""
+    async with aiofiles.open(filename, "ab+") as file:
+        await file.write(content)  # Salviamo nel file il contenuto ricevuto dal client già formattato
 
 
 async def ask_operation(writer: asyncio.StreamWriter) -> None:

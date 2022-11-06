@@ -16,8 +16,8 @@ import asyncio
 # from time import sleep
 
 # Definiamo degli header custom per identificare il tipo di dato inviato al server
-__headers_type = {1: b"<Send-File>", 2: b"<File-Name>", 3: b"<OS-type>", 4: b"<CPU-stats>", 5: b"<Ram-usage>",
-                  6: b"<Partition-disk-info>", 7: b"<Partition-disk-status>", 8: b"<IO-connected>", 9: b"<Network-info>", 10: b"<Users>"}
+__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<OS-type>", "4": b"<CPU-stats>", "5": b"<Ram-usage>",
+                  "6": b"<Partition-disk-info>", "7": b"<Partition-disk-status>", "8": b"<IO-connected>", "9": b"<Network-info>", "10": b"<Users>"}
 
 
 def test_connection(hostname: str, port: int) -> bool:
@@ -53,11 +53,14 @@ def get_cpu_information() -> str:
 
 async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
     """Invio di uno specifico file dal client al server."""
+    # Calcoliamo una dimensione che rispetti il pacchetto che stiamo inviando al client (TODO per Valentino: Spostarlo in un posto migliore e passarlo direttamente alla funzione!)
+    size_after = size - len(__headers_type["1"]) - len(__headers_type["2"]) - (len(request))
     with open(request, 'rb') as filename:
-        for chunk in iter(lambda: filename.read(size), ""):
+        for chunk in iter(lambda: filename.read(size_after), ""):
             if chunk:
-                writer.write(__headers_type[1] + chunk)
-                await asyncio.sleep(1)
+                # L'ogetto che riceverà il client sarà del tipo <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
+                writer.write(__headers_type["1"] + request.encode() + __headers_type["2"] + chunk)
+                await asyncio.sleep(2)  # Controllare se sia possibile diminuire lo sleep (o se sia invece obbligatorio aumentarlo)
                 print(f"Sent: {len(chunk)} bytes")
             else:
                 break
@@ -110,8 +113,6 @@ def get_users() -> list:
 
 def get_operating_system() -> str:
     """Recupero informazioni del SO in esecuzione sulla macchina."""
-    # simple_operating_system = platform.uname().system  # example: Linux
-    # Ritorniamo il campo con il maggior numero di informazioni possibili
     # TODO: Da testare con altri OS
-    # platform_operating_system = platform.platform()  # example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
-    return platform.platform()
+    # Ritorniamo il campo con il maggior numero di informazioni possibili
+    return platform.platform()  # example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
