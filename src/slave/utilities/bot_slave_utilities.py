@@ -15,7 +15,17 @@ import asyncio
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati -> Sostituito con un iteratore
 # from time import sleep
 
-__headers_type = {"1": b"<Send-File>", "2": b"<File-Name>", "3": b"<Print-to-Output>"}
+# Definiamo degli header custom per identificare il tipo di dato inviato al server
+__headers_type = {"1": b"<Send-File>",
+                  "2": b"<File-Name>",
+                  "3": b"<OS-type>",
+                  "4": b"<CPU-stats>",
+                  "5": b"<Ram-usage>",
+                  "6": b"<Partition-disk-info>",
+                  "7": b"<Partition-disk-status>",
+                  "8": b"<IO-connected>",
+                  "9": b"<Network-info>",
+                  "10": b"<Users>"}
 
 
 def test_connection(hostname: str, port: int) -> bool:

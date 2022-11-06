@@ -13,7 +13,6 @@ import aiofiles
 # Librerie personali
 from . import bot_master_utility as bot_master_utils
 
-
 __response_options = {"1": "OS-TYPE",
                       "2": "CPU-STATS",
                       "3": "RAM",
@@ -25,7 +24,17 @@ __response_options = {"1": "OS-TYPE",
                       "9": "DOWNLOAD-FILE",
                       "q": "QUIT"}
 
-__headers_type = {"1": b"<Send-File>", "2": b"<File-Name>", "3": b"<Print-to-Output>"}
+# Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
+__headers_type = {"1": b"<Send-File>",
+                  "2": b"<File-Name>",
+                  "3": b"<OS-type>",
+                  "4": b"<CPU-stats>",
+                  "5": b"<Ram-usage>",
+                  "6": b"<Partition-disk-info>",
+                  "7": b"<Partition-disk-status>",
+                  "8": b"<IO-connected>",
+                  "9": b"<Network-info>",
+                  "10": b"<Users>"}
 
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
