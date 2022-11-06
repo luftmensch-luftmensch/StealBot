@@ -25,16 +25,8 @@ __response_options = {"1": "OS-TYPE",
                       "q": "QUIT"}
 
 # Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
-__headers_type = {"1": b"<Send-File>",
-                  "2": b"<File-Name>",
-                  "3": b"<OS-type>",
-                  "4": b"<CPU-stats>",
-                  "5": b"<Ram-usage>",
-                  "6": b"<Partition-disk-info>",
-                  "7": b"<Partition-disk-status>",
-                  "8": b"<IO-connected>",
-                  "9": b"<Network-info>",
-                  "10": b"<Users>"}
+__headers_type = {1: b"<Send-File>", 2: b"<File-Name>", 3: b"<OS-type>", 4: b"<CPU-stats>", 5: b"<Ram-usage>",
+                  6: b"<Partition-disk-info>", 7: b"<Partition-disk-status>", 8: b"<IO-connected>", 9: b"<Network-info>", 10: b"<Users>"}
 
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
@@ -51,7 +43,7 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
             await ask_operation(writer)
         else:
             addr, port = writer.get_extra_info("peername")
-            if response.startswith(__headers_type["1"]):
+            if response.startswith(__headers_type[1]):
                 print(f"Receving file from the client {addr}:{port}")
                 await handle_response_for_files(response)  # NB: Adesso il server scriverà tutto in un file hardcodato. Valentino poi pensa a fixare (so già come fare dw)
             else:
@@ -66,7 +58,7 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
 async def handle_response_for_files(response: str) -> None:
     """Funzione di gestione per la response ricevuta dal client."""
     async with aiofiles.open("test.png", "ab+") as file:
-        await file.write(response.strip(__headers_type["1"]))    # Strippiamo l'header prima del salvataggio del file
+        await file.write(response.strip(__headers_type[1]))    # Strippiamo l'header prima del salvataggio del file
 
 
 async def ask_operation(writer: asyncio.StreamWriter) -> None:

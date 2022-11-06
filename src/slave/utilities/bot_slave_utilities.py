@@ -16,16 +16,8 @@ import asyncio
 # from time import sleep
 
 # Definiamo degli header custom per identificare il tipo di dato inviato al server
-__headers_type = {"1": b"<Send-File>",
-                  "2": b"<File-Name>",
-                  "3": b"<OS-type>",
-                  "4": b"<CPU-stats>",
-                  "5": b"<Ram-usage>",
-                  "6": b"<Partition-disk-info>",
-                  "7": b"<Partition-disk-status>",
-                  "8": b"<IO-connected>",
-                  "9": b"<Network-info>",
-                  "10": b"<Users>"}
+__headers_type = {1: b"<Send-File>", 2: b"<File-Name>", 3: b"<OS-type>", 4: b"<CPU-stats>", 5: b"<Ram-usage>",
+                  6: b"<Partition-disk-info>", 7: b"<Partition-disk-status>", 8: b"<IO-connected>", 9: b"<Network-info>", 10: b"<Users>"}
 
 
 def test_connection(hostname: str, port: int) -> bool:
@@ -64,7 +56,7 @@ async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
     with open(request, 'rb') as filename:
         for chunk in iter(lambda: filename.read(size), ""):
             if chunk:
-                writer.write(__headers_type["1"] + chunk)
+                writer.write(__headers_type[1] + chunk)
                 await asyncio.sleep(1)
                 print(f"Sent: {len(chunk)} bytes")
             else:
