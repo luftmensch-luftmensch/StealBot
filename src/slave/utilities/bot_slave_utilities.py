@@ -12,12 +12,13 @@ from cpuinfo import get_cpu_info
 import psutil
 import platform
 import asyncio
+import os  # Utilizzato per il controllo dell'esistenza del file (Alternativamente è possibile utilizzare path -> path('dir/myfile.txt').abspath())
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati -> Sostituito con un iteratore
 # from time import sleep
 
 # Definiamo degli header custom per identificare il tipo di dato inviato al server
-__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<OS-type>", "4": b"<CPU-stats>", "5": b"<Ram-usage>",
-                  "6": b"<Partition-disk-info>", "7": b"<Partition-disk-status>", "8": b"<IO-connected>", "9": b"<Network-info>", "10": b"<Users>"}
+__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-Found>", "4": b"<OS-type>", "5": b"<CPU-stats>", "6": b"<Ram-usage>",
+                  "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>"}
 
 
 def test_connection(hostname: str, port: int) -> bool:
@@ -53,17 +54,21 @@ def get_cpu_information() -> str:
 
 async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
     """Invio di uno specifico file dal client al server."""
-    # Calcoliamo una dimensione che rispetti il pacchetto che stiamo inviando al client (TODO per Valentino: Spostarlo in un posto migliore e passarlo direttamente alla funzione!)
-    size_after = size - len(__headers_type["1"]) - len(__headers_type["2"]) - (len(request))
-    with open(request, 'rb') as filename:
-        for chunk in iter(lambda: filename.read(size_after), ""):
-            if chunk:
-                # L'ogetto che riceverà il client sarà del tipo <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
-                writer.write(__headers_type["1"] + request.encode() + __headers_type["2"] + chunk)
-                await asyncio.sleep(2)  # Controllare se sia possibile diminuire lo sleep (o se sia invece obbligatorio aumentarlo)
-                print(f"Sent: {len(chunk)} bytes")
-            else:
-                break
+    if os.path.exists(os.path.abspath(request)):  # Controlliamo che il file richiesto esista
+        # Nel caso in cui il file esista calcoliamo una dimensione (utilizzato per definire la dimensione di ogni chunk) che rispetti il pacchetto che stiamo inviando al server
+        final_size = size - len(__headers_type["1"]) - len(__headers_type["2"]) - len(request)
+        with open(request, 'rb') as filename:
+            for chunk in iter(lambda: filename.read(final_size), ""):
+                if chunk:
+                    # L'ogetto che riceverà il client sarà del tipo <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
+                    writer.write(__headers_type["1"] + request.encode() + __headers_type["2"] + chunk)
+                    await asyncio.sleep(2)  # Controllare se sia possibile diminuire lo sleep (o se sia invece obbligatorio aumentarlo)
+                    print(f"Sent: {len(chunk)} bytes")
+                else:
+                    break
+    else:
+        print("Request failed")
+        writer.write(__headers_type["3"] + request.encode())
 
 
 def get_ram_size() -> str:

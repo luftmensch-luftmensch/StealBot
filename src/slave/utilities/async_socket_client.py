@@ -6,22 +6,15 @@ Scritto da:
        Francesco Ciccarelli, Giulia Caputo
 Copyright (c) 2022. All rights reserved.
 """
-import os  # Utilizzato per il controllo dell'esistenza del file (Alternativamente è possibile utilizzare path -> path('dir/myfile.txt').abspath())
 import asyncio
 from datetime import datetime as dt
 from . import bot_slave_utilities as bot_utils
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 
-__response_options = {"1": "OS-TYPE",
-                      "2": "CPU-STATS",
-                      "3": "RAM",
-                      "4": "PARTITION-DISK-INFO",
-                      "5": "PARTITION-DISK-STATUS",
-                      "6": "IO-CONNECTED",
-                      "7": "NETWORK-INFO",
-                      "8": "USERS",
-                      "9": "DOWNLOAD-FILE",
-                      "q": "QUIT"}
+__response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTITION-DISK-INFO", "5": "PARTITION-DISK-STATUS",
+                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "q": "QUIT"}
+
+__buffer_size = 8192
 
 
 # Passiamo alla funzione anche il writer in modo da poter ciclare sui vari oggetti (in particolare dischi e schede di rete)
@@ -55,12 +48,7 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
                 await asyncio.sleep(1)
         case 'DOWNLOAD-FILE':
             request = "test.png"  # Atm il file è hardcoded -> In questo punto facciamo stripping della request ricevuta dal server e controlliamo se esiste sul disco il file richiesto
-            if os.path.exists(os.path.abspath(request)):  # Controlliamo che il file richiesto esista
-                print(f"PATH: {os.path.abspath(request)}")
-                await bot_utils.send_file(request, 8192, writer)
-            else:
-                print(f"File {os.path.abspath(request)} non presente sul file system")  # In caso contrario avvisiamo il server dell'errore
-                writer.write(b"Il file richiesto non e' valido")  # (TODO: Aggiungere un header per coprire questo caso)
+            await bot_utils.send_file(request, __buffer_size, writer)  # Spostiamo la gestione del controllo di esistenza del file all'interno della funzione stessa
         case _:
             return "NULL"
 
@@ -74,7 +62,7 @@ async def run_client(hostname: str, port: int) -> None:
     writer.write(operation_keyword.encode())
     await writer.drain()
     while True:
-        response = await reader.read(8192)
+        response = await reader.read(__buffer_size)
         if not response:
             raise Exception("Socket closed!")
         print(f"Received from server: {response.decode()!r}")

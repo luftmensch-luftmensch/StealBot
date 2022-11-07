@@ -14,21 +14,15 @@ import re  # Necessario per la codifica della richiesta ricevuta dal client
 # Librerie personali
 from . import bot_master_utility as bot_master_utils
 
-__response_options = {"1": "OS-TYPE",
-                      "2": "CPU-STATS",
-                      "3": "RAM",
-                      "4": "PARTITION-DISK-INFO",
-                      "5": "PARTITION-DISK-STATUS",
-                      "6": "IO-CONNECTED",
-                      "7": "NETWORK-INFO",
-                      "8": "USERS",
-                      "9": "DOWNLOAD-FILE",
-                      "q": "QUIT"}
+__response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTITION-DISK-INFO", "5": "PARTITION-DISK-STATUS",
+                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "q": "QUIT"}
 
 # Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
 # Per la gestione della ricezione dei file utilizziamo il seguente formato: <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
-__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<OS-type>", "4": b"<CPU-stats>", "5": b"<Ram-usage>",
-                  "6": b"<Partition-disk-info>", "7": b"<Partition-disk-status>", "8": b"<IO-connected>", "9": b"<Network-info>", "10": b"<Users>"}
+__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-Found>", "4": b"<OS-type>", "5": b"<CPU-stats>", "6": b"<Ram-usage>",
+                  "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>"}
+
+__buffer_size = 8192
 
 
 async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
@@ -36,7 +30,7 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
     response = None
     stop_key = "quit"
     while True:
-        response = await reader.read(8192)  # Per ridurre i tempi di attesa aumentiamo il buffer
+        response = await reader.read(__buffer_size)  # Per ridurre i tempi di attesa aumentiamo il buffer
         if response == stop_key.encode():  # Controlliamo che il client non abbia richiesto una disconnessione (modalità stand-by attiva)
             break
         if not response:
@@ -61,9 +55,11 @@ async def handle_response(response: bytes, addr: str, port: int) -> None:
         # In questo modo otteniamo una stringa la response prima dell'header <File-Name> (eliminando il [1] otteniamo una lista con il primo elemento vuoto)
         delete_header = re.split(__headers_type["1"], response)[1]
 
-        # TODO: Assegnare a 2 variabili il contenuto della lista ottenuta da nome_n_content
-        name_n_content = re.split(__headers_type["2"], delete_header)
+        name_n_content = re.split(__headers_type["2"], delete_header)  # TODO: Assegnare a 2 variabili il contenuto della lista ottenuta da nome_n_content
+
         await handle_response_for_files(name_n_content[0], name_n_content[-1])  # La lista è composta da 2 elementi e per semplicità passiamo il primo e l'ultimo elemento in questo modo
+    elif response.startswith(__headers_type["3"]):
+        print(f'Il file richiesto {re.split(__headers_type["3"], response)[1].decode()} al client è inesistente')  # Decoding del nome del file in place
     else:
         msg = response.decode()
         print(f"Messaggio da {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
