@@ -20,7 +20,8 @@ __response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTIT
 # Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
 # Per la gestione della ricezione dei file utilizziamo il seguente formato: <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
 __headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-Found>", "4": b"<OS-type>", "5": b"<CPU-stats>", "6": b"<Ram-usage>",
-                  "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>"}
+                  "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>",
+                  "12": b"<Content-Path>"}
 
 __buffer_size = 8192
 
