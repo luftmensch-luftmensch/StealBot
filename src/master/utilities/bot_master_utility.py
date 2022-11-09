@@ -140,14 +140,6 @@ def get_directory_list(parent_path: str):
             print(f"Per mancanza di permessi non viene mostrato il contenuto di {parent_path}{current_dir}")
 
 
-# Da preferire in quanto non restituisce nulla nel caso in cui si stia cercando di leggere una directory senza permessi
-def get_path_content(current_position: str):
-    """Recupero info su directory e file."""
-    for path, dirs, files in os.walk(current_position):
-        for filename in files:
-            print(os.path.join(path, filename))
-
-
 def initialize_result_folder(current_directory: str, result_folder: str) -> None:
     """Controllo e creazione della directory utilizzata per il salvataggio di file ricevuti dal client."""
     if not os.path.exists(current_directory + "/" + result_folder):

