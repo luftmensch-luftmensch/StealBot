@@ -8,11 +8,12 @@ Copyright (c) 2022. All rights reserved.
 """
 import asyncio
 from datetime import datetime as dt
+import re
 from . import bot_slave_utilities as bot_utils
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 
 __response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTITION-DISK-INFO", "5": "PARTITION-DISK-STATUS",
-                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "q": "QUIT"}
+                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "10": "Content-Path", "q": "QUIT"}
 
 __buffer_size = 8192
 
@@ -79,5 +80,12 @@ async def run_client(hostname: str, port: int) -> None:
                 await command_to_execute(writer, response.decode())
                 await asyncio.sleep(1)
                 writer.write(operation_keyword.encode())
+        elif response.decode().startswith(__response_options["10"]):
+            # print(f'Received {__response_options.get("10")}')
+            request = re.split(__response_options["10"], response.decode())[1]
+            for files in bot_utils.get_path_content(request):
+                print(files)
+
+            writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())
