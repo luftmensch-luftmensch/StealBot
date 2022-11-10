@@ -7,7 +7,6 @@ Scritto da:
 Copyright (c) 2022. All rights reserved.
 """
 import asyncio
-from datetime import datetime as dt
 import re
 from . import bot_slave_utilities as bot_utils
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
@@ -23,31 +22,28 @@ async def command_to_execute(writer: asyncio.StreamWriter, case: str) -> None:
     """Gestione dell'operazione impartita dal master da eseguire."""
     match case:
         case 'OS-TYPE':
-            writer.write(bot_utils.get_operating_system().encode())
+            writer.write(bot_utils.get_operating_system())  # Per semplicità andiamo a parametrizzare gli oggetti separandoli con gli __headers_type
+
         case 'CPU-STATS':
-            writer.write(bot_utils.get_cpu_information().encode())
+            writer.write(bot_utils.get_cpu_information())
+
         case 'RAM':
-            writer.write(bot_utils.get_ram_size().encode())
+            writer.write(bot_utils.get_ram_size())
+
         case 'PARTITION-DISK-INFO':
-            for partition in bot_utils.get_partition_disk_info():
-                if not partition.device.startswith("/dev/loop") and not partition.mountpoint.startswith("/var/snap"):  # In questo modo escludiamo i mount point di snap
-                    info_disk = f"{partition.device}, {partition.mountpoint}, {partition.fstype}"
-                    writer.write(info_disk.encode())
-                    await asyncio.sleep(1)
+            await bot_utils.get_partition_disk_info(writer)
+
         case 'PARTITION-DISK-STATUS':
-            writer.write(bot_utils.get_io_disk_statistics().encode())
+            writer.write(bot_utils.get_io_disk_statistics())
+
         case 'NETWORK-INFO':
-            for i_name, interface_addresses in bot_utils.get_network_info().items():
-                for i_addr in interface_addresses:
-                    info_net = f"Intefaccia: {i_name}, IP: {i_addr.address}, Netmask: {i_addr.netmask}, Broadcast IP: {i_addr.broadcast}"
-                    writer.write(info_net.encode())
-                    await asyncio.sleep(1)
+            await bot_utils.get_network_info(writer)
+
         case 'USERS':
-            for user in bot_utils.get_users():
-                user_data = f"Nome: {user.name}, Attivo da: {dt.fromtimestamp(user.started)}"
-                writer.write(user_data.encode())
-                await asyncio.sleep(1)
+            await bot_utils.get_users(writer)
+
         case 'DOWNLOAD-FILE':
+            # TODO: Spostare la funzione a parte e gestire la richiesta del file con un dictionary una volta listato il contenuto (?)
             request = "test.png"  # Atm il file è hardcoded -> In questo punto facciamo stripping della request ricevuta dal server e controlliamo se esiste sul disco il file richiesto
             await bot_utils.send_file(request, __buffer_size, writer)  # Spostiamo la gestione del controllo di esistenza del file all'interno della funzione stessa
         case _:
@@ -82,8 +78,7 @@ async def run_client(hostname: str, port: int) -> None:
                 writer.write(operation_keyword.encode())
         elif response.decode().startswith(__response_options["10"]):
             request = re.split(__response_options["10"], response.decode())[1]
-            for files in bot_utils.get_path_content(request, os_type):  # Utilizziamo la variabile globale che viene settata all'avvio del client
-                print(files)
+            await bot_utils.send_dir_content(request, os_type, writer)
             writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())

