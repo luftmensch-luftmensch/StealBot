@@ -13,6 +13,7 @@ import psutil
 import platform
 import asyncio
 import os  # Utilizzato per il controllo dell'esistenza del file (Alternativamente è possibile utilizzare path -> path('dir/myfile.txt').abspath())
+import sys
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati -> Sostituito con un iteratore
 # from time import sleep
 
@@ -21,6 +22,7 @@ __headers_type = {"1": b"<File-Name>", "2": b"<File-Content>", "3": b"<File-Not-
                   "7": b"<Partition-disk-info>", "8": b"<Partition-disk-status>", "9": b"<IO-connected>", "10": b"<Network-info>", "11": b"<Users>",
                   "12": b"<Content-Path>"}
 
+__os_dict_types = {0: "linux", 1: "win32", 2: "darwin"}  # Partiamo da 0 in modo da porte accedere al'i-esimo elemento nella lista contenuta in __filesystem_hierarchy
 
 __filesystem_hierarchy = {"Root": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
                           "Home": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
@@ -31,12 +33,12 @@ __filesystem_hierarchy = {"Root": ["/", "C:/", "/"],  # Da utilizzare in maniera
 
 
 # Da preferire in quanto non restituisce nulla nel caso in cui si stia cercando di leggere una directory senza permessi
-def get_path_content(content_path: str) -> list:
+def get_path_content(content_path: str, sys_type: int) -> list:
     """Funzione per il recupero del contenuto di directory e file dato un path."""
     current_position = __filesystem_hierarchy.get(content_path)
 
     total_files = []
-    for path, dirs, files in os.walk(current_position[0]):  # Al momento è hardcoded -> Introdurre variabile globale che identifichi il tipo di OS
+    for path, dirs, files in os.walk(current_position[sys_type]):
         for filename in files:
             total_files.append(os.path.join(path, filename))
     return total_files
@@ -142,3 +144,12 @@ def get_operating_system() -> str:
     # TODO: Da testare con altri OS
     # Ritorniamo il campo con il maggior numero di informazioni possibili
     return platform.platform()  # example: Linux-5.15.0-50-generic-x86-64-with-glib2.35
+
+
+# https://stackoverflow.com/questions/446209/possible-values-from-sys-platform
+def os_type_initializer() -> int:
+    """Funzione di inizializzazione del tipo di os."""
+    os_type = sys.platform
+    if os_type in __os_dict_types.values():
+        # return __os_dict_types.index(os_type)
+        return list(__os_dict_types.keys())[list(__os_dict_types.values()).index(os_type)]

@@ -112,7 +112,7 @@ def print_menu(dictionary: dict, title: str, width=int) -> None:
     print(north_box)
     print(f"║ {title}")
     for item in dictionary.keys():
-        print("║\t", item, '--', dictionary[item])
+        print("║\t", item.ljust(2), '--', dictionary[item])
     print(south_box)
 
 

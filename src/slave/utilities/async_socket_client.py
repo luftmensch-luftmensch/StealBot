@@ -81,11 +81,15 @@ async def run_client(hostname: str, port: int) -> None:
                 await asyncio.sleep(1)
                 writer.write(operation_keyword.encode())
         elif response.decode().startswith(__response_options["10"]):
-            # print(f'Received {__response_options.get("10")}')
             request = re.split(__response_options["10"], response.decode())[1]
-            for files in bot_utils.get_path_content(request):
+            for files in bot_utils.get_path_content(request, os_type):  # Utilizziamo la variabile globale che viene settata all'avvio del client
                 print(files)
-
             writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())
+
+
+def set_initializer():
+    """Setter e wrapper della funzione di recupero OS."""
+    global os_type
+    os_type = bot_utils.os_type_initializer()

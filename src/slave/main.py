@@ -29,6 +29,7 @@ def start(host: str, port: int, finder: bool):
         net_utils.find_bot_master()
     else:
         current_status = bot_status.get(1)
+        async_client.set_initializer()  # Settaggio della variabile globale utilizzata per ottenere il tipo di OS su cui il client sta girando
 
         while True:
             # TODO: Convertirlo utilizzando il match case -> https://stackoverflow.com/questions/72638083/python-match-case-dictionary-keys

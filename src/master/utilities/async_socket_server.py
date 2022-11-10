@@ -15,7 +15,7 @@ import re  # Necessario per la codifica della richiesta ricevuta dal client
 from . import bot_master_utility as bot_master_utils
 
 __response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTITION-DISK-INFO", "5": "PARTITION-DISK-STATUS",
-                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "C": "Content-Path", "q": "QUIT"}
+                      "6": "IO-CONNECTED", "7": "NETWORK-INFO", "8": "USERS", "9": "DOWNLOAD-FILE", "10": "Content-Path", "q": "QUIT"}
 
 # Definiamo degli header custom per identificare il tipo di dato ricevuto dal client
 # Per la gestione della ricezione dei file utilizziamo il seguente formato: <File-Name>NOME_FILE<File-Content>CONTENUTO_FILE
@@ -76,7 +76,7 @@ async def handle_response_for_files(filename: str, content) -> None:
 
 async def ask_operation(writer: asyncio.StreamWriter) -> None:
     """Funzione di richiesta dell'operazione da inviare al client da parte del server."""
-    bot_master_utils.print_menu(__response_options, "Operazioni disponibili:", 32)
+    bot_master_utils.print_menu(__response_options, "Operazioni disponibili:", 36)
     try:
         request = await ainput(">>> ")
         if request in __response_options.keys():
@@ -106,7 +106,7 @@ async def ask_content_path(writer: asyncio.StreamWriter) -> None:
         request = await ainput(">>>> ")
         if request in __filesystem_hierarchy_components.keys():
             print(f"Operazione selezionata: {request}")
-            chosen_operation = __response_options["C"] + __filesystem_hierarchy_components.get(request)  # TODO: Modificare i values delle response in accordo con gli headers_type
+            chosen_operation = __response_options["10"] + __filesystem_hierarchy_components.get(request)  # TODO: Modificare i values delle response in accordo con gli headers_type
             writer.write(chosen_operation.encode())
     except Exception as e:
         #  TODO: In caso di eccezione ritornare (?)
