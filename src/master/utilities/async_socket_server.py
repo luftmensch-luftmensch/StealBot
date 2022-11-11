@@ -113,8 +113,6 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
             chosen_operation = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
             writer.write(chosen_operation.encode())
             await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
-        if not writer:
-            print("SONO QUI")
     except Exception as e:
         bot_master_utils.info(f"{type(e)}: {e}", 2)
         loop = asyncio.get_event_loop()
@@ -133,7 +131,9 @@ async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
             writer.write(__response_options["8"].encode() + chosen_file.encode())
             # TODO: Svuotare la lista nel caso in cui non si fosse chiesto il download di tutti i file
         else:
-            print("Out of range")
+            chosen_operation = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
+            writer.write(chosen_operation.encode())
+            await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
     except Exception as e:
         bot_master_utils.info(f"{type(e)}: {e}", 2)
 

