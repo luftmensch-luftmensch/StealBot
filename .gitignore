@@ -13,3 +13,4 @@
 *.pyc
 /site/resources/
 /site/.hugo_build.lock
+/src/database/.pg/

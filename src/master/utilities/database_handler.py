@@ -22,11 +22,12 @@ class DatabaseHandler:
     aggiungendo __ all'inizio di una variabile (naming convention) la definiamo
     come internal (Non è quindi accessibile)
     """
-    __database_host = "192.168.1.36"
+    # __database_host = "192.168.1.36"
+    __database_host = "localhost"
     __database_port = "5432"
-    __database_name = "botnet"
+    __database_name = "postgres"
     __database_username = "username"
-    __database_password = "password"
+    __database_password = ""
 
     __connection_alive = True
 
