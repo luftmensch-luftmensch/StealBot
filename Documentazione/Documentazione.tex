@@ -1,4 +1,4 @@
-% Created 2022-11-16 mer 12:09
+% Created 2022-11-16 mer 15:02
 % Intended LaTeX compiler: lualatex
 \documentclass[letterpaper, 11pt]{article}
 
@@ -52,9 +52,11 @@
 \definecolor{variableKeyword}{HTML}{778899}
 % Definizione colori definitiva
 \definecolor{orangelight}{RGB}{238,162,82}
+\definecolor{orange-apricot}{HTML}{FBCEB1}
 \definecolor{greenlight}{RGB}{147,196,125}
 \definecolor{purplelight}{RGB}{176,159,222}
 \definecolor{bluelight}{RGB}{122,171,216}
+\definecolor{lavanda}{HTML}{F4BBFF}
 \definecolor{redstrong}{RGB}{255,40,50}
 \definecolor{greendark}{RGB}{144,161,106}
 \definecolor{footerColor}{RGB}{0,163,243}
@@ -392,16 +394,16 @@ keywordstyle=[2]\color{includeStatementCPP},
 \tableofcontents
 \pagebreak
 \section{Presentazione}
-\label{sec:org958bcc6}
+\label{sec:org920b3b5}
 \noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
 \subsection{Descrizione della traccia}
-\label{sec:org29ee6a7}
+\label{sec:org02a91fc}
 Si richiede la realizzazione di una \texttt{BotNET} \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
 \subsubsection{Tecnologie e linguaggi richiesti}
-\label{sec:org01699b3}
+\label{sec:org8fde387}
 Si richiede un applicativo scritto in \texttt{Python} \autocite{DefinizionePython} che utilizzi come strumento di comunicazione le \texttt{socket} \autocite{DefinizioneSocket}
 \subsection{Implementazione del sistema}
-\label{sec:orgfffa239}
+\label{sec:orgaae77b7}
 Il progetto si concretizza in 2 componenti ben definite:
 \begin{itemize}
 \item Un \texttt{Bot Master} per la gestione dei dati ricevuti dal \texttt{bot slave} al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
@@ -409,9 +411,9 @@ Il progetto si concretizza in 2 componenti ben definite:
 \end{itemize}
 \vfill
 \subsection{Guida al Bot Master}
-\label{sec:org36ed504}
+\label{sec:orga2a20f3}
 \subsubsection{Primo avvio}
-\label{sec:org37f2068}
+\label{sec:orga9cdb6f}
 Durante la fase di avvio il programma effettua le seguenti operazioni:
 \begin{itemize}
 \item Controlla che \texttt{host} e \texttt{porta} \autocite{infoHostPortMaster} siano disponibili per la successiva creazione della socket;
@@ -425,12 +427,12 @@ Nel momento in cui viene effettuata una nuova connessione, il server invia la ri
 \item Nel caso in cui si trattasse di un file (identificato da un campo \texttt{Header} a inizio richiesta), lo salva automaticamente, per poter essere fruibile successivamente.
 \end{itemize}
 \subsubsection{Memorizzazione dei dati}
-\label{sec:orge0a548a}
+\label{sec:orgf6eaccf}
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal \emph{bot slave} durante la sua esecuzione.
 \subsection{Guida al Bot Slave}
-\label{sec:org0095e4e}
+\label{sec:orge01276c}
 \subsubsection{Primo avvio}
-\label{sec:orga5a0aa2}
+\label{sec:org1b708c1}
 Durante la fase di avvio il programma effettua le seguenti operazioni:
 \begin{itemize}
 \item Controlla che \texttt{host} e \texttt{porta} \autocite{infoHostPortSlave} siano disponibili per la successiva creazione della socket;
@@ -441,7 +443,7 @@ Durante la fase di avvio il programma effettua le seguenti operazioni:
 \end{itemize}
 \end{itemize}
 \subsection{Analisi della struttura del progetto}
-\label{sec:org8207020}
+\label{sec:org858ed7f}
 La struttura del progetto è così strutturata:
 
 % Server
@@ -471,26 +473,27 @@ La struttura del progetto è così strutturata:
   \end{itemize}
 \end{minipage}
 \subsection{Report dei dati recuperati}
-\label{sec:org94bef07}
+\label{sec:orga469cae}
 TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
 \section{Codice sorgente sviluppato}
-\label{sec:orgc881bf0}
+\label{sec:org9576c46}
 Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è disponibile sulla piattaforma \href{https://github.com/}{GitHub}, che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il \href{https://github.com/luftmensch-luftmensch/StealBot}{download} \autocite{informazioniRepository}
 \section{Risultati della prima prova}
-\label{sec:org3178655}
+\label{sec:org4c8e7bd}
 Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato le seguenti informazioni:
 \subsection{Informazioni sulla macchina (OS: \texttt{Linux-5.15.0-52-generic-x86\_64-with-glibc2.35})}
-\label{sec:orgd1a82b1}
+\label{sec:org09d2b3b}
 \begin{center}
 \textbf{CPU}
 \end{center}
 
 \begin{center}
-  \begin{tabular}{{|p{0.31\textwidth}|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.171\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.306\textwidth}|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.171\textwidth}|}}
     \hline
-        Brand & CPU Count & CPU Count logical & Frequenza Minima & Frequenza Massima\\
+        \cellcolor{pink!60}Brand & \cellcolor{pink!60}CPU Count & \cellcolor{pink!60}CPU Count logical & \cellcolor{pink!60}Frequenza Minima & \cellcolor{pink!60}Frequenza Massima\\
     \hline
         \texttt{Intel(R) Core(TM) i7-8569U} & 4 & 4 & 2.80GHz & 4.70GHz\\
     \hline
@@ -502,9 +505,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 \end{center}
 
 \begin{center}
-  \begin{tabular}{{|p{0.476\textwidth}|p{0.476\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
     \hline
-        Memoria utilizzata & Memoria Totale\\
+        \cellcolor{pink!60}Memoria utilizzata & \cellcolor{pink!60}Memoria Totale\\
     \hline
         790.86MB & 3.83GB\\
     \hline
@@ -516,9 +520,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 \end{center}
 
 \begin{center}
-  \begin{tabular}{{|p{0.314\textwidth}|p{0.30\textwidth}|p{0.314\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.313\textwidth}|p{0.30\textwidth}|p{0.313\textwidth}|}}
     \hline
-        Device & Mountpoint & Tipo di partizione\\
+        \cellcolor{pink!60}Device & \cellcolor{pink!60}Mountpoint & \cellcolor{pink!60}Tipo di partizione\\
     \hline
         \texttt{/dev/sda2} & \texttt{/boot/efi} & \texttt{vfat}\\
     \hline
@@ -532,9 +537,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 \end{center}
 
 \begin{center}
-  \begin{tabular}{{|p{0.476\textwidth}|p{0.476\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
     \hline
-        Letture & Scritture\\
+        \cellcolor{pink!60}Letture & \cellcolor{pink!60}Scritture\\
     \hline
         691.32MB & 31.47MB\\
     \hline
@@ -546,37 +552,38 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 \end{center}
 
 \begin{center}
-  \begin{tabular}{{|p{0.1\textwidth}|p{0.335\textwidth}|p{0.25\textwidth}|p{0.22\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.1\textwidth}|p{0.335\textwidth}|p{0.25\textwidth}|p{0.217\textwidth}|}}
     \hline
-        Interfaccia & IP & NetMask & Broadcast\\
+        \cellcolor{pink!60}Interfaccia & \cellcolor{pink!60}IP & \cellcolor{pink!60}NetMask & \cellcolor{pink!60}Broadcast\\
     \hline
-        loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
+        \cellcolor{purplelight}loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
     \hline
-        loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
+        \cellcolor{purplelight}loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
     \hline
-        loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
+        \cellcolor{purplelight}loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
     \hline
-        enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
+        \cellcolor{orange-apricot}enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
     \hline
-        enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{orange-apricot}enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
+        \cellcolor{orange-apricot}enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
     \hline
-        enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
+        \cellcolor{lavanda}enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
+        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
     \hline
-        enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff\\
+        \cellcolor{lavanda}enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff\\
     \hline
   \end{tabular}
 \end{center}
@@ -586,15 +593,30 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 \end{center}
 
 \begin{center}
-  \begin{tabular}{{|p{0.476\textwidth}|p{0.476\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
     \hline
-        Nome utente & Attivo da\\
+        \cellcolor{pink!60}Nome utente & \cellcolor{pink!60}Attivo da\\
     \hline
         \textbf{alessio} & 2022-11-16 09:04:16\\
     \hline
   \end{tabular}
 \end{center}
+\subsection{File recuperati durante l'esecuzione del bot slave}
+\label{sec:org48b13b9}
+\begin{itemize}
+\item \texttt{.bash\_history} \(\rightarrow\) Contiene tutta la cronologia dei comandi dati dall'utente;
+\item \texttt{.bash\_logout} \(\rightarrow\) Contiene le operazioni da eseguire durante il logout dell'utente;
+\item \texttt{.bashrc} \(\rightarrow\) File di configurazione della shell bash;
+\item \texttt{bookmarks} \(\rightarrow\) Contiene i segnalibri definiti dall'utente
+\item \texttt{meta-release-lts}  e \texttt{ubuntu.22.04} \(\rightarrow\) Contengono le informazioni aggiuntive della macchina su cui gira il bot slave;
+\item \texttt{.pam\_environment} \(\rightarrow\) Contiene variabili per la lingua;
+\item \texttt{.passwords} \(\rightarrow\) File contentente \texttt{eCambiata}
+\item \texttt{.profile} \(\rightarrow\) Impostazioni aggiuntive per la shell \texttt{bash}
+\item \texttt{.python\_history} \(\rightarrow\) Contiene la cronologia dei comandi effettuati dall'interprete interattivo \emph{python};
+\item \texttt{user-dirs.dirs} \(\rightarrow\) Contiene le informazioni sulle variabili delle directory della home dell'utente.
+\end{itemize}
 \section{Ringraziamenti}
-\label{sec:org4a41ac3}
+\label{sec:orgfd102a1}
 Ringraziamo il professore \href{mailto:a.botta@unina.it}{Alessio Botta} per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
 \end{document}

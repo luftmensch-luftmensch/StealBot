@@ -198,9 +198,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 
 #+begin_export latex
 \begin{center}
-  \begin{tabular}{{|p{0.31\textwidth}|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.171\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.306\textwidth}|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.171\textwidth}|}}
     \hline
-        Brand & CPU Count & CPU Count logical & Frequenza Minima & Frequenza Massima\\
+        \cellcolor{pink!60}Brand & \cellcolor{pink!60}CPU Count & \cellcolor{pink!60}CPU Count logical & \cellcolor{pink!60}Frequenza Minima & \cellcolor{pink!60}Frequenza Massima\\
     \hline
         \texttt{Intel(R) Core(TM) i7-8569U} & 4 & 4 & 2.80GHz & 4.70GHz\\
     \hline
@@ -214,9 +215,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 
 #+begin_export latex
 \begin{center}
-  \begin{tabular}{{|p{0.476\textwidth}|p{0.476\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
     \hline
-        Memoria utilizzata & Memoria Totale\\
+        \cellcolor{pink!60}Memoria utilizzata & \cellcolor{pink!60}Memoria Totale\\
     \hline
         790.86MB & 3.83GB\\
     \hline
@@ -230,9 +232,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 
 #+begin_export latex
 \begin{center}
-  \begin{tabular}{{|p{0.314\textwidth}|p{0.30\textwidth}|p{0.314\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.313\textwidth}|p{0.30\textwidth}|p{0.313\textwidth}|}}
     \hline
-        Device & Mountpoint & Tipo di partizione\\
+        \cellcolor{pink!60}Device & \cellcolor{pink!60}Mountpoint & \cellcolor{pink!60}Tipo di partizione\\
     \hline
         \texttt{/dev/sda2} & \texttt{/boot/efi} & \texttt{vfat}\\
     \hline
@@ -248,9 +251,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 
 #+begin_export latex
 \begin{center}
-  \begin{tabular}{{|p{0.476\textwidth}|p{0.476\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
     \hline
-        Letture & Scritture\\
+        \cellcolor{pink!60}Letture & \cellcolor{pink!60}Scritture\\
     \hline
         691.32MB & 31.47MB\\
     \hline
@@ -264,37 +268,38 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 
 #+begin_export latex
 \begin{center}
-  \begin{tabular}{{|p{0.1\textwidth}|p{0.335\textwidth}|p{0.25\textwidth}|p{0.22\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.1\textwidth}|p{0.335\textwidth}|p{0.25\textwidth}|p{0.217\textwidth}|}}
     \hline
-        Interfaccia & IP & NetMask & Broadcast\\
+        \cellcolor{pink!60}Interfaccia & \cellcolor{pink!60}IP & \cellcolor{pink!60}NetMask & \cellcolor{pink!60}Broadcast\\
     \hline
-        loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
+        \cellcolor{purplelight}loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
     \hline
-        loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
+        \cellcolor{purplelight}loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
     \hline
-        loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
+        \cellcolor{purplelight}loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
     \hline
-        enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
+        \cellcolor{orange-apricot}enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
     \hline
-        enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{orange-apricot}enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
+        \cellcolor{orange-apricot}enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
     \hline
-        enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
+        \cellcolor{lavanda}enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
     \hline
-        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
+        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
     \hline
-        enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff\\
+        \cellcolor{lavanda}enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff\\
     \hline
   \end{tabular}
 \end{center}
@@ -306,9 +311,10 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 
 #+begin_export latex
 \begin{center}
-  \begin{tabular}{{|p{0.476\textwidth}|p{0.476\textwidth}|}}
+  \setlength{\arrayrulewidth}{0.9pt}
+  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
     \hline
-        Nome utente & Attivo da\\
+        \cellcolor{pink!60}Nome utente & \cellcolor{pink!60}Attivo da\\
     \hline
         \textbf{alessio} & 2022-11-16 09:04:16\\
     \hline
@@ -316,18 +322,15 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 \end{center}
 #+end_export
 ** File recuperati durante l'esecuzione del bot slave
- + ~.bash_history~
- + ~.bash_logout~
- + ~.bashrc~
- + ~bookmarks~
- + ~cookie~
- + ~meta-release-lts~
- + ~.pam_environment~
- + ~.passwords~
- + ~.profile~
- + ~.python_history~
- + ~ubuntu.22.04~
- + ~user~
- + ~user-dirs.dirs~
++ ~.bash_history~ $\rightarrow$ Contiene tutta la cronologia dei comandi dati dall'utente;
++ ~.bash_logout~ $\rightarrow$ Contiene le operazioni da eseguire durante il logout dell'utente;
++ ~.bashrc~ $\rightarrow$ File di configurazione della shell bash;
++ ~bookmarks~ $\rightarrow$ Contiene i segnalibri definiti dall'utente
++ ~meta-release-lts~  e ~ubuntu.22.04~ $\rightarrow$ Contengono le informazioni aggiuntive della macchina su cui gira il bot slave;
++ ~.pam_environment~ $\rightarrow$ Contiene variabili per la lingua;
++ ~.passwords~ $\rightarrow$ File contentente ~eCambiata~
++ ~.profile~ $\rightarrow$ Impostazioni aggiuntive per la shell ~bash~
++ ~.python_history~ $\rightarrow$ Contiene la cronologia dei comandi effettuati dall'interprete interattivo /python/;
++ ~user-dirs.dirs~ $\rightarrow$ Contiene le informazioni sulle variabili delle directory della home dell'utente.
 * Ringraziamenti
 Ringraziamo il professore [[mailto:a.botta@unina.it][Alessio Botta]] per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
