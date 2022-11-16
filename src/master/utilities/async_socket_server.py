@@ -106,6 +106,9 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
             chosen_operation = __response_options.get(request)
             if chosen_operation == "Content-Path":
                 await ask_content_path(writer)
+            if chosen_operation == "DOWNLOAD-FILE":
+                chosen_file = ""
+                writer.write(__response_options["8"].encode() + chosen_file.encode())
             else:
                 writer.write(chosen_operation.encode())
                 await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
