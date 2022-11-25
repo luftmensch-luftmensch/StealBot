@@ -87,6 +87,7 @@ async def run_client(hostname: str, port: int) -> None:
             writer.write(operation_keyword.encode())
 
 
+# TODO: Disable -> Dobbiamo gestire solo macchine Unix
 def set_initializer():
     """Setter e wrapper della funzione di recupero OS."""
     global os_type

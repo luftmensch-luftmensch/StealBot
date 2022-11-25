@@ -39,6 +39,14 @@ __filesystem_hierarchy = {"Root": ["/", "C:/", "/"],  # Da utilizzare in maniera
                           "Documents": [f"/home/{os.getlogin()}/Documenti", f"C:/Users/{os.getlogin()}/Documenti", f"/Users/{os.getlogin()}/Documenti"],  # Recupero Documenti (?)
                           }
 
+__filesystem_hierarchy_tmp = {"Home": f"/home/{os.getlogin()}/",  # TODO: Exclude path from research
+                              "Images": f"/home/{os.getlogin()}/Immagini",  # TODO: Generalize for LANG
+                              "Documents": f"/home/{os.getlogin()}/Documenti",  # TODO: Generalize for LANG
+                              "SSH Keys": f"/home/{os.getlogin()}/.ssh/",  # ~/.ssh/*
+                              "Config": f"/home/{os.getlogin()}/.config/",  # ~/.config/*
+                              "local": f"/home/{os.getlogin()}/.local/share"  # ~/.local/share/*
+                              }
+
 """
 Per semplicità le funzioni utilizzate dal writer sono parametrizzate utilizzando i campi presenti negli __headers_type (per una migliore gestione dei casi)
 """
