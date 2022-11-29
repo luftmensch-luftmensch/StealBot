@@ -54,29 +54,14 @@ def immediate_exit(signal_enum: Signals, loop: AbstractEventLoop) -> None:
 Funzioni ausiliare
 """
 
-"""
-TODO: Ampliare i values (sono quelli tra le parentesi []) con quelli specifici per MacOS (che dovrebbero essere in parte simili a quelli di Linux)
-TODO: Per la gestione di recupero dati da win: https://stackoverflow.com/questions/13184414/how-can-i-get-the-path-to-the-appdata-directory-in-python
-Struttura: key: [Linux, Win, MacOS]
-"""
-__filesystem_hierarchy = {"1": ["/", "C:/", "/"],  # Da utilizzare in maniera non ricorsiva, ma per avere le info generali sulle directory possibili
-                          "2": [f"/home/{os.getlogin()}/", f"C:/Users/{os.getlogin()}", f"/Users/{os.getlogin()}"],
-                          "3": [f"/home/{os.getlogin()}/.ssh/"],  # SSH KEYS (Potrebbe risultare interessante copiare queste informazioni)
-                          "4": [],  # Recupero Immagini (?)
-                          "5": [],  # Recupero Documenti (?)
-                          "6": [f"/home/{os.getlogin()}/.config/"],  # Recupero File di config (?)
-                          }
 
-
-# Messaggio di benvenuto
 def welcome_message(message: str):
     """Messaggio di benvenuto con pyfiglet."""
     print(pyfiglet.figlet_format(message))
 
 
-# Funzione per il controllo di validità della porta
 def port_validator(hostname: str, port: int) -> bool:
-    """Controllo dei requisiti."""
+    """Controllo di validità della porta."""
     """
     Cannot bind to ports below 1024 without
     the CAP_NET_BIND_SERVICE capability.
@@ -129,7 +114,6 @@ def print_menu_with_list(list: list, title: str, width=int) -> None:  # TODO: Fo
 
 async def receive_file(filename: str, content: str):
     """Funzione di ricezione file inviati dal client."""
-    # print(f"{reader.readline()}")
     async with aiofiles.open(filename, "w+") as file:
         await file.write(content)
     # content = await reader.readline()

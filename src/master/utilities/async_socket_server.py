@@ -133,7 +133,7 @@ async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
         # Controlliamo che l'utente abbia richiesto un range di file
         # Nel caso in cui l'utente voglia selezionare un range di file utilizziamo la forma <n-N> (es 0-10 per selezionare i file che hanno indici da 0 a 10)
         if "-" in index:  # Utilizziamo come separatore <->
-            boundary = re.split('-', index)  # TODO: Aggiungere un campo all'interno di __response_options per la lista di file da scaricare (Per effettuare una singola chiamata)
+            boundary = re.split('-', index)
             filename_range = __file_range_header[1]
             for x in range(int(boundary[0]), int(boundary[1])):
                 filename_range += __file_range_header[2] + content_dir[x]
@@ -151,7 +151,6 @@ async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
                 chosen_file = content_dir[request]
                 print(f"Operazione scelta {request} -> {chosen_file}")
                 writer.write(__response_options["8"].encode() + chosen_file.encode())
-                # TODO: Svuotare la lista nel caso in cui non si fosse chiesto il download di tutti i file
             else:
                 writer.write(operation_not_supported.encode())
 

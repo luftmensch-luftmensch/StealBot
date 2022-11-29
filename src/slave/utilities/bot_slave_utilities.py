@@ -100,7 +100,7 @@ def get_io_disk_statistics() -> bytes:
            __headers_type["6-2"] + get_size(psutil.disk_io_counters().write_bytes).encode())
 
 
-async def get_network_info(writer: asyncio.StreamWriter) -> None:  # TODO: Controllare che funzioni anche con altri OS
+async def get_network_info(writer: asyncio.StreamWriter) -> None:
     """Recupero informazioni sulla rete."""
     for i_name, interface_addresses in psutil.net_if_addrs().items():
         for i_addr in interface_addresses:
