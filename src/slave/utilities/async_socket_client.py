@@ -9,10 +9,11 @@ Copyright (c) 2022. All rights reserved.
 import asyncio
 import re
 from . import bot_slave_utilities as bot_utils
-# from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati
 
 __response_options = {"1": "OS-TYPE", "2": "CPU-STATS", "3": "RAM", "4": "PARTITION-DISK-INFO", "5": "PARTITION-DISK-STATUS",
                       "6": "NETWORK-INFO", "7": "USERS", "8": "DOWNLOAD-FILE", "9": "Content-Path", "q": "QUIT"}
+
+__file_range_header = {1: "<Range-File>", 2: "<File-Name>"}
 
 __buffer_size = 8192
 
@@ -82,6 +83,25 @@ async def run_client(hostname: str, port: int) -> None:
         elif response.decode().startswith(__response_options["9"]):
             request = re.split(__response_options["9"], response.decode())[1]
             await bot_utils.send_dir_content(request, writer)
+            writer.write(operation_keyword.encode())
+
+        # Gestione del recupero di un range di file
+        elif response.decode().startswith(__file_range_header[1]):
+            request = re.split(__file_range_header[1], response.decode())
+            print(f"Request before: {request}")
+            while("" in request):
+                request.remove("")
+            print(f"Request after: {request}, type: {type(request)}, len: {len(request)}")
+
+            final_request = re.split(__file_range_header[2], request[0])  # TODO: Trovare un modo di fondere lo split
+
+            print(f"Final Request before: {final_request}")
+            while("" in final_request):
+                final_request.remove("")
+            print(f"Final Request after: {final_request}")
+
+            # TODO: Richiamare il recupero del file ciclando sulla lista final_request
+
             writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())
