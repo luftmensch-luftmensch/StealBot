@@ -14,7 +14,6 @@ import psutil
 import platform
 import asyncio
 import os  # Utilizzato per il controllo dell'esistenza del file (Alternativamente è possibile utilizzare path -> path('dir/myfile.txt').abspath())
-import sys
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati -> Sostituito con un iteratore
 # from time import sleep
 
@@ -29,8 +28,6 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
                   "8": b"<Users>", "8-1": b"<Users-Name>", "8-2": b"<Users-Active-Since>",
                   "9": b"<Content-Path>",
                   "10": b"<Waiting-For-File>"}
-
-__os_dict_types = {0: "linux", 1: "win32", 2: "darwin"}  # Partiamo da 0 in modo da porte accedere al'i-esimo elemento nella lista contenuta in __filesystem_hierarchy
 
 __filesystem_hierarchy = {"Home": f"/home/{os.getlogin()}/",  # TODO: Exclude path from research
                           "Images": f"/home/{os.getlogin()}/Immagini",  # TODO: Generalize for LANG
@@ -166,21 +163,6 @@ async def send_dir_content(request: str, writer: asyncio.StreamWriter):
         writer.write(__headers_type["9"] + files.encode())
         await asyncio.sleep(1)
     writer.write(__headers_type["10"])
-
-
-# TODO: ELIMINARE
-def get_hostname() -> str:
-    """Recupero info hostname."""
-    return socket.gethostname()
-
-
-# https://stackoverflow.com/questions/446209/possible-values-from-sys-platform
-def os_type_initializer() -> int:
-    """Funzione di inizializzazione del tipo di os."""
-    os_type = sys.platform
-    if os_type in __os_dict_types.values():
-        # return __os_dict_types.index(os_type)
-        return list(__os_dict_types.keys())[list(__os_dict_types.values()).index(os_type)]
 
 
 def test_connection(hostname: str, port: int) -> bool:
