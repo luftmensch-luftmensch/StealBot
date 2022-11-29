@@ -61,6 +61,11 @@ in pkgs.mkShell rec {
          export PS1="\[\e[1;32m\][\w] slave > \[\e[0m\]"
          cd ~/UNI/StealBot/src/slave
     }
+
+    run(){
+         python main.py
+
+    }
   '';
 
 }

