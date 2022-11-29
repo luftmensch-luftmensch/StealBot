@@ -126,7 +126,7 @@ async def ask_operation(writer: asyncio.StreamWriter) -> None:
 
 async def ask_file_name_to_download(writer: asyncio.StreamWriter) -> None:
     """Gestione della richiesta del recupero di un file presente sulla macchina dove viene eseguito il client."""
-    bot_master_utils.print_menu_with_list(content_dir, "Path disponibili:", 70)
+    bot_master_utils.print_menu(content_dir, "Path disponibili:", 70)
     try:
         operation_not_supported = "OPERATION_NOT_SUPPORTED"  # Testing nel caso in cui niente di quello inserito dall'utente matchi
         index = await ainput(">>> ")

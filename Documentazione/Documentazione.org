@@ -67,7 +67,7 @@
     \node[rectangle, inner sep = 0pt, outer sep = 0pt, minimum width = 3.5cm, minimum height = 3.5cm]
     at (logo){\includegraphics[width=3.5cm, height=3.5cm]{./Risorse/Start-Page/FedericoII.png}};
 
-    \node[scale=1.5] at (5.85,-10){\LARGE{StealBot}}; %% TODO: Pensare ad una alternativa
+    \node[scale=1.5] at (5.85,-10){\LARGE{StealBot}};
 
     \node[rectangle,
       draw,
@@ -102,11 +102,6 @@
     %% Giulia Caputo
     \node[scale=3] at (12,-26.4){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
     \node[scale=1.5] at (15.8, -26.5){\textbf{Giulia Caputo - N86003429}};
-
-    %% TODO: Testare che i nomi siano effettivamente allineati con \node[fit, draw=red, fill=red, inner sep=5pt]{nome}{test}
-
-    %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
-    %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
   \end{scope}
 
 \end{tikzpicture}

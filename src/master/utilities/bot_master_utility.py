@@ -90,25 +90,21 @@ def info(msg: str, level: int) -> None:
             sys.exit(1)
 
 
-def print_menu(dictionary: dict, title: str, width=int) -> None:
+def print_menu(values, title: str, width: int):
     """Menu di scelta per l'operazione da effettuare."""
     north_box = f'╔{"═" * width}╗'  # upper_border
     south_box = f'╚{"═" * width}╝'  # lower_border
     print(north_box)
     print(f"║ {title}")
-    for item in dictionary.keys():
-        print("║\t", item.ljust(2), '--', dictionary[item])
-    print(south_box)
-
-
-def print_menu_with_list(list: list, title: str, width=int) -> None:  # TODO: Fondere il metodo
-    """Menu di scelta per l'operazione da effettuare."""
-    north_box = f'╔{"═" * width}╗'  # upper_border
-    south_box = f'╚{"═" * width}╝'  # lower_border
-    print(north_box)
-    print(f"║ {title}")
-    for item in list:
-        print("║\t", list.index(item), '--', item)
+    match values:
+        case dict():
+            for item in values.keys():
+                print("║\t", item.ljust(2), '--', values[item])
+        case list():
+            for item in values:
+                print("║\t", values.index(item), '--', item)
+        case _:
+            print("Cannot identify type: ")
     print(south_box)
 
 
