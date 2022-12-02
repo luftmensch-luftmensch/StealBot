@@ -7,9 +7,13 @@ Scritto da:
 Copyright (c) 2022. All rights reserved.
 """
 import psutil
-from socket import AddressFamily
+from socket import socket, AddressFamily, AF_INET, SOCK_STREAM
+# import socket
 import typing
 import ipaddress
+import subprocess
+from concurrent import futures
+
 # Librerie personali
 from . import bot_slave_utilities as bot_utils
 
@@ -20,43 +24,46 @@ def get_net_ifname() -> dict:
             if value[0].family == AddressFamily.AF_INET and key != 'lo'][0]
 
 
-def get_hosts(net: str) -> typing.List[str]:
-    """Recupero di tutti gli indirizzi validi data una subnet."""
-    print("Network to scan:", net)
-    network = ipaddress.IPv4Network(net)
-    hosts_obj = network.hosts()
-    print("Prefix to scan:", network.prefixlen)
-    hosts = []
-    for i in hosts_obj:
-        hosts.append(str(i))
-    print(f"Number of hosts to scan: {len(hosts)}")
-    return hosts
+def find_active_devices(ip_addr: str, valid_hosts: list) -> None:
+    """Sfruttiamo ICMP per la ricerca degli host effettivamente attivi sulla rete."""
+    try:
+        subprocess.run(["ping", "-c", "1", ip_addr], shell=False, check=True, capture_output=True, text=True)
+        valid_hosts.append(ip_addr)
+    except subprocess.CalledProcessError:
+        # print(f"Error: Ping failed with host {ip_addr}")
+        pass
 
 
-def get_list_active_hosts(hosts: list) -> list:
-    """Recupero di tutti gli host attivi che accettano una connessione sulla porta richiesta."""
-    active_hosts = []
-    for host in hosts:
-        # TODO: Velocizzare il testing (magari facendolo a batteria) e diminuendo il timeout
-        if bot_utils.test_connection(host, 9090) is True:
-            print(f"L'host {host} è raggiungibile sulla porta 9090")
-            hosts.append(host)
-        else:
-            print(f"Socket non presente sull'host {host}")
-    return active_hosts
-
-
-def find_bot_master() -> None:
+def find_bot_master(port: int) -> None:
     """Funzione di wrapping per la ricerca del bot master sulla rete locale."""
-    # TODO: Trovare un modo più pulito di ottenere l'ip + subnet da passare alla funzione get_hosts
     range = ''
     i = 0
     for ip in get_net_ifname().values():
-        print(f"{ip.split('.')}")
         while i < 3:
             range += ip.split('.')[i] + '.'
             i += 1
 
-    hosts = get_hosts(range + "0/24")
-    active_hosts = get_list_active_hosts(hosts)
-    print(active_hosts)
+    network_hosts = ipaddress.ip_network(range + "0/24").hosts()
+
+    active_hosts = []
+    final_hosts = []
+
+    with futures.ThreadPoolExecutor(254) as executor:
+        ping_hosts = [executor.submit(find_active_devices, str(ip), active_hosts) for ip in network_hosts]
+        # È possibile utilizzare `executor.shutdown(wait=True)`
+        # Non necessario in quanto tutti gli executor attendono che tutti i processi terminano in un blocco `with`.
+        # Pertanto non c'è bisogno di invocare manualmente `executor.shutdown()`.
+        futures.wait(ping_hosts)
+
+    for host in active_hosts:
+      with socket(AF_INET, SOCK_STREAM) as tester:
+          try:
+              if (tester.connect_ex((host, port)) == 0):
+                  final_hosts.append(host)
+          except Exception as e:
+              print(e)
+
+    print(f"Host attualmente attivi: {final_hosts}")
+
+# if __name__ == "__main__":
+#     find_bot_master(9090)

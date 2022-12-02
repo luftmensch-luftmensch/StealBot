@@ -171,10 +171,10 @@ def test_connection(hostname: str, port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as tester:
         try:
             if (tester.connect_ex((hostname, port)) == 0):
-                print(f"Il server {hostname} sulla porta {port} è attualmente raggiungibile")
+                # print(f"Il server {hostname} sulla porta {port} è attualmente raggiungibile")
                 return True
             else:
-                print(f"Il server {hostname} sulla porta {port} non è attualmente raggiungibile.")
+                # print(f"Il server {hostname} sulla porta {port} non è attualmente raggiungibile.")
                 return False
         except Exception as e:
             print(e)
