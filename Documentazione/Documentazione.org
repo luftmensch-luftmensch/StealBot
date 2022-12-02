@@ -113,23 +113,43 @@
 #+end_export
 #+OPTIONS: date:nil title:nil toc:nil
 #+STARTUP: overview hideblocks
-#+SETUPFILE: ~/.config/emacs/setup-org-latex.setup
+#+SETUPFILE: ~/config/emacs/setup-org-latex.setup
 #+LATEX: \pagebreak
 * Presentazione
+:PROPERTIES:
+:CUSTOM_ID: Presentazione progetto
+:END:
 #+begin_export latex
 \noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
 #+end_export
 ** Descrizione della traccia
+:PROPERTIES:
+:CUSTOM_ID: Descrizione traccia
+:END:
 Si richiede la realizzazione di una ~BotNET~ \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
 *** Tecnologie e linguaggi richiesti
+:PROPERTIES:
+:CUSTOM_ID: Tecnologie e linguaggi
+:END:
+
 Si richiede un applicativo scritto in ~Python~ \autocite{DefinizionePython} che utilizzi come strumento di comunicazione le ~socket~ \autocite{DefinizioneSocket}
 ** Implementazione del sistema 
+:PROPERTIES:
+:CUSTOM_ID: Implementazione sistema
+:END:
+
 Il progetto si concretizza in 2 componenti ben definite:
 + Un ~Bot Master~ per la gestione dei dati ricevuti dal ~bot slave~ al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
 + Il ~Bot slave~, che ha il compito di ricavare quante più informazioni possibili sullo stato della macchina sul quale viene eseguito \autocite{notaBotSlave1} .
 #+LATEX: \vfill
 ** Guida al Bot Master
+:PROPERTIES:
+:CUSTOM_ID: Guida (Bot master)
+:END:
 *** Primo avvio
+:PROPERTIES:
+:CUSTOM_ID: Primo avvio (Bot master)
+:END:
 Durante la fase di avvio il programma effettua le seguenti operazioni:
 + Controlla che ~host~ e ~porta~ \autocite{infoHostPortMaster} siano disponibili per la successiva creazione della socket;
 + Esegue una connessione al dbms utilizzato per il salvataggio delle informazioni e inizializza la ~tabella~ utilizzata per lo scopo (se non precedentemente presente);
@@ -139,15 +159,27 @@ Nel momento in cui viene effettuata una nuova connessione, il server invia la ri
 + Salva l'informazione sul database (che viene mostrata all'utente attraverso lo standard output);
 + Nel caso in cui si trattasse di un file (identificato da un campo ~Header~ a inizio richiesta), lo salva automaticamente, per poter essere fruibile successivamente.
 *** Memorizzazione dei dati
+:PROPERTIES:
+:CUSTOM_ID: Memorizzazione dati (Bot master)
+:END:
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal /bot slave/ durante la sua esecuzione.
 ** Guida al Bot Slave
+:PROPERTIES:
+:CUSTOM_ID: Guida (Bot Slave)
+:END:
 *** Primo avvio
+:PROPERTIES:
+:CUSTOM_ID: Primo avvio (Bot slave)
+:END:
 Durante la fase di avvio il programma effettua le seguenti operazioni:
 + Controlla che ~host~ e ~porta~ \autocite{infoHostPortSlave} siano disponibili per la successiva creazione della socket;
 + Esegue un test sull'effettivo stato di attività del server
   - In caso di esito negativo attende e ritenta;
   - In caso di esito positivo invece esegue le istruzioni impartite dal Master.
 ** Analisi della struttura del progetto
+:PROPERTIES:
+:CUSTOM_ID: Analisi progetto
+:END:
 La struttura del progetto è così strutturata:
 
 #+begin_export latex
@@ -179,144 +211,120 @@ La struttura del progetto è così strutturata:
 \end{minipage}
 #+end_export
 ** Report dei dati recuperati
+:PROPERTIES:
+:CUSTOM_ID: Report dati
+:END:
 TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
 * Codice sorgente sviluppato
+:PROPERTIES:
+:CUSTOM_ID: Codice sorgente
+:END:
 Il codice sorgente prodotto durante lo sviluppo di $StealBot^{\copyright}$ è disponibile sulla piattaforma [[https://github.com/][GitHub]], che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il [[https://github.com/luftmensch-luftmensch/StealBot][download]] \autocite{informazioniRepository}
 * Risultati della prima prova
+:PROPERTIES:
+:CUSTOM_ID: Report prima prova
+:END:
 Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato le seguenti informazioni:
 ** Informazioni sulla macchina (OS: ~Linux-5.15.0-52-generic-x86_64-with-glibc2.35~)
-#+begin_center
-*CPU*
-#+end_center
-
+:PROPERTIES:
+:CUSTOM_ID: Tabelle con info della macchina
+:END:
 #+begin_export latex
+%% CPU
 \begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.306\textwidth}|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.171\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Brand & \cellcolor{pink!60}CPU Count & \cellcolor{pink!60}CPU Count logical & \cellcolor{pink!60}Frequenza Minima & \cellcolor{pink!60}Frequenza Massima\\
-    \hline
-        \texttt{Intel(R) Core(TM) i7-8569U} & 4 & 4 & 2.80GHz & 4.70GHz\\
-    \hline
-  \end{tabular}
+    \textbf{CPU}
 \end{center}
-#+end_export
 
-#+begin_center
-*RAM*
-#+end_center
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[1.5,c]X[c]X[c]X[c]X[c]}, width = \textwidth}
+        Brand & CPU Count & CPU Count logical & Frequenza Minima & Frequenza Massima\\
+        \texttt{Intel(R) Core(TM) i7-8569U} & 4 & 4 & 2.80GHz & 4.70GHz
+\end{tblr}
 
-#+begin_export latex
+%% RAM
+
 \begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Memoria utilizzata & \cellcolor{pink!60}Memoria Totale\\
-    \hline
+    \textbf{RAM}
+\end{center}
+
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
+        Memoria utilizzata & Memoria Totale\\
+
         790.86MB & 3.83GB\\
-    \hline
-  \end{tabular}
-\end{center}
-#+end_export
- 
-#+begin_center
-*DISCO*
-#+end_center
+\end{tblr}
 
-#+begin_export latex
+%% DISCO
+
 \begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.313\textwidth}|p{0.30\textwidth}|p{0.313\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Device & \cellcolor{pink!60}Mountpoint & \cellcolor{pink!60}Tipo di partizione\\
-    \hline
+    \textbf{DISCO}
+\end{center}
+
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]X[c]}, width = \textwidth}
+        Device & Mountpoint & Tipo di partizione\\
+
         \texttt{/dev/sda2} & \texttt{/boot/efi} & \texttt{vfat}\\
-    \hline
-        \texttt{/dev/sda3} & \texttt{/} & \texttt{ext4}\\
-    \hline
-  \end{tabular}
-\end{center}
-#+end_export
 
-#+begin_center
-*STATO DEL DISCO*
-#+end_center
+        \texttt{/dev/sda3} & \texttt{/} & \texttt{ext4}
+\end{tblr}
 
-#+begin_export latex
+%% STATO DEL DISCO
+
 \begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Letture & \cellcolor{pink!60}Scritture\\
-    \hline
-        691.32MB & 31.47MB\\
-    \hline
-  \end{tabular}
+    \textbf{STATO DEL DISCO}
 \end{center}
-#+end_export
 
-#+begin_center
-*NETWORK*
-#+end_center
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
+        Letture & Scritture\\
+        691.32MB & 31.47MB
+\end{tblr}
 
-#+begin_export latex
+%% NETWORK
+
 \begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.1\textwidth}|p{0.335\textwidth}|p{0.25\textwidth}|p{0.217\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Interfaccia & \cellcolor{pink!60}IP & \cellcolor{pink!60}NetMask & \cellcolor{pink!60}Broadcast\\
-    \hline
-        \cellcolor{purplelight}loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
-    \hline
-        \cellcolor{purplelight}loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
-    \hline
-        \cellcolor{purplelight}loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
-    \hline
-        \cellcolor{orange-apricot}enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
-    \hline
-        \cellcolor{orange-apricot}enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{orange-apricot}enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
-    \hline
-        \cellcolor{lavanda}enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff\\
-    \hline
-  \end{tabular}
+    \textbf{NETWORK}
 \end{center}
-#+end_export
 
-#+begin_center
-*UTENTI ATTIVI*
-#+end_center
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60},
+             cell{2-4}{1} = {purplelight}, cell{5-7}{1} = {orange-apricot}, cell{8-15}{1} = {lavanda},
+             colspec = {X[0.5,c]X[1.5,c]X[c]X[c]}, width = \textwidth}
 
-#+begin_export latex
+        Interfaccia & IP & NetMask & Broadcast\\
+
+        loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
+        loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
+        loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
+
+        enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
+        enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
+
+        enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
+        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
+        enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff
+\end{tblr}
+
+%% UTENTI ATTIVI
+
 \begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Nome utente & \cellcolor{pink!60}Attivo da\\
-    \hline
-        \textbf{alessio} & 2022-11-16 09:04:16\\
-    \hline
-  \end{tabular}
+    \textbf{UTENTI ATTIVI}
 \end{center}
+
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
+        Nome utente & Attivo da\\
+
+        \textbf{alessio} & 2022-11-16 09:04:16
+\end{tblr}
 #+end_export
 ** File recuperati durante l'esecuzione del bot slave
+:PROPERTIES:
+:CUSTOM_ID: File recuperati
+:END:
 + ~.bash_history~ $\rightarrow$ Contiene tutta la cronologia dei comandi dati dall'utente;
 + ~.bash_logout~ $\rightarrow$ Contiene le operazioni da eseguire durante il logout dell'utente;
 + ~.bashrc~ $\rightarrow$ File di configurazione della shell bash;
@@ -328,4 +336,7 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 + ~.python_history~ $\rightarrow$ Contiene la cronologia dei comandi effettuati dall'interprete interattivo /python/;
 + ~user-dirs.dirs~ $\rightarrow$ Contiene le informazioni sulle variabili delle directory della home dell'utente.
 * Ringraziamenti
+:PROPERTIES:
+:CUSTOM_ID: Ringraziamenti
+:END:
 Ringraziamo il professore [[mailto:a.botta@unina.it][Alessio Botta]] per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.

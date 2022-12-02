@@ -1,4 +1,4 @@
-% Created 2022-11-16 mer 15:02
+% Created 2022-12-02 ven 16:52
 % Intended LaTeX compiler: lualatex
 \documentclass[letterpaper, 11pt]{article}
 
@@ -10,14 +10,28 @@
 \setmainfont{RobotoCondensed}[Extension=.ttf, UprightFont=*-Light, BoldFont=*-Regular, ItalicFont=*-LightItalic, BoldItalicFont=*-BoldItalic, Path=/home/valentino/Dropbox/fonts/]
 
 % Tables, wrapping, and other options
-\usepackage{longtable} % This package defines the longtable environment, a multi-page version of tabular
+%\usepackage{longtable} % This package defines the longtable environment, a multi-page version of tabular
+% For a long time, the tabular environment was used to build tables.
+% However, writing tables with tabular can be troublesome for beginners and really complex tables can be near impossible to write
+% Also, tables built with the tabular environment have some typographical issues and, when color is used, can be misread by PDF readers.
+% Therefore, more and more LaTeX users are calling to use the tblr environment from the tabularray package instead.
+% Guide at https://www.latex-tables.com/ressources/tabularray.html
+\usepackage{tabularray} % In order to get tblr env
 \usepackage{wrapfig} % This makes the wrapfigure environment available
 \usepackage{rotating} % Pretty obvious
 \usepackage[normalem]{ulem} % underlining and strike-through
 \usepackage{capt-of} % Captions outside of floats
 \usepackage{graphicx} % Include images
 \usepackage{amsmath, amsthm, amssymb} % Subscript & superscript and math environments (amsmath),  Various symbols used for interpreting the entities (amssymb)
+%% Memo for table setup
+%% h -> Place the float here, i.e., approximately at the same point it occurs in the source text (however, not exactly at the spot)
+%% t -> Position at the top of the page
+%% b -> Position at the bottom of the page
+%% p -> Put on a special page for floats only
+%% ! -> Override internal parameters LaTeX uses for determining "good" float positions
+%% H -> Places the float at precisely the location in the LaTeX code (Requires the float package)
 \usepackage[table, xcdraw]{xcolor}
+\usepackage{float} % Needed for table[H] override
 \usepackage{listings} % Code highlighting
 \usepackage{mdframed} % \usepackage[framemethod=TikZ]{mdframed} (Alternativa in caso si voglia usare Tikz come metodo)
 
@@ -344,7 +358,7 @@ keywordstyle=[2]\color{includeStatementCPP},
     \node[rectangle, inner sep = 0pt, outer sep = 0pt, minimum width = 3.5cm, minimum height = 3.5cm]
     at (logo){\includegraphics[width=3.5cm, height=3.5cm]{./Risorse/Start-Page/FedericoII.png}};
 
-    \node[scale=1.5] at (5.85,-10){\LARGE{StealBot}}; %% TODO: Pensare ad una alternativa
+    \node[scale=1.5] at (5.85,-10){\LARGE{StealBot}};
 
     \node[rectangle,
       draw,
@@ -379,11 +393,6 @@ keywordstyle=[2]\color{includeStatementCPP},
     %% Giulia Caputo
     \node[scale=3] at (12,-26.4){\includegraphics[height=10pt,width=10pt]{./Risorse/Start-Page/graduated_alt.png}};
     \node[scale=1.5] at (15.8, -26.5){\textbf{Giulia Caputo - N86003429}};
-
-    %% TODO: Testare che i nomi siano effettivamente allineati con \node[fit, draw=red, fill=red, inner sep=5pt]{nome}{test}
-
-    %\draw [red,thick,domain=0:90, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
-    %\draw [blue,thick,domain=180:270, xshift=-4cm, yshift=3.5cm] plot ({cos(\x)}, {sin(\x)});
   \end{scope}
 
 \end{tikzpicture}
@@ -394,16 +403,16 @@ keywordstyle=[2]\color{includeStatementCPP},
 \tableofcontents
 \pagebreak
 \section{Presentazione}
-\label{sec:org920b3b5}
+\label{Presentazione progetto}
 \noindent\makebox[\textwidth]{\includegraphics[width=\paperwidth]{Risorse/Title.png}}
 \subsection{Descrizione della traccia}
-\label{sec:org02a91fc}
+\label{Descrizione traccia}
 Si richiede la realizzazione di una \texttt{BotNET} \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
 \subsubsection{Tecnologie e linguaggi richiesti}
-\label{sec:org8fde387}
+\label{Tecnologie e linguaggi}
 Si richiede un applicativo scritto in \texttt{Python} \autocite{DefinizionePython} che utilizzi come strumento di comunicazione le \texttt{socket} \autocite{DefinizioneSocket}
 \subsection{Implementazione del sistema}
-\label{sec:orgaae77b7}
+\label{Implementazione sistema}
 Il progetto si concretizza in 2 componenti ben definite:
 \begin{itemize}
 \item Un \texttt{Bot Master} per la gestione dei dati ricevuti dal \texttt{bot slave} al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
@@ -411,9 +420,9 @@ Il progetto si concretizza in 2 componenti ben definite:
 \end{itemize}
 \vfill
 \subsection{Guida al Bot Master}
-\label{sec:orga2a20f3}
+\label{Guida (Bot master)}
 \subsubsection{Primo avvio}
-\label{sec:orga9cdb6f}
+\label{Primo avvio (Bot master)}
 Durante la fase di avvio il programma effettua le seguenti operazioni:
 \begin{itemize}
 \item Controlla che \texttt{host} e \texttt{porta} \autocite{infoHostPortMaster} siano disponibili per la successiva creazione della socket;
@@ -427,12 +436,12 @@ Nel momento in cui viene effettuata una nuova connessione, il server invia la ri
 \item Nel caso in cui si trattasse di un file (identificato da un campo \texttt{Header} a inizio richiesta), lo salva automaticamente, per poter essere fruibile successivamente.
 \end{itemize}
 \subsubsection{Memorizzazione dei dati}
-\label{sec:orgf6eaccf}
+\label{Memorizzazione dati (Bot master)}
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal \emph{bot slave} durante la sua esecuzione.
 \subsection{Guida al Bot Slave}
-\label{sec:orge01276c}
+\label{Guida (Bot Slave)}
 \subsubsection{Primo avvio}
-\label{sec:org1b708c1}
+\label{Primo avvio (Bot slave)}
 Durante la fase di avvio il programma effettua le seguenti operazioni:
 \begin{itemize}
 \item Controlla che \texttt{host} e \texttt{porta} \autocite{infoHostPortSlave} siano disponibili per la successiva creazione della socket;
@@ -443,7 +452,7 @@ Durante la fase di avvio il programma effettua le seguenti operazioni:
 \end{itemize}
 \end{itemize}
 \subsection{Analisi della struttura del progetto}
-\label{sec:org858ed7f}
+\label{Analisi progetto}
 La struttura del progetto è così strutturata:
 
 % Server
@@ -473,137 +482,108 @@ La struttura del progetto è così strutturata:
   \end{itemize}
 \end{minipage}
 \subsection{Report dei dati recuperati}
-\label{sec:orga469cae}
+\label{Report dati}
 TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
 \section{Codice sorgente sviluppato}
-\label{sec:org9576c46}
+\label{Codice sorgente}
 Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è disponibile sulla piattaforma \href{https://github.com/}{GitHub}, che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il \href{https://github.com/luftmensch-luftmensch/StealBot}{download} \autocite{informazioniRepository}
 \section{Risultati della prima prova}
-\label{sec:org4c8e7bd}
+\label{Report prima prova}
 Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato le seguenti informazioni:
 \subsection{Informazioni sulla macchina (OS: \texttt{Linux-5.15.0-52-generic-x86\_64-with-glibc2.35})}
-\label{sec:org09d2b3b}
+\label{Tabelle con info della macchina}
+%% CPU
 \begin{center}
-\textbf{CPU}
+    \textbf{CPU}
 \end{center}
 
-\begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.306\textwidth}|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.171\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Brand & \cellcolor{pink!60}CPU Count & \cellcolor{pink!60}CPU Count logical & \cellcolor{pink!60}Frequenza Minima & \cellcolor{pink!60}Frequenza Massima\\
-    \hline
-        \texttt{Intel(R) Core(TM) i7-8569U} & 4 & 4 & 2.80GHz & 4.70GHz\\
-    \hline
-  \end{tabular}
-\end{center}
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[1.5,c]X[c]X[c]X[c]X[c]}, width = \textwidth}
+        Brand & CPU Count & CPU Count logical & Frequenza Minima & Frequenza Massima\\
+        \texttt{Intel(R) Core(TM) i7-8569U} & 4 & 4 & 2.80GHz & 4.70GHz
+\end{tblr}
+
+%% RAM
 
 \begin{center}
-\textbf{RAM}
+    \textbf{RAM}
 \end{center}
 
-\begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Memoria utilizzata & \cellcolor{pink!60}Memoria Totale\\
-    \hline
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
+        Memoria utilizzata & Memoria Totale\\
+
         790.86MB & 3.83GB\\
-    \hline
-  \end{tabular}
-\end{center}
+\end{tblr}
+
+%% DISCO
 
 \begin{center}
-\textbf{DISCO}
+    \textbf{DISCO}
 \end{center}
 
-\begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.313\textwidth}|p{0.30\textwidth}|p{0.313\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Device & \cellcolor{pink!60}Mountpoint & \cellcolor{pink!60}Tipo di partizione\\
-    \hline
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]X[c]}, width = \textwidth}
+        Device & Mountpoint & Tipo di partizione\\
+
         \texttt{/dev/sda2} & \texttt{/boot/efi} & \texttt{vfat}\\
-    \hline
-        \texttt{/dev/sda3} & \texttt{/} & \texttt{ext4}\\
-    \hline
-  \end{tabular}
-\end{center}
+
+        \texttt{/dev/sda3} & \texttt{/} & \texttt{ext4}
+\end{tblr}
+
+%% STATO DEL DISCO
 
 \begin{center}
-\textbf{STATO DEL DISCO}
+    \textbf{STATO DEL DISCO}
 \end{center}
 
-\begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Letture & \cellcolor{pink!60}Scritture\\
-    \hline
-        691.32MB & 31.47MB\\
-    \hline
-  \end{tabular}
-\end{center}
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
+        Letture & Scritture\\
+        691.32MB & 31.47MB
+\end{tblr}
+
+%% NETWORK
 
 \begin{center}
-\textbf{NETWORK}
+    \textbf{NETWORK}
 \end{center}
 
-\begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.1\textwidth}|p{0.335\textwidth}|p{0.25\textwidth}|p{0.217\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Interfaccia & \cellcolor{pink!60}IP & \cellcolor{pink!60}NetMask & \cellcolor{pink!60}Broadcast\\
-    \hline
-        \cellcolor{purplelight}loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
-    \hline
-        \cellcolor{purplelight}loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
-    \hline
-        \cellcolor{purplelight}loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
-    \hline
-        \cellcolor{orange-apricot}enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
-    \hline
-        \cellcolor{orange-apricot}enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{orange-apricot}enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
-    \hline
-        \cellcolor{lavanda}enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
-    \hline
-        \cellcolor{lavanda}enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff\\
-    \hline
-  \end{tabular}
-\end{center}
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60},
+             cell{2-4}{1} = {purplelight}, cell{5-7}{1} = {orange-apricot}, cell{8-15}{1} = {lavanda},
+             colspec = {X[0.5,c]X[1.5,c]X[c]X[c]}, width = \textwidth}
+
+        Interfaccia & IP & NetMask & Broadcast\\
+
+        loop & 127.0.0.1 & 255.0.0.0 & Nessuna\\
+        loop & ::1 & ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff & Nessuna\\
+        loop &  00:00:00:00:00:00 & Nessuna & Nessuna\\
+
+        enp0s3 &  10.0.2.15 & 255.255.255.0 & 10.0.2.255\\
+        enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
+
+        enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
+        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
+        enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
+        enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff
+\end{tblr}
+
+%% UTENTI ATTIVI
 
 \begin{center}
-\textbf{UTENTI ATTIVI}
+    \textbf{UTENTI ATTIVI}
 \end{center}
 
-\begin{center}
-  \setlength{\arrayrulewidth}{0.9pt}
-  \begin{tabular}{{|p{0.475\textwidth}|p{0.475\textwidth}|}}
-    \hline
-        \cellcolor{pink!60}Nome utente & \cellcolor{pink!60}Attivo da\\
-    \hline
-        \textbf{alessio} & 2022-11-16 09:04:16\\
-    \hline
-  \end{tabular}
-\end{center}
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
+        Nome utente & Attivo da\\
+
+        \textbf{alessio} & 2022-11-16 09:04:16
+\end{tblr}
 \subsection{File recuperati durante l'esecuzione del bot slave}
-\label{sec:org48b13b9}
+\label{File recuperati}
 \begin{itemize}
 \item \texttt{.bash\_history} \(\rightarrow\) Contiene tutta la cronologia dei comandi dati dall'utente;
 \item \texttt{.bash\_logout} \(\rightarrow\) Contiene le operazioni da eseguire durante il logout dell'utente;
@@ -617,6 +597,6 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 \item \texttt{user-dirs.dirs} \(\rightarrow\) Contiene le informazioni sulle variabili delle directory della home dell'utente.
 \end{itemize}
 \section{Ringraziamenti}
-\label{sec:orgfd102a1}
+\label{Ringraziamenti}
 Ringraziamo il professore \href{mailto:a.botta@unina.it}{Alessio Botta} per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
 \end{document}
