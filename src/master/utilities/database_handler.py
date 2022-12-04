@@ -24,7 +24,7 @@ class DatabaseHandler:
     """
     # __database_host = "192.168.1.36"
     __database_host = "localhost"
-    __database_port = "5432"
+    __database_port = 5432
     __database_name = "postgres"
     __database_username = "username"
     __database_password = ""
@@ -205,7 +205,7 @@ class DatabaseHandler:
             print("All Done")
 
     @classmethod
-    def __init__(self):
+    def __init__(self):  # Class methods should take a "cls" parameter
         """Invocazione automatica della funzione di init."""
         self.__connection_alive = self.database_init(self.__database_host, self.__database_port, self.__database_name,
                                                      self.__database_username, self.__database_password)

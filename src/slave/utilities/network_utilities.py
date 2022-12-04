@@ -8,14 +8,10 @@ Copyright (c) 2022. All rights reserved.
 """
 import psutil
 from socket import socket, AddressFamily, AF_INET, SOCK_STREAM
-# import socket
-import typing
+# import typing
 import ipaddress
 import subprocess
 from concurrent import futures
-
-# Librerie personali
-from . import bot_slave_utilities as bot_utils
 
 
 def get_net_ifname() -> dict:
@@ -56,14 +52,11 @@ def find_bot_master(port: int) -> None:
         futures.wait(ping_hosts)
 
     for host in active_hosts:
-      with socket(AF_INET, SOCK_STREAM) as tester:
-          try:
-              if (tester.connect_ex((host, port)) == 0):
-                  final_hosts.append(host)
-          except Exception as e:
-              print(e)
+        with socket(AF_INET, SOCK_STREAM) as tester:
+            try:
+                if (tester.connect_ex((host, port)) == 0):
+                    final_hosts.append(host)
+            except Exception as e:
+                print(e)
 
     print(f"Host attualmente attivi: {final_hosts}")
-
-# if __name__ == "__main__":
-#     find_bot_master(9090)
