@@ -26,7 +26,7 @@ bot_status = {1: "Connecting", 2: "Connected"}
 def start(host: str, port: int, finder: bool):
     """Funzione di esecuzione del client."""
     if finder:
-        net_utils.find_bot_master()
+        net_utils.find_bot_master(port)  # Ricerca automatica del server sulla rete locale
     else:
         current_status = bot_status.get(1)
 
