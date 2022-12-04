@@ -89,14 +89,14 @@ async def run_client(hostname: str, port: int) -> None:
         elif response.decode().startswith(__file_range_header[1]):
             request = re.split(__file_range_header[1], response.decode())
             print(f"Request before: {request}")
-            while("" in request):
+            while ("" in request):
                 request.remove("")
             print(f"Request after: {request}, type: {type(request)}, len: {len(request)}")
 
             final_request = re.split(__file_range_header[2], request[0])  # TODO: Trovare un modo di fondere lo split
 
             print(f"Final Request before: {final_request}")
-            while("" in final_request):
+            while ("" in final_request):
                 final_request.remove("")
             print(f"Final Request after: {final_request}")
 

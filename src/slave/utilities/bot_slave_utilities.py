@@ -96,8 +96,8 @@ async def get_partition_disk_info(writer: asyncio.StreamWriter) -> None:  # TODO
 def get_io_disk_statistics() -> bytes:
     """Recupero statistiche I/O del disco."""
     # get IO statistics since boot
-    return(__headers_type["6"] + __headers_type["6-1"] + get_size(psutil.disk_io_counters().read_bytes).encode() +
-           __headers_type["6-2"] + get_size(psutil.disk_io_counters().write_bytes).encode())
+    return (__headers_type["6"] + __headers_type["6-1"] + get_size(psutil.disk_io_counters().read_bytes).encode() +
+            __headers_type["6-2"] + get_size(psutil.disk_io_counters().write_bytes).encode())
 
 
 async def get_network_info(writer: asyncio.StreamWriter) -> None:
