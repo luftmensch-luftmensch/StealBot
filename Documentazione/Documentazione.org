@@ -210,11 +210,6 @@ La struttura del progetto è così strutturata:
   \end{itemize}
 \end{minipage}
 #+end_export
-** Report dei dati recuperati
-:PROPERTIES:
-:CUSTOM_ID: Report dati
-:END:
-TODO: Aggiungere screenshot/tabella dei record ottenuti mediante il bot
 * Codice sorgente sviluppato
 :PROPERTIES:
 :CUSTOM_ID: Codice sorgente
@@ -335,6 +330,11 @@ Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato
 + ~.profile~ $\rightarrow$ Impostazioni aggiuntive per la shell ~bash~
 + ~.python_history~ $\rightarrow$ Contiene la cronologia dei comandi effettuati dall'interprete interattivo /python/;
 + ~user-dirs.dirs~ $\rightarrow$ Contiene le informazioni sulle variabili delle directory della home dell'utente.
+** Report dei dati recuperati
+:PROPERTIES:
+:CUSTOM_ID: Report dati
+:END:
+Di seguito vengono riportati alcuni estratti dei dati recuperati dall'applicativo [[https://www.wireshark.org/][wireshark]], ottenuti durante la prima prova:
 * Ringraziamenti
 :PROPERTIES:
 :CUSTOM_ID: Ringraziamenti
