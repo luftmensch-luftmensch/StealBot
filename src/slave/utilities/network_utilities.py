@@ -30,7 +30,7 @@ def find_active_devices(ip_addr: str, valid_hosts: list) -> None:
         pass
 
 
-def find_bot_master(port: int) -> None:
+def find_bot_master(port: int) -> str:
     """Funzione di wrapping per la ricerca del bot master sulla rete locale."""
     range = ''
     i = 0
@@ -42,7 +42,7 @@ def find_bot_master(port: int) -> None:
     network_hosts = ipaddress.ip_network(range + "0/24").hosts()
 
     active_hosts = []
-    final_hosts = []
+    final_host = ""
 
     with futures.ThreadPoolExecutor(254) as executor:
         ping_hosts = [executor.submit(find_active_devices, str(ip), active_hosts) for ip in network_hosts]
@@ -55,8 +55,9 @@ def find_bot_master(port: int) -> None:
         with socket(AF_INET, SOCK_STREAM) as tester:
             try:
                 if (tester.connect_ex((host, port)) == 0):
-                    final_hosts.append(host)
+                    final_host = "".join(host)
             except Exception as e:
                 print(e)
 
-    print(f"Host attualmente attivi: {final_hosts}")
+    print(f"Host attualmente attivo: {final_host}")
+    return final_host

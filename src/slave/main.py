@@ -26,22 +26,22 @@ bot_status = {1: "Connecting", 2: "Connected"}
 def start(host: str, port: int, finder: bool):
     """Funzione di esecuzione del client."""
     if finder:
-        net_utils.find_bot_master(port)  # Ricerca automatica del server sulla rete locale
-    else:
-        current_status = bot_status.get(1)
+        host = net_utils.find_bot_master(port)  # Ricerca automatica del server sulla rete locale
 
-        while True:
-            if current_status == bot_status.get(1):
-                if bot_slave.test_connection(host, port) is True:
-                    current_status = bot_status.get(2)
-                else:
-                    print("Il server non è attualmente raggiungibile.")
-                    sleep(5)
-            elif current_status == bot_status.get(2):
-                loop = asyncio.new_event_loop()
-                loop.run_until_complete(async_client.run_client(host, port))  # TODO: Modificare in base alla ricerca effettuata dal client
-                current_status = bot_status.get(1)
-                sleep(4)  # TODO: In produzione controllare che le sleep abbiano un tempo sufficiente
+    current_status = bot_status.get(1)
+
+    while True:
+        if current_status == bot_status.get(1):
+            if bot_slave.test_connection(host, port) is True:  # Controlliamo che il server sia in esecuzione
+                current_status = bot_status.get(2)
+            else:
+                print("Il server non è attualmente raggiungibile.")
+                sleep(5)
+        elif current_status == bot_status.get(2):
+            loop = asyncio.new_event_loop()
+            loop.run_until_complete(async_client.run_client(host, port))  # Gestione della connessione con il server
+            current_status = bot_status.get(1)
+            sleep(4)
 
 
 if __name__ == "__main__":
