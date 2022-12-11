@@ -87,21 +87,18 @@ async def run_client(hostname: str, port: int) -> None:
 
         # Gestione del recupero di un range di file
         elif response.decode().startswith(__file_range_header[1]):
+            # Eseguiamo una serie di strip della request in modo da ottenere una lista di file che andranno poi inviati al server
             request = re.split(__file_range_header[1], response.decode())
-            print(f"Request before: {request}")
             while ("" in request):
                 request.remove("")
-            print(f"Request after: {request}, type: {type(request)}, len: {len(request)}")
 
             final_request = re.split(__file_range_header[2], request[0])
 
-            print(f"Final Request before: {final_request}")
             while ("" in final_request):
                 final_request.remove("")
-            print(f"Final Request after: {final_request}")
 
-            # TODO: Richiamare il recupero del file ciclando sulla lista final_request
-
+            for filename in final_request:
+                await bot_utils.send_file(filename, __buffer_size, writer)
             writer.write(operation_keyword.encode())
         else:  # In caso contrario chiediamo al server di inviare una nuova risposta valida
             writer.write(operation_keyword.encode())
