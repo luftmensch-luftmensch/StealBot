@@ -18,6 +18,8 @@ from utilities import bot_master_utility as bot_master
 from utilities import async_socket_server as async_server
 from utilities import database_handler as db
 
+__dispatcher_buf_size = 150
+
 
 def validator(hostname: str, port: int):
     """Inizializzazione degli handler (tastiera e porta in uso)."""
@@ -40,26 +42,38 @@ def main():
 def start(host: str, port: int, out_directory: str, supervisor: str):
     """Funzione di esecuzione del server."""
     bot_master.info(f"Running master in {supervisor} mode", 1)
-    db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
 
-    if supervisor == "server":
-        validator(host, port)
-        bot_master.initialize_result_folder(os.getcwd(), out_directory)
-        loop = asyncio.new_event_loop()
+    match supervisor:
+        case "server":
+            validator(host, port)
+            bot_master.initialize_result_folder(os.getcwd(), out_directory)
+            loop = asyncio.new_event_loop()
 
-        for signal_enum in [SIGINT, SIGTERM]:
-            exit_func = partial(bot_master.immediate_exit, signal_enum=signal_enum, loop=loop)
-            loop.add_signal_handler(signal_enum, exit_func)
-
-        try:
-            loop.run_until_complete(async_server.run_server(host, port))
-        except bot_master.SignalHaltError as shr:
-            print(f"{shr}")
-            pass
-        else:
-            raise
-    else:
-        db.DatabaseHandler.handle_request()  # Gestiamo le interrogazioni che l'utente vorrà eseguire
+            for signal_enum in [SIGINT, SIGTERM]:
+                exit_func = partial(bot_master.immediate_exit, signal_enum=signal_enum, loop=loop)
+                loop.add_signal_handler(signal_enum, exit_func)
+            try:
+                loop.run_until_complete(async_server.run_server(host, port))
+            except bot_master.SignalHaltError as shr:
+                print(f"{shr}")
+                pass
+            else:
+                raise
+        case "dispatcher":
+            bot_master.bind_port_to_client(host, port, __dispatcher_buf_size)
+            # dispatcher_loop = asyncio.new_event_loop()
+            # for signal_enum in [SIGINT, SIGTERM]:
+            #     exit_func = partial(bot_master.immediate_exit, signal_enum=signal_enum, loop=dispatcher_loop)
+            #     dispatcher_loop.add_signal_handler(signal_enum, exit_func)
+            # try:
+            #     dispatcher_loop.run_until_complete(async_server.run_dispatcher(host, port))
+            # except bot_master.SignalHaltError as shr:
+            #     print(f"{shr}")
+            #     pass
+            # else:
+            #     raise
+        case "database":
+            db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
 
 
 if __name__ == "__main__":

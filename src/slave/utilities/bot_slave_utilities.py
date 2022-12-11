@@ -13,7 +13,9 @@ from datetime import datetime as dt
 import psutil
 import platform
 import asyncio
+import sys
 import os  # Utilizzato per il controllo dell'esistenza del file (Alternativamente è possibile utilizzare path -> path('dir/myfile.txt').abspath())
+import re
 # from functools import partial  # Per comodità leggiamo il file da inviare in chunk di dati -> Sostituito con un iteratore
 # from time import sleep
 
@@ -37,9 +39,27 @@ __filesystem_hierarchy = {"Home": f"/home/{os.getlogin()}/",  # Gestione non ric
                           "local": f"/home/{os.getlogin()}/.local/share"  # ~/.local/share/*
                           }
 
+__bind_port_header = {1: b"<Service-Port>", 2: b"<Assigned-Port>", 3: b"<Client-UUID>"}
+
 """
 Per semplicità le funzioni utilizzate dal writer sono parametrizzate utilizzando i campi presenti negli __headers_type (per una migliore gestione dei casi)
 """
+
+
+def info(msg: str, level: int) -> None:
+    """Funzione di stampa in caso di errore."""
+    ANSI_COLOR_BLUE = "\x1b[34m"
+    ANSI_COLOR_GREEN = "\x1b[32m"
+    ANSI_COLOR_RED = "\x1b[31m"
+    ANSI_COLOR_RESET = "\x1b[0m"
+
+    match level:
+        case 1:  # Logging Level: info
+            print(f"{ANSI_COLOR_GREEN}[+] {msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in verde il messaggio di errore (in seguito resettiamo il colore a default)
+        case 2:  # Logging Level: debug
+            print(f"{ANSI_COLOR_BLUE}[+] {msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in blu il messaggio di errore (in seguito resettiamo il colore a default)
+        case 3:  # Logging Level: error
+            print(f"{ANSI_COLOR_RED}[!] {msg}{ANSI_COLOR_RESET}", file=sys.stderr)  # Stampiamo in rosso il messaggio di errore (in seguito resettiamo il colore a default)
 
 
 def get_operating_system() -> bytes:
@@ -178,3 +198,22 @@ def test_connection(hostname: str, port: int) -> bool:
                 return False
         except Exception as e:
             print(e)
+
+
+def retrieve_port(hostname: str, port: int, node: str, bufsize: int) -> int:
+    """Funzione di supporto per la mappatura del client al suo server."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((hostname, port))
+        s.send(__bind_port_header[1] + __bind_port_header[3] + node.encode() + __bind_port_header[3])
+        data = s.recv(bufsize)
+        if data:
+            # print(bytes.decode(data))
+            remove_request_header = re.split(__bind_port_header[1], data)[1]
+            remove_uuid_header = re.split(__bind_port_header[3], remove_request_header)[-1]
+            remove_assigned_port_header = re.split(__bind_port_header[2], remove_uuid_header)
+
+            while (b'' in remove_assigned_port_header):
+                remove_assigned_port_header.remove(b'')
+
+            assigned_port = remove_assigned_port_header[-1]
+            return int(assigned_port.decode())

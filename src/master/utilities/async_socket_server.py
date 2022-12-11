@@ -190,5 +190,4 @@ async def run_server(hostname: str, port: int) -> None:
     server = await asyncio.start_server(handle_bot_client, hostname, port)
 
     async with server:
-        # async with server:
         await server.serve_forever()

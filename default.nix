@@ -53,7 +53,7 @@ in pkgs.mkShell rec {
     # export PYTHONDONTWRITEBYTECODE=1
 
     master(){
-         export PS1="\[\e[1;32m\][\w] master > \[\e[0m\]"
+         export PS1="\[\e[1;32m\][\w] master [PORT: 9000] > \[\e[0m\]"
          cd ~/UNI/StealBot/src/master
     }
 
@@ -62,8 +62,14 @@ in pkgs.mkShell rec {
          cd ~/UNI/StealBot/src/slave
     }
 
-    run(){
-         python main.py
+    dispatcher(){
+         export PS1="\[\e[1;32m\][\w] dispatcher [PORT: 9090] > \[\e[0m\]"
+         cd ~/UNI/StealBot/src/master
+
+    }
+
+    run-dispatcher(){
+         python main.py --port=9090 --supervisor=dispatcher
 
     }
   '';

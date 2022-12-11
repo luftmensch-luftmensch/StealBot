@@ -11,6 +11,7 @@ import socket
 # import asyncio
 import aiofiles
 import os
+import re
 
 from sys import stderr
 import asyncio
@@ -20,6 +21,8 @@ from signal import Signals
 # Generate welcome message with ASCII text
 # More at https://github.com/pwaller/pyfiglet
 import pyfiglet
+
+__bind_port_header = {1: b"<Service-Port>", 2: b"<Assigned-Port>", 3: b"<Client-UUID>"}
 
 
 class SignalHaltError(SystemExit):
@@ -140,3 +143,36 @@ def initialize_result_folder(current_directory: str, result_folder: str) -> None
 
 def file_system_navigator():
     """Funzione per la navigazione delle directory presenti sul client."""
+
+
+def bind_port_to_client(host: str, port: int, bufsize: int) -> None:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((host, port))
+        s.listen()
+        ports = [b"9000", b"9001"]
+        clients = {}
+
+        while True:
+            conn, addr = s.accept()  # Accettiamo la connessione
+            with conn:
+                data = conn.recv(bufsize)
+                if len(data) > 0:  # Prima di eseguire qualsiasi operazione sui dati controlliamo di aver effettivamente ricevuto qualcosa
+                    # print(f"Len: {len(data)}, Content: {data.decode()}")
+                    client_addr = re.split(__bind_port_header[1], data)[1]  # Strippiamo da data la request
+                    # print(client_addr)
+                    retrieved_uuid = re.split(__bind_port_header[3], client_addr)[1]  # Strippiamo da client_addr i delimitatori dell'id del client
+                    # print(retrieved_uuid)
+                    if not bool(clients):  # Siamo nel caso in cui si sia collegato il primo client
+                        # clients.update({retrieved_uuid.decode(): ports[0]})
+                        clients.__setitem__(retrieved_uuid, ports[0])
+                    # if retrieved_uuid in clients.keys():
+                    #     print(f"Key ({retrieved_uuid}) already inserted")
+                    if retrieved_uuid not in clients.keys():
+                        clients.__setitem__(retrieved_uuid, ports[1])
+
+                    print(f"Current clients: {clients}")
+
+                    # Inviamo un oggetto del tipo <Service-Port><Client-UUID>784635aa16f44c13abda1cc4398003c3<Client-UUID><Assigned-Port>9000<Assigned-Port>
+                    conn.sendall(__bind_port_header[1] + __bind_port_header[3] + retrieved_uuid + __bind_port_header[3] + __bind_port_header[2] + clients.get(retrieved_uuid) + __bind_port_header[2])
