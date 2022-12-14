@@ -151,7 +151,7 @@ def bind_port_to_client(host: str, port: int, bufsize: int) -> None:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((host, port))
         s.listen()
-        ports = [b"9000", b"9001"]
+        ports = [b"9001", b"9000"]
         clients = {}
 
         while True:

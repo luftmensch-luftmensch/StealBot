@@ -1,4 +1,4 @@
-% Created 2022-12-06 mar 10:01
+% Created 2022-12-14 mer 08:47
 % Intended LaTeX compiler: lualatex
 \documentclass[letterpaper, 11pt]{article}
 
@@ -15,14 +15,14 @@
 % However, writing tables with tabular can be troublesome for beginners and really complex tables can be near impossible to write
 % Also, tables built with the tabular environment have some typographical issues and, when color is used, can be misread by PDF readers.
 % Therefore, more and more LaTeX users are calling to use the tblr environment from the tabularray package instead.
-% Guide at https://www.latex-tables.com/ressources/tabularray.html
+% Guide at https://www.latex-tables.com/ressources/tabularray.html (To merge cells cell{5}{1} = {c=2}{})
 \usepackage{tabularray} % In order to get tblr env
 \usepackage{wrapfig} % This makes the wrapfigure environment available
 \usepackage{rotating} % Pretty obvious
 \usepackage[normalem]{ulem} % underlining and strike-through
 \usepackage{capt-of} % Captions outside of floats
 \usepackage{graphicx} % Include images
-\usepackage{amsmath, amsthm, amssymb} % Subscript & superscript and math environments (amsmath),  Various symbols used for interpreting the entities (amssymb)
+\usepackage{amsmath, amsthm, amssymb, mathtools} % Subscript & superscript and math environments (amsmath),  Various symbols used for interpreting the entities (amssymb)
 %% Memo for table setup
 %% h -> Place the float here, i.e., approximately at the same point it occurs in the source text (however, not exactly at the spot)
 %% t -> Position at the top of the page
@@ -79,7 +79,7 @@
 % TIKZ
 \usepackage{tikz}
 % DEFINIZIONE CAMPI E FORME PER TIKZ
-\usetikzlibrary{calc,shadows,shapes,arrows}
+\usetikzlibrary{calc,shadows,shapes,arrows,backgrounds,graphdrawing.trees}
 
 % DEFINIZIONE FORME GEOMETRICHE PER DIAGRAMMI
 \tikzstyle{CIRCLE} = [circle, minimum width=0.8cm, minimum height=0.8cm,text centered, draw=black, fill=blue!30]
@@ -90,6 +90,8 @@
 \tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
 \tikzstyle{class}=[rectangle, draw=black, text centered, anchor=north, text=black, text width=3cm, shading=axis, bottom color=classTIKZcolor,top color=white,shading angle=45]
 \tikzstyle{arrow} = [thick,->,>=stealth]
+% Tree forest
+\usepackage[linguistics]{forest} %\usepackage{forest}
 
 
 % OPTIONS FOR MDFRAMES (ENVIRONMENT)
@@ -399,8 +401,8 @@ keywordstyle=[2]\color{includeStatementCPP},
 
 \newpage
 \restoregeometry
-\renewcommand*\contentsname{\hfill Indice \hfill}
-\tableofcontents
+%\renewcommand*\contentsname{\hfill Indice \hfill}
+%\tableofcontents
 \pagebreak
 \section{Presentazione}
 \label{Presentazione progetto}
@@ -438,6 +440,20 @@ Nel momento in cui viene effettuata una nuova connessione, il server invia la ri
 \subsubsection{Memorizzazione dei dati}
 \label{Memorizzazione dati (Bot master)}
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal \emph{bot slave} durante la sua esecuzione.
+\subsubsection{Modalità di esecuzione}
+\label{Modalità dispatcher}
+È possibile invocare il bot master con una serie di flag aggiuntive, che permettono di:
+\begin{itemize}
+\item Definire un host e porta su cui esporre il servizio (rispettivamente \texttt{-{}-host} e \texttt{-{}-port})
+\begin{itemize}
+\item Ricordiamo che di default il bot master utilizzerà rispettivamente \texttt{127.0.0.1} e la porta \texttt{9090};
+\end{itemize}
+\item Definire una cartella custom che verrà utilizzata per il salvataggio dei dati \autocite{NotaDatiSalvati};
+\item Gestire una connessione multi-client (invocando il bot master con \texttt{-{}-supervisor=dispatcher})
+\begin{itemize}
+\item In questo modo il bot master fa da tramite per la connessione 1:1 tra \texttt{clientX} e \texttt{master}
+\end{itemize}
+\end{itemize}
 \subsection{Guida al Bot Slave}
 \label{Guida (Bot Slave)}
 \subsubsection{Primo avvio}
@@ -450,6 +466,13 @@ Durante la fase di avvio il programma effettua le seguenti operazioni:
 \item In caso di esito negativo attende e ritenta;
 \item In caso di esito positivo invece esegue le istruzioni impartite dal Master.
 \end{itemize}
+\end{itemize}
+
+In base alle flag specificate è possibile:
+\begin{itemize}
+\item Definire un nuovo host e porta a cui connettersi (rispettivamente \texttt{-{}-host} e \texttt{-{}-port});
+\item Ricercare automaticamente il bot master (flag \texttt{-{}-finder});
+\item Richiesta di mappatura della porta a uno specifico master
 \end{itemize}
 \subsection{Analisi della struttura del progetto}
 \label{Analisi progetto}
@@ -486,9 +509,9 @@ La struttura del progetto è così strutturata:
 Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è disponibile sulla piattaforma \href{https://github.com/}{GitHub}, che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il \href{https://github.com/luftmensch-luftmensch/StealBot}{download} \autocite{informazioniRepository}
-\section{Risultati della prima prova}
+\section{Risultati ottenuti}
 \label{Report prima prova}
-Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato le seguenti informazioni:
+Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le seguenti informazioni:
 \subsection{Informazioni sulla macchina (OS: \texttt{Linux-5.15.0-52-generic-x86\_64-with-glibc2.35})}
 \label{Tabelle con info della macchina}
 %% CPU

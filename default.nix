@@ -52,8 +52,13 @@ in pkgs.mkShell rec {
     # Don't create __pycache_ directory
     # export PYTHONDONTWRITEBYTECODE=1
 
-    master(){
+    master1(){
          export PS1="\[\e[1;32m\][\w] master [PORT: 9000] > \[\e[0m\]"
+         cd ~/UNI/StealBot/src/master
+    }
+
+    master2(){
+         export PS1="\[\e[1;32m\][\w] master [PORT: 9001] > \[\e[0m\]"
          cd ~/UNI/StealBot/src/master
     }
 

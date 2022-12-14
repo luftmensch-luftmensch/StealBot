@@ -108,8 +108,8 @@
 
 \newpage
 \restoregeometry
-\renewcommand*\contentsname{\hfill Indice \hfill}
-\tableofcontents
+%\renewcommand*\contentsname{\hfill Indice \hfill}
+%\tableofcontents
 #+end_export
 #+OPTIONS: date:nil title:nil toc:nil
 #+STARTUP: overview hideblocks
@@ -163,6 +163,17 @@ Nel momento in cui viene effettuata una nuova connessione, il server invia la ri
 :CUSTOM_ID: Memorizzazione dati (Bot master)
 :END:
 Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvataggio dei dati ricavati dal /bot slave/ durante la sua esecuzione.
+*** Modalità di esecuzione
+:PROPERTIES:
+:CUSTOM_ID: Modalità dispatcher
+:END:
+
+È possibile invocare il bot master con una serie di flag aggiuntive, che permettono di:
++ Definire un host e porta su cui esporre il servizio (rispettivamente ~--host~ e ~--port~)
+  - Ricordiamo che di default il bot master utilizzerà rispettivamente ~127.0.0.1~ e la porta ~9090~;
++ Definire una cartella custom che verrà utilizzata per il salvataggio dei dati \autocite{NotaDatiSalvati};
++ Gestire una connessione multi-client (invocando il bot master con ~--supervisor=dispatcher~)
+  - In questo modo il bot master fa da tramite per la connessione 1:1 tra ~clientX~ e ~master~
 ** Guida al Bot Slave
 :PROPERTIES:
 :CUSTOM_ID: Guida (Bot Slave)
@@ -176,6 +187,11 @@ Durante la fase di avvio il programma effettua le seguenti operazioni:
 + Esegue un test sull'effettivo stato di attività del server
   - In caso di esito negativo attende e ritenta;
   - In caso di esito positivo invece esegue le istruzioni impartite dal Master.
+
+In base alle flag specificate è possibile:
++ Definire un nuovo host e porta a cui connettersi (rispettivamente ~--host~ e ~--port~);
++ Ricercare automaticamente il bot master (flag ~--finder~);
++ Richiesta di mappatura della porta a uno specifico master
 ** Analisi della struttura del progetto
 :PROPERTIES:
 :CUSTOM_ID: Analisi progetto
@@ -217,11 +233,11 @@ La struttura del progetto è così strutturata:
 Il codice sorgente prodotto durante lo sviluppo di $StealBot^{\copyright}$ è disponibile sulla piattaforma [[https://github.com/][GitHub]], che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il [[https://github.com/luftmensch-luftmensch/StealBot][download]] \autocite{informazioniRepository}
-* Risultati della prima prova
+* Risultati ottenuti
 :PROPERTIES:
 :CUSTOM_ID: Report prima prova
 :END:
-Durante la prima prova di testing, effettuata il 16 novembre, abbiamo recuperato le seguenti informazioni:
+Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le seguenti informazioni:
 ** Informazioni sulla macchina (OS: ~Linux-5.15.0-52-generic-x86_64-with-glibc2.35~)
 :PROPERTIES:
 :CUSTOM_ID: Tabelle con info della macchina
