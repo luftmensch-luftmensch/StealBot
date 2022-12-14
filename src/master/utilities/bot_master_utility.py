@@ -159,16 +159,11 @@ def bind_port_to_client(host: str, port: int, bufsize: int) -> None:
             with conn:
                 data = conn.recv(bufsize)
                 if len(data) > 0:  # Prima di eseguire qualsiasi operazione sui dati controlliamo di aver effettivamente ricevuto qualcosa
-                    # print(f"Len: {len(data)}, Content: {data.decode()}")
                     client_addr = re.split(__bind_port_header[1], data)[1]  # Strippiamo da data la request
-                    # print(client_addr)
                     retrieved_uuid = re.split(__bind_port_header[3], client_addr)[1]  # Strippiamo da client_addr i delimitatori dell'id del client
-                    # print(retrieved_uuid)
                     if not bool(clients):  # Siamo nel caso in cui si sia collegato il primo client
                         # clients.update({retrieved_uuid.decode(): ports[0]})
                         clients.__setitem__(retrieved_uuid, ports[0])
-                    # if retrieved_uuid in clients.keys():
-                    #     print(f"Key ({retrieved_uuid}) already inserted")
                     if retrieved_uuid not in clients.keys():
                         clients.__setitem__(retrieved_uuid, ports[1])
 

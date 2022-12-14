@@ -61,17 +61,6 @@ def start(host: str, port: int, out_directory: str, supervisor: str):
                 raise
         case "dispatcher":
             bot_master.bind_port_to_client(host, port, __dispatcher_buf_size)
-            # dispatcher_loop = asyncio.new_event_loop()
-            # for signal_enum in [SIGINT, SIGTERM]:
-            #     exit_func = partial(bot_master.immediate_exit, signal_enum=signal_enum, loop=dispatcher_loop)
-            #     dispatcher_loop.add_signal_handler(signal_enum, exit_func)
-            # try:
-            #     dispatcher_loop.run_until_complete(async_server.run_dispatcher(host, port))
-            # except bot_master.SignalHaltError as shr:
-            #     print(f"{shr}")
-            #     pass
-            # else:
-            #     raise
         case "database":
             db.DatabaseHandler()  # Creazione automatica delle tabelle necessarie al salvataggio dei dati sul dbms
 
