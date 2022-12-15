@@ -126,7 +126,7 @@
 :PROPERTIES:
 :CUSTOM_ID: Descrizione traccia
 :END:
-Si richiede la realizzazione di una ~BotNET~ \autocite{BOTNET} per il recupero di quante più informazioni possibili sulla dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
+Si richiede la realizzazione di una ~BotNET~ \autocite{BOTNET} per il recupero di quante più informazioni possibili sul dispositivo in cui una delle componenti della BotNET (a scelta dello studente) venga eseguito.
 *** Tecnologie e linguaggi richiesti
 :PROPERTIES:
 :CUSTOM_ID: Tecnologie e linguaggi
@@ -191,7 +191,7 @@ Durante la fase di avvio il programma effettua le seguenti operazioni:
 In base alle flag specificate è possibile:
 + Definire un nuovo host e porta a cui connettersi (rispettivamente ~--host~ e ~--port~);
 + Ricercare automaticamente il bot master (flag ~--finder~);
-+ Richiesta di mappatura della porta a uno specifico master
++ Richiedere di essere accoppiato ad un ~bot master~ automaticamente (flag ~-r~).
 ** Analisi della struttura del progetto
 :PROPERTIES:
 :CUSTOM_ID: Analisi progetto
@@ -237,7 +237,7 @@ Di seguito riportiamo un link per il [[https://github.com/luftmensch-luftmensch/
 :PROPERTIES:
 :CUSTOM_ID: Report prima prova
 :END:
-Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le seguenti informazioni:
+Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le seguenti informazioni \autocite{NotaAnalisiMacchine}:
 ** Informazioni sulla macchina (OS: ~Linux-5.15.0-52-generic-x86_64-with-glibc2.35~)
 :PROPERTIES:
 :CUSTOM_ID: Tabelle con info della macchina
@@ -248,7 +248,7 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
     \textbf{CPU}
 \end{center}
 
-\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[1.5,c]X[c]X[c]X[c]X[c]}, width = \textwidth}
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[2,c]X[0.6,c]X[c]X[c]X[1.2,c]}, width = \textwidth}
         Brand & CPU Count & CPU Count logical & Frequenza Minima & Frequenza Massima\\
         \texttt{Intel(R) Core(TM) i7-8569U} & 4 & 4 & 2.80GHz & 4.70GHz
 \end{tblr}
@@ -293,11 +293,11 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
 %% NETWORK
 
 \begin{center}
-    \textbf{NETWORK}
+    \textbf{NETWORKING} \autocite{NotaHosts}
 \end{center}
 
 \begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60},
-             cell{2-4}{1} = {purplelight}, cell{5-7}{1} = {orange-apricot}, cell{8-15}{1} = {lavanda},
+             cell{2-4}{1} = {purplelight}, cell{5-7}{1} = {orange-apricot}, cell{8-16}{1} = {lavanda},
              colspec = {X[0.5,c]X[1.5,c]X[c]X[c]}, width = \textwidth}
 
         Interfaccia & IP & NetMask & Broadcast\\
@@ -310,7 +310,8 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
         enp0s3 &  fe80::9406:ff6d:57df:81b6\%enp0s3 &  ffff:ffff:ffff:ffff:: & Nessuna\\
         enp0s3 &  08:00:27:63:f0:81 &  Nessuna & ff:ff:ff:ff:ff:ff\\
 
-        enp0s8 & 192.168.1.114 & 255.255.255.0 & 192.168.1.255\\
+        enp0s8 & 192.168.1.188 & 255.255.255.0 & 192.168.1.255\\
+        enp0s8 & 192.168.1.224 & 255.255.255.0 & 192.168.1.255\\
         enp0s8 & fdac:c077:5c58:0:7913:ba74:dcde:5157 & ffff:ffff:ffff:ffff:: & Nessuna\\
         enp0s8 & fdac:c077:5c58:0:3595:1b00:316b:ad04 & ffff:ffff:ffff:ffff:: & Nessuna\\
         enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna\\
@@ -350,9 +351,49 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
 :PROPERTIES:
 :CUSTOM_ID: Report dati
 :END:
-Di seguito vengono riportati alcuni estratti dei dati recuperati dall'applicativo [[https://www.wireshark.org/][wireshark]], ottenuti durante la prima prova:
+Di seguito vengono riportati alcuni estratti dei dati recuperati dall'applicativo [[https://www.wireshark.org/][wireshark]] \autocite{NotaWireshark} , ottenuti durante la prima prova:
+
+#+begin_export latex
+\begin{tblr}{hline{1-Z} = {0.9pt}, vline{1-Z} = {0.9pt}, colspec = {X[c]X[c]}, width = \textwidth, vline{1} = {1}{0pt}, hline{1} = {1}{0pt},
+             cell{1}{2} = {pink!60}, row{2} = {customAzure1}, row{3} = {customAzure2},
+             row{4} = {customAzure3}, row{5} = {customAzure4}, row{6} = {customAzure5}, row{13} = {customAzure6}}
+  % PRIMA RICHIESTA
+                  & No 1 (Time \emph{0.000000000})\\
+  Source          & WistronN\_73:f9:a6\\
+  Destination     & Broadcast\\
+  Protocol        & ARP\\
+  Lenght          & 42\\
+  Info            & Who has 192.168.11.1? Tell 192.168.1.24\\
+\end{tblr}
+
+\begin{tblr}{hline{1-Z} = {0.9pt}, vline{1-Z} = {0.9pt}, colspec = {X[c]X[c]}, width = \textwidth, vline{1} = {1}{0pt}, hline{1} = {1}{0pt},
+             cell{1}{2} = {pink!60}, row{2} = {customAzure1}, row{3} = {customAzure2},
+             row{4} = {customAzure3}, row{5} = {customAzure4}, row{6} = {customAzure5}, row{7} = {customAzure6}}
+  % SECONDA RICHIESTA
+                  & No 13 (Time \emph{3.176898029})\\
+  Source          & 192.168.1.72\\
+  Destination     & 192.168.1.188\\
+  Protocol        & TCP\\
+  Lenght          & 120\\
+  Info            & 54654 \rightarrow 9000 [PSH, ACK] Seq=1 Ack=8 Win=502 TSVal=1423094325 TSecr=3808546355\\
+  Data (54 bytes) & <OS-type>Linux-5.15.0-52-generic-x86\_64-with-glibc2.35\\
+\end{tblr}
+
+\begin{tblr}{hline{1-Z} = {0.9pt}, vline{1-Z} = {0.9pt}, colspec = {X[c]X[c]}, width = \textwidth, vline{1} = {1}{0pt}, hline{1} = {1}{0pt},
+             cell{1}{2} = {pink!60}, row{2} = {customAzure1}, row{3} = {customAzure2},
+             row{4} = {customAzure3}, row{5} = {customAzure4}, row{6} = {customAzure5}, row{7} = {customAzure6}}
+  % TERZA RICHIESTA
+                  & No 179 (Time \emph{14.033129003})\\
+  Source          & 192.168.1.72\\
+  Destination     & 192.168.1.224\\
+  Protocol        & TCP\\
+  Lenght          & 157\\
+  Info            & 54658 \rightarrow 9001 [PSH, ACK] Seq=268 Ack=39 Win=502 TSVal=1423105176 TSecr=3808557231\\
+  Data (54 bytes) & <Partition-disk-info><Partition-Device>/dev/sda3<Partition-MountPoint>/<Partition-FSType>ext4\\
+\end{tblr}
+#+end_export
 * Ringraziamenti
 :PROPERTIES:
 :CUSTOM_ID: Ringraziamenti
 :END:
-Ringraziamo il professore [[mailto:a.botta@unina.it][Alessio Botta]] per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di tutti fanno largo uso.
+Ringraziamo il professore [[mailto:a.botta@unina.it][Alessio Botta]] per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di cui il mondo fa largo uso.

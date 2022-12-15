@@ -41,3 +41,15 @@
 @BOOK{NoteDateTesting,
       TITLE="Effettuate il 16 novembre e il 13 dicembre"
 }
+
+@BOOK{NotaAnalisiMacchine,
+      TITLE="Le due macchine in questione sono molto simili tra loro (ricordiamo che sono entrambe macchine virtuali eseguite su Hypervisor \href{https://www.virtualbox.org/}{VirtualBox}), tanto da supporre che siano una il clone dell'altra"
+}
+
+@BOOK{NotaHosts,
+      TITLE="Onde evitare inutili ripetizioni abbiamo preferito compattare le informazioni riguardanti il networking di entrambe le macchine virtuali. Con l'IP \textbf{192.168.1.188} stiamo indicando la macchina della quale avevamo già informazioni; con \textbf{192.168.1.224} quella sulla quale non erano stati ancora effettuati test di alcun tipo"
+}
+
+@BOOK{NotaWireshark,
+      TITLE="Nel quale abbiamo impostato il filtro $ip.addr\ eq\ 192.168.1.72\ and\ (tcp.port\ eq\ 9000\ ||\ tcp.port\ eq\ 9001)$ (ottenendo in questo modo solo i pacchetti di nostro interesse)"
+}
