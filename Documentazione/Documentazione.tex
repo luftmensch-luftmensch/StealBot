@@ -1,4 +1,4 @@
-% Created 2022-12-15 gio 17:53
+% Created 2022-12-15 gio 22:17
 % Intended LaTeX compiler: lualatex
 \documentclass[letterpaper, 11pt]{article}
 
@@ -88,7 +88,7 @@
 % TIKZ
 \usepackage{tikz}
 % DEFINIZIONE CAMPI E FORME PER TIKZ
-\usetikzlibrary{calc,shadows,shapes,arrows,backgrounds,graphdrawing.trees}
+\usetikzlibrary{calc,shadows,shapes,arrows,backgrounds,graphdrawing.trees, decorations.pathreplacing,positioning, arrows.meta}
 
 % DEFINIZIONE FORME GEOMETRICHE PER DIAGRAMMI
 \tikzstyle{CIRCLE} = [circle, minimum width=0.8cm, minimum height=0.8cm,text centered, draw=black, fill=blue!30]
@@ -255,7 +255,7 @@ keywordstyle=[2]\color{includeStatementCPP},
 \usepackage{hyphenat}
 \usepackage{ragged2e}
 \usepackage{subfig} % Subfigures (not needed in Org I think)
-\usepackage[top=1in, bottom=1.25in, left=0.55in, right=0.55in]{geometry} % Page geometry (to show frames add showframe options)
+\usepackage[top=1in, bottom=1.25in, left=0.55in, right=0.55in, showframe]{geometry} % Page geometry (to show frames add showframe options)
 \renewcommand{\baselinestretch}{1.15}
 % Page numbering - Footer
 \usepackage{fancyhdr} % Custom headers and footers
@@ -518,6 +518,12 @@ La struttura del progetto è così strutturata:
 Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è disponibile sulla piattaforma \href{https://github.com/}{GitHub}, che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il \href{https://github.com/luftmensch-luftmensch/StealBot}{download} \autocite{informazioniRepository}
+
+È possibile leggere una attenta analisi del codice al seguente \href{https://www.google.com}{link}
+
+TODO: Aggiungere l'url del sito prima di consegnare
+
+\pagebreak
 \section{Risultati ottenuti}
 \label{Report prima prova}
 Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le seguenti informazioni \autocite{NotaAnalisiMacchine}:
@@ -571,6 +577,7 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
 \end{tblr}
 
 %% NETWORK
+\vfill\pagebreak
 
 \begin{center}
     \textbf{NETWORKING} \autocite{NotaHosts}
@@ -654,7 +661,7 @@ Di seguito vengono riportati alcuni estratti dei dati recuperati dall'applicativ
   Info            & 54654 \rightarrow 9000 [PSH, ACK] Seq=1 Ack=8 Win=502 TSVal=1423094325 TSecr=3808546355\\
   Data (54 bytes) & <OS-type>Linux-5.15.0-52-generic-x86\_64-with-glibc2.35\\
 \end{tblr}
-
+\vfill\pagebreak
 \begin{tblr}{hline{1-Z} = {0.9pt}, vline{1-Z} = {0.9pt}, colspec = {X[c]X[c]}, width = \textwidth, vline{1} = {1}{0pt}, hline{1} = {1}{0pt},
              cell{1}{2} = {pink!60}, row{2} = {customAzure1}, row{3} = {customAzure2},
              row{4} = {customAzure3}, row{5} = {customAzure4}, row{6} = {customAzure5}, row{7} = {customAzure6}}

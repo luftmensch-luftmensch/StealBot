@@ -233,6 +233,12 @@ La struttura del progetto è così strutturata:
 Il codice sorgente prodotto durante lo sviluppo di $StealBot^{\copyright}$ è disponibile sulla piattaforma [[https://github.com/][GitHub]], che ne ha permesso anche il versionamento.
 
 Di seguito riportiamo un link per il [[https://github.com/luftmensch-luftmensch/StealBot][download]] \autocite{informazioniRepository}
+
+È possibile leggere una attenta analisi del codice al seguente [[https://www.google.com][link]]
+
+TODO: Aggiungere l'url del sito prima di consegnare
+
+#+LATEX: \pagebreak
 * Risultati ottenuti
 :PROPERTIES:
 :CUSTOM_ID: Report prima prova
@@ -291,6 +297,7 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
 \end{tblr}
 
 %% NETWORK
+\vfill\pagebreak
 
 \begin{center}
     \textbf{NETWORKING} \autocite{NotaHosts}
@@ -378,7 +385,7 @@ Di seguito vengono riportati alcuni estratti dei dati recuperati dall'applicativ
   Info            & 54654 \rightarrow 9000 [PSH, ACK] Seq=1 Ack=8 Win=502 TSVal=1423094325 TSecr=3808546355\\
   Data (54 bytes) & <OS-type>Linux-5.15.0-52-generic-x86\_64-with-glibc2.35\\
 \end{tblr}
-
+\vfill\pagebreak
 \begin{tblr}{hline{1-Z} = {0.9pt}, vline{1-Z} = {0.9pt}, colspec = {X[c]X[c]}, width = \textwidth, vline{1} = {1}{0pt}, hline{1} = {1}{0pt},
              cell{1}{2} = {pink!60}, row{2} = {customAzure1}, row{3} = {customAzure2},
              row{4} = {customAzure3}, row{5} = {customAzure4}, row{6} = {customAzure5}, row{7} = {customAzure6}}
