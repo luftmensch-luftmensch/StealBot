@@ -1,4 +1,4 @@
-% Created 2022-12-15 gio 22:17
+% Created 2022-12-18 dom 16:01
 % Intended LaTeX compiler: lualatex
 \documentclass[letterpaper, 11pt]{article}
 
@@ -88,7 +88,7 @@
 % TIKZ
 \usepackage{tikz}
 % DEFINIZIONE CAMPI E FORME PER TIKZ
-\usetikzlibrary{calc,shadows,shapes,arrows,backgrounds,graphdrawing.trees, decorations.pathreplacing,positioning, arrows.meta}
+\usetikzlibrary{calc,shadows,shapes,arrows,backgrounds,graphdrawing.trees, decorations.pathreplacing,positioning, arrows.meta, automata}
 
 % DEFINIZIONE FORME GEOMETRICHE PER DIAGRAMMI
 \tikzstyle{CIRCLE} = [circle, minimum width=0.8cm, minimum height=0.8cm,text centered, draw=black, fill=blue!30]
@@ -255,7 +255,7 @@ keywordstyle=[2]\color{includeStatementCPP},
 \usepackage{hyphenat}
 \usepackage{ragged2e}
 \usepackage{subfig} % Subfigures (not needed in Org I think)
-\usepackage[top=1in, bottom=1.25in, left=0.55in, right=0.55in, showframe]{geometry} % Page geometry (to show frames add showframe options)
+\usepackage[top=1in, bottom=1.25in, left=0.55in, right=0.55in]{geometry} % Page geometry (to show frames add showframe options)
 \renewcommand{\baselinestretch}{1.15}
 % Page numbering - Footer
 \usepackage{fancyhdr} % Custom headers and footers
@@ -426,7 +426,7 @@ Si richiede un applicativo scritto in \texttt{Python} \autocite{DefinizionePytho
 \label{Implementazione sistema}
 Il progetto si concretizza in 2 componenti ben definite:
 \begin{itemize}
-\item Un \texttt{Bot Master} per la gestione dei dati ricevuti dal \texttt{bot slave} al quale inpartisce comandi sfruttando una connessione tramite socket asincrona;
+\item Un \texttt{Bot Master} per la gestione dei dati ricevuti dal \texttt{bot slave} al quale impartisce comandi sfruttando una connessione tramite socket asincrona;
 \item Il \texttt{Bot slave}, che ha il compito di ricavare quante più informazioni possibili sullo stato della macchina sul quale viene eseguito \autocite{notaBotSlave1} .
 \end{itemize}
 \vfill
@@ -437,7 +437,7 @@ Il progetto si concretizza in 2 componenti ben definite:
 Durante la fase di avvio il programma effettua le seguenti operazioni:
 \begin{itemize}
 \item Controlla che \texttt{host} e \texttt{porta} \autocite{infoHostPortMaster} siano disponibili per la successiva creazione della socket;
-\item Esegue una connessione al dbms utilizzato per il salvataggio delle informazioni e inizializza la \texttt{tabella} utilizzata per lo scopo (se non precedentemente presente);
+\item Esegue una connessione al DBMS utilizzato per il salvataggio delle informazioni e inizializza la \texttt{tabella} utilizzata per lo scopo (se non precedentemente presente);
 \item Inizializza la socket in attesa di nuove connessioni dal client a cui impartirà comandi da eseguire;
 \end{itemize}
 
@@ -463,6 +463,8 @@ Il sistema permette inoltre utilizza un DBMS \autocite{postgres} per il salvatag
 \item In questo modo il bot master fa da tramite per la connessione 1:1 tra \texttt{clientX} e \texttt{master}
 \end{itemize}
 \end{itemize}
+\vfill
+\pagebreak
 \subsection{Guida al Bot Slave}
 \label{Guida (Bot Slave)}
 \subsubsection{Primo avvio}
@@ -519,10 +521,6 @@ Il codice sorgente prodotto durante lo sviluppo di \(StealBot^{\copyright}\) è 
 
 Di seguito riportiamo un link per il \href{https://github.com/luftmensch-luftmensch/StealBot}{download} \autocite{informazioniRepository}
 
-È possibile leggere una attenta analisi del codice al seguente \href{https://www.google.com}{link}
-
-TODO: Aggiungere l'url del sito prima di consegnare
-
 \pagebreak
 \section{Risultati ottenuti}
 \label{Report prima prova}
@@ -576,6 +574,18 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
         691.32MB & 31.47MB
 \end{tblr}
 
+%% UTENTI ATTIVI
+
+\begin{center}
+    \textbf{UTENTI ATTIVI}
+\end{center}
+
+\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
+        Nome utente & Attivo da\\
+
+        \textbf{alessio} & 2022-11-16 09:04:16
+\end{tblr}
+
 %% NETWORK
 \vfill\pagebreak
 
@@ -607,18 +617,6 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
         enp0s8 & fe80::b224:2d33:82d5:b5de\%enp0s8 & ffff:ffff:ffff:ffff:: & Nessuna \\
         enp0s8 & 08:00:27:e5:6a:b8 & Nessuna & ff:ff:ff:ff:ff:ff
 \end{tblr}
-
-%% UTENTI ATTIVI
-
-\begin{center}
-    \textbf{UTENTI ATTIVI}
-\end{center}
-
-\begin{tblr}{hlines = {0.9pt}, vlines = {0.9pt}, row{1} = {pink!60}, colspec = {X[c]X[c]}, width = \textwidth}
-        Nome utente & Attivo da\\
-
-        \textbf{alessio} & 2022-11-16 09:04:16
-\end{tblr}
 \subsection{File recuperati durante l'esecuzione del bot slave}
 \label{File recuperati}
 \begin{itemize}
@@ -628,7 +626,7 @@ Durante le prove di testing \autocite{NoteDateTesting} , abbiamo recuperato le s
 \item \texttt{bookmarks} \(\rightarrow\) Contiene i segnalibri definiti dall'utente
 \item \texttt{meta-release-lts}  e \texttt{ubuntu.22.04} \(\rightarrow\) Contengono le informazioni aggiuntive della macchina su cui gira il bot slave;
 \item \texttt{.pam\_environment} \(\rightarrow\) Contiene variabili per la lingua;
-\item \texttt{.passwords} \(\rightarrow\) File contentente \texttt{eCambiata}
+\item \texttt{.passwords} \(\rightarrow\) File contenente \texttt{eCambiata}
 \item \texttt{.profile} \(\rightarrow\) Impostazioni aggiuntive per la shell \texttt{bash}
 \item \texttt{.python\_history} \(\rightarrow\) Contiene la cronologia dei comandi effettuati dall'interprete interattivo \emph{python};
 \item \texttt{user-dirs.dirs} \(\rightarrow\) Contiene le informazioni sulle variabili delle directory della home dell'utente.
@@ -661,7 +659,8 @@ Di seguito vengono riportati alcuni estratti dei dati recuperati dall'applicativ
   Info            & 54654 \rightarrow 9000 [PSH, ACK] Seq=1 Ack=8 Win=502 TSVal=1423094325 TSecr=3808546355\\
   Data (54 bytes) & <OS-type>Linux-5.15.0-52-generic-x86\_64-with-glibc2.35\\
 \end{tblr}
-\vfill\pagebreak
+%\vfill\pagebreak
+
 \begin{tblr}{hline{1-Z} = {0.9pt}, vline{1-Z} = {0.9pt}, colspec = {X[c]X[c]}, width = \textwidth, vline{1} = {1}{0pt}, hline{1} = {1}{0pt},
              cell{1}{2} = {pink!60}, row{2} = {customAzure1}, row{3} = {customAzure2},
              row{4} = {customAzure3}, row{5} = {customAzure4}, row{6} = {customAzure5}, row{7} = {customAzure6}}
@@ -674,7 +673,8 @@ Di seguito vengono riportati alcuni estratti dei dati recuperati dall'applicativ
   Info            & 54658 \rightarrow 9001 [PSH, ACK] Seq=268 Ack=39 Win=502 TSVal=1423105176 TSecr=3808557231\\
   Data (54 bytes) & <Partition-disk-info><Partition-Device>/dev/sda3<Partition-MountPoint>/<Partition-FSType>ext4\\
 \end{tblr}
+\vfill
 \section{Ringraziamenti}
 \label{Ringraziamenti}
-Ringraziamo il professore \href{mailto:a.botta@unina.it}{Alessio Botta} per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di cui il mondo fa largo uso.
+Ringraziamo il professore \href{https://www.docenti.unina.it/alessio.botta}{Alessio Botta} per lo splendido corso, che ci ha permesso di comprendere a pieno tecnologie di cui il mondo fa largo uso.
 \end{document}
